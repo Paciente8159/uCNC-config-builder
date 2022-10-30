@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>Title</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS v5.2.1 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.2/css/bootstrap.min.css"
+		integrity="sha512-CpIKUSyh9QX2+zSdfGP+eWLx23C8Dj9/XmHjZY2uDtfkdLGo0uY12jgcnkX9vXOgYajEKb/jiw67EYm+kBf+6g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular-csp.min.css"
+		integrity="sha512-nptw3cPhphu13Dy21CXMS1ceuSy2yxpKswAfZ7bAAE2Lvh8rHXhQFOjU+sSnw4B+mEoQmKFLKOj8lmXKVk3gow=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<style>
+		fieldset>div,
+		div.mb-3 {
+			margin: 20px;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+
+		main {
+			max-width: 1600px;
+			margin: 20px;
+		}
+	</style>
+</head>
+
+<body ng-app="uCNCapp" ng-controller="uCNCcontroller">
+	<header>
+		<!-- place navbar here -->
+		<h1>µCNC config generator</h1>
+	</header>
+	<main>
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="configbasic-tab" data-bs-toggle="tab" data-bs-target="#configbasic"
+					type="button" role="tab" aria-controls="configbasic" aria-selected="true">Basic</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="configboardmap-tab" data-bs-toggle="tab" data-bs-target="#configboardmap"
+					type="button" role="tab" aria-controls="configboardmap" aria-selected="false">Board</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="confighal-tab" data-bs-toggle="tab" data-bs-target="#confighal"
+					type="button" role="tab" aria-controls="confighal" aria-selected="false">HAL</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="configmodules-tab" data-bs-toggle="tab" data-bs-target="#configmodules"
+					type="button" role="tab" aria-controls="configmodules" aria-selected="false">Additional
+					Modules</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="configfiles-tab" data-bs-toggle="tab" data-bs-target="#configfiles"
+					type="button" role="tab" aria-controls="configfiles" aria-selected="false">Config files</button>
+			</li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div class="tab-pane active" id="configbasic" role="tabpanel" aria-labelledby="configbasic-tab">
+				<p>Hi there,</p>
+				<p>Welcome to µCNC basic configuration generator.</p>
+
+				<fieldset>
+					<legend>Basic settings</legend>
+
+					<div class="mb-3">
+						<label for="" class="form-label">What board will you be using?</label>
+						<select class="form-select form-select-md" name="MCU" id="MCU" ng-model="MCU">
+							<option value="{{x.id}}" ng-repeat="x in MCUS">{{x.name}}</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label for="" class="form-label">What type of kinematic does your machine have?</label>
+						<select class="form-select form-select-md" name="KINEMATIC" id="KINEMATIC" ng-model="KINEMATIC">
+							<option value="{{x.id}}" ng-repeat="x in KINEMATICS">{{x.name}}</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label for="" class="form-label">How many axis does your machine have?</label>
+						<select class="form-select form-select-md" name="AXIS_COUNT" id="AXIS_COUNT"
+							ng-model="AXIS_COUNT">
+							<option value=1>1</option>
+							<option value=2>2</option>
+							<option value=3>3</option>
+							<option value=4>4</option>
+							<option value=5>5</option>
+							<option value=6>6</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label for="" class="form-label">How many tools do you have on your machine</label>
+						<select class="form-select form-select-md" name="TOOL_COUNT" id="TOOL_COUNT"
+							ng-model="TOOL_COUNT" ng-options="item as x for x in TOOLS track by x">
+						</select>
+					</div>
+				</fieldset>
+			</div>
+			<div class="tab-pane" id="configboardmap" role="tabpanel" aria-labelledby="configboardmap-tab">
+				<div class="mb-3">
+					<label for="" class="form-label">What board will you be using?</label>
+					<select class="form-select form-select-md" name="BOARD" id="BOARD" ng-model="BOARD"
+						ng-change="boardChanged()">
+						<option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option>
+					</select>
+				</div>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">µCNC pin</th>
+							<th scope="col">Pin number</th>
+							<th scope="col">Pin port</th>
+							<th scope="col">Pullup</th>
+							<th scope="col">ISR</th>
+							<th scope="col">CHANNEL</th>
+							<th scope="col">TIMER</th>
+							<th scope="col">MUX</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="x in UCNCPINS">
+						<th scope='row'>{{x.pin}}</th>
+						<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+								ng-model-dynamic="{{x.pin}}_BIT">
+								<option value='{{y.pin}}' ng-repeat="y in PINS | filter: {'mcu': MCU}">{{y.pin}}
+								</option>
+							</select></td>
+						<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+								ng-model-dynamic="{{x.pin}}_PORT">
+								<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
+								</option>
+							</select></td>
+						<td>
+							<div class="form-check form-switch"
+								ng-if='x.type=="input" || x.type=="input_interruptable"'>
+								<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
+									id='{{x.pin}}_PULLUP' ng-model-dynamic="{{x.pin}}_PULLUP">
+							</div>
+						</td>
+						<td>
+							<div class="form-check form-switch" ng-if='x.type=="input_interruptable"'>
+								<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
+									ng-model-dynamic="{{x.pin}}_ISR" ng-if='MCU!="MCU_AVR"'>
+								<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
+									<select class='form-select form-select-sm' name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
+										ng-model-dynamic="{{x.pin}}_ISR">
+										<option value='{{y.isr}}' ng-repeat="y in ISRS | filter: {'mcu': MCU}">
+											{{y.isr}}
+										</option>
+									</select>
+									<small id="helpId" class="form-text text-muted">wiki</small>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div ng-if='x.type=="pwm" || x.type=="analog"'><select class='form-select form-select-sm'
+									name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
+									ng-model-dynamic="{{x.pin}}_CHANNEL">
+									<option value='{{y.channel}}' ng-repeat="y in CHANNELS | filter: {'mcu': MCU}">
+										{{y.channel}}
+									</option>
+								</select></div>
+						</td>
+						<td>
+							<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_TIMER'
+									id='{{x.pin}}_TIMER' ng-model-dynamic="{{x.pin}}_TIMER">
+									<option value='{{y.timer}}' ng-repeat="y in TIMERS | filter: {'mcu': MCU}">
+										{{y.timer}}
+									</option>
+								</select></div>
+						</td>
+						<td>
+							<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_MUX'
+									id='{{x.pin}}_MUX' ng-model-dynamic="{{x.pin}}_MUX">
+									<option value='{{y.mux}}' ng-repeat="y in MUXS | filter: {'mcu': MCU}">{{y.mux}}
+									</option>
+								</select></div>
+						</td>
+					</tr>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="tab-pane" id="confighal" role="tabpanel" aria-labelledby="confighal-tab">
+				<fieldset>
+					<legend>Controls</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="DISABLE_ALL_CONTROLS"
+							ng-model="DISABLE_ALL_CONTROLS">
+						<label class="form-check-label" for="DISABLE_ALL_CONTROLS">Disable control inputs (E-STOP,
+							Security
+							door,
+							Hold, Cycle start-Resume)</label>
+					</div>
+					<div ng-hide="DISABLE_ALL_CONTROLS">
+						<div class="form-check form-check-inline" ng-repeat="y in CONTROLS">
+							<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP" value="{{y}}_PULLUP"
+								ng-model-dynamic="{{y.control}}_PULLUP">
+							<label class="form-check-label" for="{{y}}_PULLUP">Enable {{y}} internal pullup
+								resistor</label>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Limit switches</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="DISABLE_ALL_LIMITS"
+							ng-model="DISABLE_ALL_LIMITS">
+						<label class="form-check-label" for="DISABLE_ALL_LIMITS">Disable all limit switches</label>
+					</div>
+					<div ng-hide="DISABLE_ALL_LIMITS">
+						<div class="form-check form-check-inline"
+							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
+							<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE"
+								value="{{y.limit}}_DISABLE" ng-model-dynamic="$parent.{{y.limit}}_DISABLE">
+							<label class="form-check-label" for="{{y.limit}}_DISABLE">Disable {{y.limit}}</label>
+						</div>
+					</div>
+					<div ng-hide="DISABLE_ALL_LIMITS">
+						<div class="form-check form-check-inline"
+							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
+							<input class="form-check-input" type="checkbox" id="{{y.limit}}_PULLUP"
+								value="{{y.limit}}_PULLUP" ng-disabled="$parent.{{y.limit}}_DISABLE"
+								ng-model-dynamic="{{y.limit}}_PULLUP">
+							<label class="form-check-label" for="{{y.limit}}_PULLUP">Enable {{y.limit}} internal pullup
+								resistor</label>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Probe</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="DISABLE_PROBE" ng-model="DISABLE_PROBE">
+						<label class="form-check-label" for="DISABLE_PROBE">Disable probe</label>
+					</div>
+					<div ng-hide="DISABLE_PROBE">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="PROBE_PULLUP" value="PROBE_PULLUP">
+							<label class="form-check-label" for="">Enable PROBE internal pullup resistor</label>
+						</div>
+					</div>
+				</fieldset>
+
+				<fieldset>
+					<legend>Multi drive axis</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_DUAL_DRIVE_AXIS"
+							ng-model="ENABLE_DUAL_DRIVE_AXIS">
+						<label class="form-check-label" for="ENABLE_DUAL_DRIVE_AXIS">Enable multi-drive AXIS</label>
+					</div>
+					<div ng-show="ENABLE_DUAL_DRIVE_AXIS">
+						<div class="mb-3">
+							<label for="" class="form-label">Select multi-drive FIRST axis</label>
+							<select class="form-select form-select-md" name="DUAL_DRIVE0_AXIS" id="DUAL_DRIVE0_AXIS"
+								ng-model="DUAL_DRIVE0_AXIS">
+								<option value="" selected>-</option>
+								<option value="X">X</option>
+								<option value="Y">Y</option>
+								<option value="Z">Z</option>
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<label for="" class="form-label">Select FIRST multi-drive axis second stepper</label>
+							<select class="form-select form-select-md" name="DUAL_DRIVE0_AXIS" id="DUAL_DRIVE0_AXIS"
+								ng-model="DUAL_DRIVE0_AXIS">
+								<option selected>Select one</option>
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6" selected>6</option>
+								<option value="7">7</option>
+							</select>
+						</div>
+
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="DUAL_DRIVE0_ENABLE_SELFSQUARING"
+								ng-model="DUAL_DRIVE0_ENABLE_SELFSQUARING">
+							<label class="form-check-label" for="DUAL_DRIVE0_ENABLE_SELFSQUARING">Enable FIRST axis
+								auto-squaring</label>
+						</div>
+
+						<div class="mb-3">
+							<label for="" class="form-label">Select multi-drive SECOND axis</label>
+							<select class="form-select form-select-md" name="DUAL_DRIVE1_AXIS" id="DUAL_DRIVE1_AXIS"
+								ng-model="DUAL_DRIVE1_AXIS">
+								<option value="" selected>-</option>
+								<option value="X">X</option>
+								<option value="Y">Y</option>
+								<option value="Z">Z</option>
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<label for="" class="form-label">Select SECOND multi-drive axis second stepper</label>
+							<select class="form-select form-select-md" name="DUAL_DRIVE1_AXIS" id="DUAL_DRIVE1_AXIS"
+								ng-model="DUAL_DRIVE1_AXIS">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7" selected>7</option>
+							</select>
+						</div>
+
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="DUAL_DRIVE1_ENABLE_SELFSQUARING"
+								ng-model="DUAL_DRIVE1_ENABLE_SELFSQUARING">
+							<label class="form-check-label" for="DUAL_DRIVE1_ENABLE_SELFSQUARING">Enable FIRST axis
+								auto-squaring</label>
+						</div>
+
+					</div>
+				</fieldset>
+
+				<fieldset>
+					<legend>Tools options</legend>
+					<div class="mb-3" ng-repeat="x in TOOLS | filter: numSmallerOrEq()">
+						<label for="" class="form-label">Select TOOL{{x}}</label>
+						<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}"
+							ng-dynamic-model="TOOL{{x}}">
+							<option value="spindle_pwm">spindle_pwm</option>
+							<option value="laser">laser</option>
+							<option value="vfd">vfd</option>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Laser options</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_LASER_PPI"
+							ng-model="ENABLE_LASER_PPI">
+						<label class="form-check-label" for="ENABLE_LASER_PPI">Enable Laser PPI</label>
+					</div>
+					<div class="mb-3" ng-show="ENABLE_LASER_PPI">
+						<label for="" class="form-label">Laser PPI output µCNC pin</label>
+						<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI" ng-model="LASER_PPI">
+							<option value="PWM0" selected>PWM0</option>
+							<option value="PWM1">PWM1</option>
+							<option value="PWM2">PWM2</option>
+							<option value="PWM3">PWM3</option>
+							<option value="PWM4">PWM4</option>
+							<option value="PWM5">PWM5</option>
+							<option value="PWM6">PWM6</option>
+							<option value="PWM7">PWM7</option>
+							<option value="PWM8">PWM8</option>
+							<option value="PWM9">PWM9</option>
+							<option value="PWM10">PWM10</option>
+							<option value="PWM11">PWM11</option>
+							<option value="PWM12">PWM12</option>
+							<option value="PWM13">PWM13</option>
+							<option value="PWM14">PWM14</option>
+							<option value="PWM15">PWM15</option>
+							<option value="SERVO0">SERVO0</option>
+							<option value="SERVO1">SERVO1</option>
+							<option value="SERVO2">SERVO2</option>
+							<option value="SERVO3">SERVO3</option>
+							<option value="SERVO4">SERVO4</option>
+							<option value="SERVO5">SERVO5</option>
+							<option value="DOUT0">DOUT0</option>
+							<option value="DOUT1">DOUT1</option>
+							<option value="DOUT2">DOUT2</option>
+							<option value="DOUT3">DOUT3</option>
+							<option value="DOUT4">DOUT4</option>
+							<option value="DOUT5">DOUT5</option>
+							<option value="DOUT6">DOUT6</option>
+							<option value="DOUT7">DOUT7</option>
+							<option value="DOUT8">DOUT8</option>
+							<option value="DOUT9">DOUT9</option>
+							<option value="DOUT10">DOUT10</option>
+							<option value="DOUT11">DOUT11</option>
+							<option value="DOUT12">DOUT12</option>
+							<option value="DOUT13">DOUT13</option>
+							<option value="DOUT14">DOUT14</option>
+							<option value="DOUT15">DOUT15</option>
+							<option value="DOUT16">DOUT16</option>
+							<option value="DOUT17">DOUT17</option>
+							<option value="DOUT18">DOUT18</option>
+							<option value="DOUT19">DOUT19</option>
+							<option value="DOUT20">DOUT20</option>
+							<option value="DOUT21">DOUT21</option>
+							<option value="DOUT22">DOUT22</option>
+							<option value="DOUT23">DOUT23</option>
+							<option value="DOUT24">DOUT24</option>
+							<option value="DOUT25">DOUT25</option>
+							<option value="DOUT26">DOUT26</option>
+							<option value="DOUT27">DOUT27</option>
+							<option value="DOUT28">DOUT28</option>
+							<option value="DOUT29">DOUT29</option>
+							<option value="DOUT30">DOUT30</option>
+							<option value="DOUT31">DOUT31</option>
+						</select>
+					</div>
+				</fieldset>
+				<!--<fieldset>
+					<legend>TMC drivers</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="STEPPER0_HAS_TMC"
+							ng-model="STEPPER0_HAS_TMC">
+						<label class="form-check-label" for="STEPPER0_HAS_TMC">Stepper0 has TMC driver</label>
+						<div ng-show="STEPPER0_HAS_TMC">
+							<div class="mb-3">
+								<label for="" class="form-label">Stepper0 TMC type</label>
+								<select class="form-select form-select-md" name="STEPPER0_DRIVER_TYPE"
+									id="STEPPER0_DRIVER_TYPE" ng-model="STEPPER0_DRIVER_TYPE">
+									<option value="2202">2202</option>
+									<option value="2208" selected>2208</option>
+									<option value="2209">2209</option>
+									<option value="2225">2225</option>
+									<option value="2226">2226</option>
+									<option value="2130">2130</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="STEPPER0_TMC_INTERFACE" class="form-label">Stepper0 TMC interface</label>
+								<select class="form-select form-select-md" name="STEPPER0_TMC_INTERFACE"
+									id="STEPPER0_TMC_INTERFACE" ng-model="STEPPER0_TMC_INTERFACE">
+									<option value="TMC_UART" selected>UART</option>
+									<option value="TMC_SPI">SPI</option>
+								</select>
+							</div>
+							<div ng-show='{{STEPPER0_TMC_INTERFACE=="TMC_UART"}}'>
+								<div class="mb-3">
+									<label for="STEPPER0_UART_TX" class="form-label">Stepper0 TMC UART TX pin</label>
+									<select class="form-select form-select-md" name="STEPPER0_UART_TX"
+										id="STEPPER0_UART_TX" ng-model="STEPPER0_UART_TX">
+										<option value="DOUT0">DOUT0</option>
+										<option value="DOUT1">DOUT1</option>
+										<option value="DOUT2">DOUT2</option>
+										<option value="DOUT3">DOUT3</option>
+										<option value="DOUT4">DOUT4</option>
+										<option value="DOUT5">DOUT5</option>
+										<option value="DOUT6">DOUT6</option>
+										<option value="DOUT7">DOUT7</option>
+										<option value="DOUT8">DOUT8</option>
+										<option value="DOUT9">DOUT9</option>
+										<option value="DOUT10">DOUT10</option>
+										<option value="DOUT11">DOUT11</option>
+										<option value="DOUT12">DOUT12</option>
+										<option value="DOUT13">DOUT13</option>
+										<option value="DOUT14">DOUT14</option>
+										<option value="DOUT15">DOUT15</option>
+										<option value="DOUT16">DOUT16</option>
+										<option value="DOUT17">DOUT17</option>
+										<option value="DOUT18">DOUT18</option>
+										<option value="DOUT19">DOUT19</option>
+										<option value="DOUT20">DOUT20</option>
+										<option value="DOUT21">DOUT21</option>
+										<option value="DOUT22">DOUT22</option>
+										<option value="DOUT23">DOUT23</option>
+										<option value="DOUT24">DOUT24</option>
+										<option value="DOUT25">DOUT25</option>
+										<option value="DOUT26">DOUT26</option>
+										<option value="DOUT27">DOUT27</option>
+										<option value="DOUT28">DOUT28</option>
+										<option value="DOUT29">DOUT29</option>
+										<option value="DOUT30">DOUT30</option>
+										<option value="DOUT31">DOUT31</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>-->
+			</div>
+			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab"> configmodules
+			</div>
+			<div class="tab-pane" id="configfiles" role="tabpanel" aria-labelledby="configfiles-tab">
+				<div class="card">
+					<img class="card-img-top" src="holder.js/100x180/?text=Image cap" alt="Card image cap">
+					<div class="card-body">
+						<h4 class="card-title">Config µCNC</h4>
+						<p class="card-text">To setup your build of µCNC follow these steps</p>
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item"><a href="https://github.com/Paciente8159/uCNC/"
+								target="_blank">Download and unzip the latest version of µCNC</a></li>
+						<li class="list-group-item"><a name="user_config" id="user_config" class="btn btn-primary"
+								href="#" role="button">Download cnc_user_config.h</a></li>
+						<li class="list-group-item">Item 3</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer>
+		<!-- place footer here -->
+	</footer>
+	<!-- Bootstrap JavaScript Libraries -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+		integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+		</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.2/js/bootstrap.min.js"
+		integrity="sha512-5BqtYqlWfJemW5+v+TZUs22uigI8tXeVah5S/1Z6qBLVO7gakAOtkOzUtgq6dsIo5c0NJdmGPs0H9I+2OHUHVQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"
+		integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.js"
+		integrity="sha512-klc+qN5PPscoGxSzFpetVsCr9sryi2e2vHwZKq43FdFyhSAa7vAqog/Ifl8tzg/8mBZiG2MAKhyjH5oPJp65EA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	<script>
+
+		function parsePreprocessor(file, settings = [], callback) {
+			const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d]*)/gm
+			var txtFile = new XMLHttpRequest();
+			txtFile.open("GET", file, true);
+			txtFile.onreadystatechange = function () {
+				if (txtFile.readyState === 4 && txtFile.status === 200) {  // Makes sure it's found the file.
+					allText = txtFile.responseText;
+					const matches = [...allText.matchAll(defineregex)];
+					for (var i = 0; i < matches.length; i++) {
+						settings[matches[i][1]] = matches[i][2];
+					}
+					if (callback) {
+						callback(settings);
+					}
+				}
+			}
+			txtFile.send(null);
+		}
+
+		var version = 'v1.5.4';
+		var app = angular.module("uCNCapp", []);
+		var controller = app.controller('uCNCcontroller', function ($scope) {
+			$scope.MCUS = [
+				{ id: 'MCU_AVR', name: 'Atmel AVR' },
+				{ id: 'MCU_SAMD21', name: 'Atmel SAMD21' },
+				{ id: 'MCU_STM32F1X', name: 'STM32F1x' },
+				{ id: 'MCU_STM32F4X', name: 'STM32F4X' },
+				{ id: 'MCU_LPC176X', name: 'LPC176X' },
+				{ id: 'MCU_ESP8266', name: 'ESP8266' },
+				{ id: 'MCU_ESP32', name: 'ESP32' }
+			];
+			$scope.KINEMATICS = [
+				{ id: 'KINEMATIC_CARTESIAN', name: 'Cartesian' },
+				{ id: 'KINEMATIC_COREXY', name: 'Core XY' },
+				{ id: 'KINEMATIC_DELTA', name: 'Linear delta' }
+			];
+
+			$scope.BOARDS = [
+				{ id: 'BOARD_UNO', name: 'Arduino UNO', mcu: 'MCU_AVR' },
+				{ id: 'BOARD_RAMBO14', name: 'Rambo v1.4', mcu: 'MCU_AVR' },
+				{ id: 'BOARD_RAMPS14', name: 'Arduino MEGA/RAMPS v1.4', mcu: 'MCU_AVR' },
+				{ id: 'BOARD_MKS_DLC', name: 'MKS DLC', mcu: 'MCU_AVR' },
+				{ id: 'BOARD_X_CONTROLLER', name: 'X-Controller', mcu: 'MCU_AVR' },
+				{ id: 'BOARD_MKS_GEN_L_V1', name: 'MKS Gen L v1', mcu: 'MCU_AVR' },
+				{ id: 'BOARD_BLUEPILL', name: 'Bluepill STM32F103', mcu: 'MCU_STM32F1X' },
+				{ id: 'BOARD_BLACKPILL', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },
+				{ id: 'BOARD_MKS_ROBIN_NANO_V1_2', name: 'MKS Robin Nano v1.2', mcu: 'MCU_STM32F1X' },
+				{ id: 'BOARD_SKR_PRO_V1_2', name: 'SKR Pro v1.2', mcu: 'MCU_STM32F4X' },
+				{ id: 'BOARD_MZERO', name: 'Arduino M0', mcu: 'MCU_SAMD21' },
+				{ id: 'BOARD_ZERO', name: 'Arduino Zero', mcu: 'MCU_SAMD21' },
+				{ id: 'BOARD_RE_ARM', name: 'Panukatt RE-ARM', mcu: 'MCU_LPC176X' },
+				{ id: 'BOARD_MKS_BASE13', name: 'MKS Base v1.3', mcu: 'MCU_LPC176X' },
+				{ id: 'BOARD_SKR_V14_TURBO', name: 'SKR v1.4 Turbo', mcu: 'MCU_LPC176X' },
+				{ id: 'BOARD_WEMOS_D1', name: 'Wemos D1', mcu: 'MCU_ESP8266' },
+				{ id: 'BOARD_WEMOS_D1_R32', name: 'Wemos D1 R32', mcu: 'MCU_ESP32' },
+				{ id: 'BOARD_MKS_TINYBEE', name: 'MKS Tinybee', mcu: 'MCU_ESP32' },
+				{ id: 'BOARD_MKS_DLC32', name: 'MKS DLC32', mcu: 'MCU_ESP32' }
+			];
+
+			$scope.UCNCPINS = [
+				{ pin: 'STEP0', type: 'special output' },
+				{ pin: 'STEP1', type: 'special output' },
+				{ pin: 'STEP2', type: 'special output' },
+				{ pin: 'STEP3', type: 'special output' },
+				{ pin: 'STEP4', type: 'special output' },
+				{ pin: 'STEP5', type: 'special output' },
+				{ pin: 'STEP6', type: 'special output' },
+				{ pin: 'STEP7', type: 'special output' },
+				{ pin: 'DIR0', type: 'special output' },
+				{ pin: 'DIR1', type: 'special output' },
+				{ pin: 'DIR2', type: 'special output' },
+				{ pin: 'DIR3', type: 'special output' },
+				{ pin: 'DIR4', type: 'special output' },
+				{ pin: 'DIR5', type: 'special output' },
+				{ pin: 'DIR6', type: 'special output' },
+				{ pin: 'DIR7', type: 'special output' },
+				{ pin: 'STEP0_EN', type: 'special output' },
+				{ pin: 'STEP1_EN', type: 'special output' },
+				{ pin: 'STEP2_EN', type: 'special output' },
+				{ pin: 'STEP3_EN', type: 'special output' },
+				{ pin: 'STEP4_EN', type: 'special output' },
+				{ pin: 'STEP5_EN', type: 'special output' },
+				{ pin: 'STEP6_EN', type: 'special output' },
+				{ pin: 'STEP7_EN', type: 'special output' },
+				{ pin: 'PWM0', type: 'pwm' },
+				{ pin: 'PWM1', type: 'pwm' },
+				{ pin: 'PWM2', type: 'pwm' },
+				{ pin: 'PWM3', type: 'pwm' },
+				{ pin: 'PWM4', type: 'pwm' },
+				{ pin: 'PWM5', type: 'pwm' },
+				{ pin: 'PWM6', type: 'pwm' },
+				{ pin: 'PWM7', type: 'pwm' },
+				{ pin: 'PWM8', type: 'pwm' },
+				{ pin: 'PWM9', type: 'pwm' },
+				{ pin: 'PWM10', type: 'pwm' },
+				{ pin: 'PWM11', type: 'pwm' },
+				{ pin: 'PWM12', type: 'pwm' },
+				{ pin: 'PWM13', type: 'pwm' },
+				{ pin: 'PWM14', type: 'pwm' },
+				{ pin: 'PWM15', type: 'pwm' },
+				{ pin: 'SERVO0', type: 'special output' },
+				{ pin: 'SERVO1', type: 'special output' },
+				{ pin: 'SERVO2', type: 'special output' },
+				{ pin: 'SERVO3', type: 'special output' },
+				{ pin: 'SERVO4', type: 'special output' },
+				{ pin: 'SERVO5', type: 'special output' },
+				{ pin: 'DOUT0', type: 'output' },
+				{ pin: 'DOUT1', type: 'output' },
+				{ pin: 'DOUT2', type: 'output' },
+				{ pin: 'DOUT3', type: 'output' },
+				{ pin: 'DOUT4', type: 'output' },
+				{ pin: 'DOUT5', type: 'output' },
+				{ pin: 'DOUT6', type: 'output' },
+				{ pin: 'DOUT7', type: 'output' },
+				{ pin: 'DOUT8', type: 'output' },
+				{ pin: 'DOUT9', type: 'output' },
+				{ pin: 'DOUT10', type: 'output' },
+				{ pin: 'DOUT11', type: 'output' },
+				{ pin: 'DOUT12', type: 'output' },
+				{ pin: 'DOUT13', type: 'output' },
+				{ pin: 'DOUT14', type: 'output' },
+				{ pin: 'DOUT15', type: 'output' },
+				{ pin: 'DOUT16', type: 'output' },
+				{ pin: 'DOUT17', type: 'output' },
+				{ pin: 'DOUT18', type: 'output' },
+				{ pin: 'DOUT19', type: 'output' },
+				{ pin: 'DOUT20', type: 'output' },
+				{ pin: 'DOUT21', type: 'output' },
+				{ pin: 'DOUT22', type: 'output' },
+				{ pin: 'DOUT23', type: 'output' },
+				{ pin: 'DOUT24', type: 'output' },
+				{ pin: 'DOUT25', type: 'output' },
+				{ pin: 'DOUT26', type: 'output' },
+				{ pin: 'DOUT27', type: 'output' },
+				{ pin: 'DOUT28', type: 'output' },
+				{ pin: 'DOUT29', type: 'output' },
+				{ pin: 'DOUT30', type: 'output' },
+				{ pin: 'DOUT31', type: 'output' },
+				{ pin: 'LIMIT_X', type: 'input_interruptable' },
+				{ pin: 'LIMIT_Y', type: 'input_interruptable' },
+				{ pin: 'LIMIT_Z', type: 'input_interruptable' },
+				{ pin: 'LIMIT_X2', type: 'input_interruptable' },
+				{ pin: 'LIMIT_Y2', type: 'input_interruptable' },
+				{ pin: 'LIMIT_Z2', type: 'input_interruptable' },
+				{ pin: 'LIMIT_A', type: 'input_interruptable' },
+				{ pin: 'LIMIT_B', type: 'input_interruptable' },
+				{ pin: 'LIMIT_C', type: 'input_interruptable' },
+				{ pin: 'PROBE', type: 'input_interruptable' },
+				{ pin: 'ESTOP', type: 'input_interruptable' },
+				{ pin: 'SAFETY_DOOR', type: 'input_interruptable' },
+				{ pin: 'FHOLD', type: 'input_interruptable' },
+				{ pin: 'CS_RES', type: 'input_interruptable' },
+				{ pin: 'ANALOG0', type: 'analog' },
+				{ pin: 'ANALOG1', type: 'analog' },
+				{ pin: 'ANALOG2', type: 'analog' },
+				{ pin: 'ANALOG3', type: 'analog' },
+				{ pin: 'ANALOG4', type: 'analog' },
+				{ pin: 'ANALOG5', type: 'analog' },
+				{ pin: 'ANALOG6', type: 'analog' },
+				{ pin: 'ANALOG7', type: 'analog' },
+				{ pin: 'ANALOG8', type: 'analog' },
+				{ pin: 'ANALOG9', type: 'analog' },
+				{ pin: 'ANALOG10', type: 'analog' },
+				{ pin: 'ANALOG11', type: 'analog' },
+				{ pin: 'ANALOG12', type: 'analog' },
+				{ pin: 'ANALOG13', type: 'analog' },
+				{ pin: 'ANALOG14', type: 'analog' },
+				{ pin: 'ANALOG15', type: 'analog' },
+				{ pin: 'DIN0', type: 'input_interruptable' },
+				{ pin: 'DIN1', type: 'input_interruptable' },
+				{ pin: 'DIN2', type: 'input_interruptable' },
+				{ pin: 'DIN3', type: 'input_interruptable' },
+				{ pin: 'DIN4', type: 'input_interruptable' },
+				{ pin: 'DIN5', type: 'input_interruptable' },
+				{ pin: 'DIN6', type: 'input_interruptable' },
+				{ pin: 'DIN7', type: 'input_interruptable' },
+				{ pin: 'DIN8', type: 'input' },
+				{ pin: 'DIN9', type: 'input' },
+				{ pin: 'DIN10', type: 'input' },
+				{ pin: 'DIN11', type: 'input' },
+				{ pin: 'DIN12', type: 'input' },
+				{ pin: 'DIN13', type: 'input' },
+				{ pin: 'DIN14', type: 'input' },
+				{ pin: 'DIN15', type: 'input' },
+				{ pin: 'DIN16', type: 'input' },
+				{ pin: 'DIN17', type: 'input' },
+				{ pin: 'DIN18', type: 'input' },
+				{ pin: 'DIN19', type: 'input' },
+				{ pin: 'DIN20', type: 'input' },
+				{ pin: 'DIN21', type: 'input' },
+				{ pin: 'DIN22', type: 'input' },
+				{ pin: 'DIN23', type: 'input' },
+				{ pin: 'DIN24', type: 'input' },
+				{ pin: 'DIN25', type: 'input' },
+				{ pin: 'DIN26', type: 'input' },
+				{ pin: 'DIN27', type: 'input' },
+				{ pin: 'DIN28', type: 'input' },
+				{ pin: 'DIN29', type: 'input' },
+				{ pin: 'DIN30', type: 'input' },
+				{ pin: 'DIN31', type: 'input' },
+				{ pin: 'TX', type: 'special output' },
+				{ pin: 'RX', type: 'special input' },
+				{ pin: 'USB_DM', type: 'special output' },
+				{ pin: 'USB_DP', type: 'special output' },
+				{ pin: 'SPI_CLK', type: 'special output' },
+				{ pin: 'SPI_SDI', type: 'special input' },
+				{ pin: 'SPI_SDO', type: 'special output' },
+				{ pin: 'SPI_CS', type: 'special output' },
+				{ pin: 'I2C_SCL', type: 'special input' },
+				{ pin: 'I2C_SDA', type: 'special input' }
+			];
+
+			$scope.PINS = [
+				{ pin: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 6, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 7, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 10, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 11, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 12, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 13, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 14, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 15, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 16, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+				{ pin: 17, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP33' },
+				{ pin: 18, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP34' },
+				{ pin: 19, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP35' },
+				{ pin: 20, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP36' },
+				{ pin: 21, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP37' },
+				{ pin: 22, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP38' },
+				{ pin: 23, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP39' },
+				{ pin: 24, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP40' },
+				{ pin: 25, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP41' },
+				{ pin: 26, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP42' },
+				{ pin: 27, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP43' },
+				{ pin: 28, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP44' },
+				{ pin: 29, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP45' },
+				{ pin: 30, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP46' },
+				{ pin: 31, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP47' }
+			];
+
+			$scope.PORTS = [
+				{ port: 'A', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'B', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'C', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'D', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'E', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'F', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'G', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'H', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'I', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'J', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'K', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'L', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'M', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: 'N', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ port: '0', mcu: 'MCU_LPC176X' },
+				{ port: '1', mcu: 'MCU_LPC176X' },
+				{ port: '2', mcu: 'MCU_LPC176X' }
+			];
+
+			$scope.ISRS = [
+				{ isr: 0, mcu: 'MCU_AVR' },
+				{ isr: 1, mcu: 'MCU_AVR' },
+				{ isr: 2, mcu: 'MCU_AVR' },
+				{ isr: -1, mcu: 'MCU_AVR' },
+				{ isr: -2, mcu: 'MCU_AVR' },
+				{ isr: -3, mcu: 'MCU_AVR' },
+				{ isr: -4, mcu: 'MCU_AVR' },
+				{ isr: -5, mcu: 'MCU_AVR' },
+				{ isr: -6, mcu: 'MCU_AVR' },
+				{ isr: -7, mcu: 'MCU_AVR' },
+				{ isr: -8, mcu: 'MCU_AVR' }
+			];
+
+			$scope.CHANNELS = [
+				{ channel: 0, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 4, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 5, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 6, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 7, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 10, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 11, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 12, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 13, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 14, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 15, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ channel: 'A', mcu: 'MCU_AVR' },
+				{ channel: 'B', mcu: 'MCU_AVR' },
+				{ channel: 'C', mcu: 'MCU_AVR' },
+				{ channel: 'D', mcu: 'MCU_AVR' }
+			];
+
+			$scope.TIMERS = [
+				{ timer: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ timer: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ timer: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ timer: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+				{ timer: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 6, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 7, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 10, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 11, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 12, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 13, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 14, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
+				{ timer: 15, mcu: 'MCU_STM32F1X,MCU_STM32F4X' }
+			];
+
+			$scope.MUXS = [
+				{ mux: 'A', mcu: 'MCU_SAMD21' },
+				{ mux: 'B', mcu: 'MCU_SAMD21' },
+				{ mux: 'C', mcu: 'MCU_SAMD21' },
+				{ mux: 'D', mcu: 'MCU_SAMD21' },
+				{ mux: 'E', mcu: 'MCU_SAMD21' },
+				{ mux: 'F', mcu: 'MCU_SAMD21' },
+				{ mux: 'G', mcu: 'MCU_SAMD21' },
+				{ mux: 'H', mcu: 'MCU_SAMD21' }
+			];
+
+			$scope.CONTROLS = [
+				'ESTOP',
+				'SAFETY_DOOR',
+				'FHOLD',
+				'CS_RES'
+			];
+
+			$scope.LIMITS = [
+				{ limit: 'LIMIT_X', axis: '1,2,3,4,5,6' },
+				{ limit: 'LIMIT_Y', axis: '2,3,4,5,6' },
+				{ limit: 'LIMIT_Z', axis: '3,4,5,6' },
+				{ limit: 'LIMIT_X2', axis: '1,2,3,4,5,6' },
+				{ limit: 'LIMIT_Y2', axis: '2,3,4,5,6' },
+				{ limit: 'LIMIT_Z2', axis: '3,4,5,6' },
+				{ limit: 'LIMIT_A', axis: '4,5,6' },
+				{ limit: 'LIMIT_B', axis: '5,6' },
+				{ limit: 'LIMIT_C', axis: '6' },
+			];
+
+			$scope.TOOLS = [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16
+			];
+
+			$scope.MCU = "MCU_AVR";
+			$scope.BOARD = "BOARD_UNO";
+			$scope.KINEMATIC = "KINEMATIC_CARTESIAN";
+			$scope.AXIS_COUNT = "3";
+			$scope.TOOL_COUNT = "1";
+
+			$scope.numSmallerOrEq = function () {
+				return function (item) {
+					if (parseInt(item) <= parseInt($scope.TOOL_COUNT)) {
+						return item;
+					}
+				}
+			}
+
+			$scope.boardChanged = function () {
+
+				var settings = [];
+				var url = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version + "/uCNC/src/hal/boards/";
+				switch (document.querySelector('#BOARD').value) {
+					case 'BOARD_UNO':
+						url = url + "avr/boardmap_uno.h";
+						break;
+					case 'BOARD_X_CONTROLLER':
+						url = url + "avr/boardmap_x_controller.h";
+						break;
+					case 'BOARD_UNO':
+						url = url + "avr/boardmap_uno.h";
+						break;
+					case 'BOARD_MKS_DLC':
+						url = url + "avr/boardmap_mks_dlc.h";
+						break;
+					case 'BOARD_RAMBO14':
+						url = url + "avr/boardmap_rambo14.h";
+						break;
+					case 'BOARD_RAMPS14':
+						url = url + "avr/boardmap_ramps14.h";
+						break;
+					case 'BOARD_MKS_GEN_L_V1':
+						url = url + "avr/boardmap_ramps14.h";
+						break;
+					case 'BOARD_BLUEPILL':
+						url = url + "stm32/boardmap_bluepill.h";
+						break;
+					case 'BOARD_BLACKPILL':
+						url = url + "stm32/boardmap_blackpill.h";
+						break;
+					case 'BOARD_MKS_ROBIN_NANO_V1_2':
+						url = url + "stm32/boardmap_mks_robin_nano_v1_2.h";
+						break;
+					case 'BOARD_SKR_PRO_V1_2':
+						url = url + "stm32/boardmap_srk_pro_v1_2.h";
+						break;
+					case 'BOARD_MZERO':
+						url = url + "samd21/boardmap_mzero.h";
+						break;
+					case 'BOARD_ZERO':
+						url = url + "samd21/boardmap_zero.h";
+						break;
+					case 'BOARD_RE_ARM':
+						url = url + "lpc176x/boardmap_re_arm.h";
+						break;
+					case 'BOARD_MKS_BASE13':
+						url = url + "lpc176x/boardmap_mks_base13.h";
+						break;
+					case 'BOARD_SKR_V14_TURBO':
+						url = url + "lpc176x/boardmap_skr_v14_turbo.h";
+						break;
+					case 'BOARD_WEMOS_D1':
+						url = url + "boardmap_wemos_d1.h";
+						break;
+					case 'BOARD_WEMOS_D1_R32':
+						url = url + "esp32/boardmap_wemos_d1_r32.h";
+						break;
+					case 'BOARD_MKS_TINYBEE':
+						url = url + "esp32/boardmap_mks_tinybee.h";
+						break;
+					case 'BOARD_MKS_DLC32':
+						url = url + "esp32/boardmap_mks_dlc32.h";
+						break;
+				}
+
+				parsePreprocessor(url, settings, function (newsettings) {
+					settings = newsettings;
+					for (var s in settings) {
+						if (settings.hasOwnProperty(s)) {
+							var node = document.querySelector("#" + s);
+							if (node) {
+								switch (node.type) {
+									case 'select-one':
+										node.value = settings[s];
+										break;
+									case 'checkbox':
+										node.checked = true;
+										break;
+									default:
+										node.value = settings[s];
+										break;
+								}
+							}
+						}
+					}
+				});
+			}
+		});
+
+		app.directive('ngModelDynamic', ['$compile',
+			function ($compile) {
+				return {
+
+					restrict: 'A',
+					link: function (scope, element, attrs) {
+						// Remove ng-model-dynamic to prevent recursive compilation
+						element.removeAttr('ng-model-dynamic');
+
+						// Add ng-model with a value set to the now evaluated expression
+						element.attr('ng-model', attrs.ngModelDynamic);
+
+						// Recompile the entire element
+						$compile(element)(scope);
+					}
+
+				}
+			}]);
+
+	</script>
+	<script>
+		function download(filename, text) {
+			var element = document.createElement('a');
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+			element.setAttribute('download', filename);
+
+			element.style.display = 'none';
+			document.body.appendChild(element);
+
+			element.click();
+
+			document.body.removeChild(element);
+		}
+
+		function generate_user_config() {
+
+		}
+	</script>
+</body>
+
+</html>
