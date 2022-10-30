@@ -1,0 +1,16 @@
+fieldset>div,
+div.mb-3 {
+	margin: 20px;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+main {
+	max-width: 1600px;
+	margin: 20px;
+}
