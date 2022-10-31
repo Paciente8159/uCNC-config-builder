@@ -11,6 +11,33 @@ body {
 }
 
 main {
-	max-width: 1600px;
+	max-width: 1240px;
 	margin: 20px;
+}
+
+.logo {
+	max-width: 400px;
+}
+
+.center-content{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+fieldset {
+	border-radius: 6px;
+	border: 1px solid #ddd;
+	padding: 20px;
+	position: relative;
+	margin: 20px 0;
+}
+
+fieldset>legend {
+	position: absolute;
+	top: -20px;
+	left: 20px;
+	background: #fff;
+	width: fit-content;
 }

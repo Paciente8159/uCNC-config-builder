@@ -93,110 +93,136 @@
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configboardmap" role="tabpanel" aria-labelledby="configboardmap-tab">
-				<div class="mb-3">
-					<label for="" class="form-label">What board will you be using?</label>
-					<select class="form-select form-select-md" name="BOARD" id="BOARD" ng-model="BOARD"
-						ng-change="boardChanged()">
-						<option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option>
-					</select>
-				</div>
-
-				<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
-					<label for="" class="form-label">In which port are PCINT pins 0 to 7?</label>
-					<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT'
-						ng-model="PCINT0_PORT">
-						<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
-						</option>
-					</select>
-					<label for="" class="form-label">In which port are PCINT pins 8 to 15?</label>
-					<select class='form-select form-select-sm' name='PCINT1_PORT' id='PCINT1_PORT'
-						ng-model="PCINT1_PORT">
-						<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
-						</option>
-					</select>
-					<label for="" class="form-label">In which port are PCINT pins 16 to 23?</label>
-					<select class='form-select form-select-sm' name='PCINT2_PORT' id='PCINT2_PORT'
-						ng-model="PCINT2_PORT">
-						<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
-						</option>
-					</select>
-				</div>
-
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col">µCNC pin</th>
-							<th scope="col">Pin number</th>
-							<th scope="col">Pin port</th>
-							<th scope="col">Pullup</th>
-							<th scope="col">ISR</th>
-							<th scope="col">CHANNEL</th>
-							<th scope="col">TIMER</th>
-							<th scope="col">MUX</th>
-						</tr>
-					</thead>
-					<tr ng-repeat="x in UCNCPINS">
-						<th scope='row'>{{x.pin}}</th>
-						<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
-								ng-model-dynamic="{{x.pin}}_BIT">
-								<option value='{{y.pin}}' ng-repeat="y in PINS | filter: {'mcu': MCU}">{{y.pin}}
-								</option>
-							</select></td>
-						<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
-								ng-model-dynamic="{{x.pin}}_PORT">
-								<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
-								</option>
-							</select></td>
-						<td>
-							<div class="form-check form-switch"
-								ng-if='x.type=="input" || x.type=="input_interruptable"'>
-								<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
-									id='{{x.pin}}_PULLUP' ng-model-dynamic="{{x.pin}}_PULLUP">
-							</div>
-						</td>
-						<td>
-							<div class="form-check form-switch" ng-if='x.type=="input_interruptable"'>
-								<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
-									ng-model-dynamic="{{x.pin}}_ISR" ng-if='MCU!="MCU_AVR"'>
-								<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
-									<select class='form-select form-select-sm' name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
-										ng-model-dynamic="{{x.pin}}_ISR">
-										<option value='{{y.isr}}' ng-repeat="y in ISRS | filter: {'mcu': MCU}">
-											{{y.isr}}
-										</option>
-									</select>
-									<small id="helpId" class="form-text text-muted"><a href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature" target="_blank">wiki</a></small>
+				<fieldset>
+					<legend>Basic board settings</legend>
+					<div class="mb-3">
+						<label for="" class="form-label">What board will you be using?</label>
+						<select class="form-select form-select-md" name="BOARD" id="BOARD" ng-model="BOARD"
+							ng-change="boardChanged()">
+							<option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Special purpose timmers and features</legend>
+					<div class="mb-3">
+						<label for="" class="form-label">The board name printed with $I command?</label>
+						<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME" ng-model="BOARD_NAME"
+							aria-describedby="helpId" placeholder="">
+						<small id="helpId" class="form-text text-muted">Name must be between quotation marks
+							(string)</small>
+					</div>
+					<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
+						<label for="" class="form-label">In which port are PCINT pins 0 to 7?</label>
+						<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT'
+							ng-model="PCINT0_PORT">
+							<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
+							</option>
+						</select>
+						<label for="" class="form-label">In which port are PCINT pins 8 to 15?</label>
+						<select class='form-select form-select-sm' name='PCINT1_PORT' id='PCINT1_PORT'
+							ng-model="PCINT1_PORT">
+							<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
+							</option>
+						</select>
+						<label for="" class="form-label">In which port are PCINT pins 16 to 23?</label>
+						<select class='form-select form-select-sm' name='PCINT2_PORT' id='PCINT2_PORT'
+							ng-model="PCINT2_PORT">
+							<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
+							</option>
+						</select>
+					</div>
+					<div ng-repeat="x in UCNCTIMERS | filter: {'mcu': MCU}">
+						<label for="{{x.timer}}_TIMER" class="form-label">Which Timer will be used as
+							{{x.timer}}_TIMER?</label>
+						<select class='form-select form-select-sm' name='{{x.timer}}_TIMER' id='{{x.timer}}_TIMER'
+							ng-model-dynamic="{{x.timer}}_TIMER">
+							<option value='{{y.timer}}' ng-repeat="y in TIMERS | filter: {'mcu': MCU}">
+								{{y.timer}}
+							</option>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Board pin mapping</legend>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">µCNC pin</th>
+								<th scope="col">Pin number</th>
+								<th scope="col">Pin port</th>
+								<th scope="col">Pullup</th>
+								<th scope="col">ISR</th>
+								<th scope="col">CHANNEL</th>
+								<th scope="col">TIMER</th>
+								<th scope="col">MUX</th>
+							</tr>
+						</thead>
+						<tr ng-repeat="x in UCNCPINS">
+							<th scope='row'>{{x.pin}}</th>
+							<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+									ng-model-dynamic="{{x.pin}}_BIT">
+									<option value='{{y.pin}}' ng-repeat="y in PINS | filter: {'mcu': MCU}">{{y.pin}}
+									</option>
+								</select></td>
+							<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+									ng-model-dynamic="{{x.pin}}_PORT">
+									<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
+									</option>
+								</select></td>
+							<td>
+								<div class="form-check form-switch"
+									ng-if='x.type=="input" || x.type=="input_interruptable"'>
+									<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
+										id='{{x.pin}}_PULLUP' ng-model-dynamic="{{x.pin}}_PULLUP">
 								</div>
-							</div>
-						</td>
-						<td>
-							<div ng-if='x.type=="pwm" || x.type=="analog"'><select class='form-select form-select-sm'
-									name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
-									ng-model-dynamic="{{x.pin}}_CHANNEL">
-									<option value='{{y.channel}}' ng-repeat="y in CHANNELS | filter: {'mcu': MCU}">
-										{{y.channel}}
-									</option>
-								</select></div>
-						</td>
-						<td>
-							<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_TIMER'
-									id='{{x.pin}}_TIMER' ng-model-dynamic="{{x.pin}}_TIMER">
-									<option value='{{y.timer}}' ng-repeat="y in TIMERS | filter: {'mcu': MCU}">
-										{{y.timer}}
-									</option>
-								</select></div>
-						</td>
-						<td>
-							<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_MUX'
-									id='{{x.pin}}_MUX' ng-model-dynamic="{{x.pin}}_MUX">
-									<option value='{{y.mux}}' ng-repeat="y in MUXS | filter: {'mcu': MCU}">{{y.mux}}
-									</option>
-								</select></div>
-						</td>
-					</tr>
-					<tbody>
-					</tbody>
-				</table>
+							</td>
+							<td>
+								<div class="form-check form-switch" ng-if='x.type=="input_interruptable"'>
+									<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR'
+										id='{{x.pin}}_ISR' ng-model-dynamic="{{x.pin}}_ISR" ng-if='MCU!="MCU_AVR"'>
+									<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
+										<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
+											id='{{x.pin}}_ISR' ng-model-dynamic="{{x.pin}}_ISR">
+											<option value='{{y.isr}}' ng-repeat="y in ISRS | filter: {'mcu': MCU}">
+												{{y.isr}}
+											</option>
+										</select>
+										<small id="helpId" class="form-text text-muted"><a
+												href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
+												target="_blank">wiki</a></small>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div ng-if='x.type=="pwm" || x.type=="analog"'><select
+										class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
+										id='{{x.pin}}_CHANNEL' ng-model-dynamic="{{x.pin}}_CHANNEL">
+										<option value='{{y.channel}}' ng-repeat="y in CHANNELS | filter: {'mcu': MCU}">
+											{{y.channel}}
+										</option>
+									</select></div>
+							</td>
+							<td>
+								<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
+										name='{{x.pin}}_TIMER' id='{{x.pin}}_TIMER' ng-model-dynamic="{{x.pin}}_TIMER">
+										<option value='{{y.timer}}' ng-repeat="y in TIMERS | filter: {'mcu': MCU}">
+											{{y.timer}}
+										</option>
+									</select></div>
+							</td>
+							<td>
+								<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
+										name='{{x.pin}}_MUX' id='{{x.pin}}_MUX' ng-model-dynamic="{{x.pin}}_MUX">
+										<option value='{{y.mux}}' ng-repeat="y in MUXS | filter: {'mcu': MCU}">{{y.mux}}
+										</option>
+									</select></div>
+							</td>
+						</tr>
+						<tbody>
+						</tbody>
+					</table>
+				</fieldset>
 			</div>
 			<div class="tab-pane" id="confighal" role="tabpanel" aria-labelledby="confighal-tab">
 				<fieldset>
@@ -211,9 +237,9 @@
 					</div>
 					<div ng-hide="DISABLE_ALL_CONTROLS">
 						<div class="form-check form-check-inline" ng-repeat="y in CONTROLS">
-							<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP" value="{{y}}_PULLUP"
-								ng-model-dynamic="{{y.control}}_PULLUP">
-							<label class="form-check-label" for="{{y}}_PULLUP">Enable {{y}} internal pullup
+							<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP_ENABLE" value="{{y}}_PULLUP_ENABLE"
+								ng-model-dynamic="{{y.control}}_PULLUP_ENABLE">
+							<label class="form-check-label" for="{{y}}_PULLUP_ENABLE">Enable {{y}} internal pullup
 								resistor</label>
 						</div>
 					</div>
@@ -236,10 +262,10 @@
 					<div ng-hide="DISABLE_ALL_LIMITS">
 						<div class="form-check form-check-inline"
 							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
-							<input class="form-check-input" type="checkbox" id="{{y.limit}}_PULLUP"
-								value="{{y.limit}}_PULLUP" ng-disabled="$parent.{{y.limit}}_DISABLE"
-								ng-model-dynamic="{{y.limit}}_PULLUP">
-							<label class="form-check-label" for="{{y.limit}}_PULLUP">Enable {{y.limit}} internal pullup
+							<input class="form-check-input" type="checkbox" id="{{y.limit}}_PULLUP_ENABLE"
+								value="{{y.limit}}_PULLUP_ENABLE" ng-disabled="$parent.{{y.limit}}_DISABLE"
+								ng-model-dynamic="{{y.limit}}_PULLUP_ENABLE">
+							<label class="form-check-label" for="{{y.limit}}_PULLUP_ENABLE">Enable {{y.limit}} internal pullup
 								resistor</label>
 						</div>
 					</div>
@@ -252,7 +278,7 @@
 					</div>
 					<div ng-hide="DISABLE_PROBE">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" id="PROBE_PULLUP" value="PROBE_PULLUP">
+							<input class="form-check-input" type="checkbox" id="PROBE_PULLUP_ENABLE" value="PROBE_PULLUP_ENABLE" ng-model="PROBE_PULLUP_ENABLE">
 							<label class="form-check-label" for="">Enable PROBE internal pullup resistor</label>
 						</div>
 					</div>
@@ -418,9 +444,10 @@
 						</select>
 					</div>
 				</fieldset>
-				<!--<fieldset>
+				<fieldset>
 					<legend>TMC drivers</legend>
-					<div class="form-check form-switch">
+					<p>Under development</p>
+					<!--<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="STEPPER0_HAS_TMC"
 							ng-model="STEPPER0_HAS_TMC">
 						<label class="form-check-label" for="STEPPER0_HAS_TMC">Stepper0 has TMC driver</label>
@@ -486,24 +513,37 @@
 								</div>
 							</div>
 						</div>
-					</div>
-				</fieldset>-->
+					</div>-->
+				</fieldset>
 			</div>
-			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab"> Under development
+			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab"> Under
+				development
 			</div>
 			<div class="tab-pane" id="configfiles" role="tabpanel" aria-labelledby="configfiles-tab">
 				<div class="card">
-					<img class="card-img-top" src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
+					<div class="center-content">
+						<img class="card-img-top logo"
+							src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png"
+							alt="µCNC logo">
+					</div>
 					<div class="card-body">
 						<h4 class="card-title">Config µCNC</h4>
-						<p class="card-text">To setup your build of µCNC follow these steps</p>
+						<p class="card-text"><i>To build your custom version of µCNC follow these steps:</i></p>
 					</div>
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item"><a href="https://github.com/Paciente8159/uCNC/"
 								target="_blank">Download and unzip the latest version of µCNC</a></li>
-						<li class="list-group-item"><a name="user_config" id="user_config" class="btn btn-primary"
-								href="#" role="button">Download cnc_user_config.h</a></li>
-						<li class="list-group-item">Item 3</li>
+						<li class="list-group-item"><a name="boardmap_overrides" id="boardmap_overrides"
+								class="btn btn-primary" href="#" role="button">Download boardmap_overrides.h</a>
+							<small id="helpId" class="form-text text-muted">And replace the existing file inside
+								uCNC/src/boards/</small>
+						<li class="list-group-item"><a name="cnc_hal_overrides" id="cnc_hal_overrides"
+								class="btn btn-primary" href="#" role="button">Download cnc_hal_overrides.h</a>
+							<small id="helpId" class="form-text text-muted">And replace the existing file inside
+								uCNC/src/</small>
+						</li>
+						<li class="list-group-item">Compile and upload the project either via Platform IO (recommended)
+							or Arduino IDE.</li>
 					</ul>
 				</div>
 			</div>
