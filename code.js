@@ -99,7 +99,7 @@ function updateBoardmap() {
 	});
 }
 
-var version = 'v1.5.4';
+var version = 'v1.5.5';
 var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	$scope.MCUS = [
