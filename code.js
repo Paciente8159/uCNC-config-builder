@@ -17,85 +17,141 @@ function parsePreprocessor(file, settings = [], callback) {
 	txtFile.send(null);
 }
 
+function updateFields(settings = []) {
+	for (var s in settings) {
+		if (settings.hasOwnProperty(s)) {
+			var node = document.querySelector("#" + s);
+			if (node) {
+				switch (node.type) {
+					case 'select-one':
+						node.value = settings[s];
+						break;
+					case 'checkbox':
+						node.checked = true;
+						break;
+					default:
+						node.value = settings[s];
+						break;
+				}
+			}
+		}
+	}
+}
+
 function updateBoardmap() {
 	var settings = [];
-	var url = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version + "/uCNC/src/hal/boards/";
-	switch (document.querySelector('#BOARD').value) {
-		case 'BOARD_UNO':
-		case 'BOARD_MKS_DLC':
-		case 'BOARD_X_CONTROLLER':
-			url = url + "avr/boardmap_uno.h";
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
+
+	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
+	switch (document.querySelector('#MCU').value) {
+		case 'MCU_AVR':
+			mcuurl = mcuurl + "avr/mcumap_avr.h";
 			break;
-		case 'BOARD_RAMBO14':
-		case 'BOARD_MKS_GEN_L_V1':
-			url = url + "avr/boardmap_rambo14.h";
+		case 'MCU_STM32F1X':
+			mcuurl = mcuurl + "stm32f1x/mcumap_stm32f1x.h";
 			break;
-		case 'BOARD_RAMPS14':
-			url = url + "avr/boardmap_ramps14.h";
+		case 'MCU_STM32F4X':
+			mcuurl = mcuurl + "stm32f4x/mcumap_stm32f4x.h";
 			break;
-		case 'BOARD_BLUEPILL':
-			url = url + "stm32/boardmap_bluepill.h";
+		case 'MCU_SAMD21':
+			mcuurl = mcuurl + "samd21/mcumap_samd21.h";
 			break;
-		case 'BOARD_BLACKPILL':
-			url = url + "stm32/boardmap_blackpill.h";
+		case 'MCU_LPC176X':
+			mcuurl = mcuurl + "lpc176x/mcumap_lpc176x.h";
 			break;
-		case 'BOARD_MKS_ROBIN_NANO_V1_2':
-			url = url + "stm32/boardmap_mks_robin_nano_v1_2.h";
+		case 'MCU_ESP8266':
+			mcuurl = mcuurl + "esp8266/mcumap_esp8266.h";
 			break;
-		case 'BOARD_SKR_PRO_V1_2':
-			url = url + "stm32/boardmap_srk_pro_v1_2.h";
-			break;
-		case 'BOARD_MZERO':
-			url = url + "samd21/boardmap_mzero.h";
-			break;
-		case 'BOARD_ZERO':
-			url = url + "samd21/boardmap_zero.h";
-			break;
-		case 'BOARD_RE_ARM':
-			url = url + "lpc176x/boardmap_re_arm.h";
-			break;
-		case 'BOARD_MKS_BASE13':
-			url = url + "lpc176x/boardmap_mks_base13.h";
-			break;
-		case 'BOARD_SKR_V14_TURBO':
-			url = url + "lpc176x/boardmap_skr_v14_turbo.h";
-			break;
-		case 'BOARD_WEMOS_D1':
-			url = url + "boardmap_wemos_d1.h";
-			break;
-		case 'BOARD_WEMOS_D1_R32':
-			url = url + "esp32/boardmap_wemos_d1_r32.h";
-			break;
-		case 'BOARD_MKS_TINYBEE':
-			url = url + "esp32/boardmap_mks_tinybee.h";
-			break;
-		case 'BOARD_MKS_DLC32':
-			url = url + "esp32/boardmap_mks_dlc32.h";
+		case 'MCU_ESP32':
+			mcuurl = mcuurl + "esp32/mcumap_esp32.h";
 			break;
 		default:
 			return;
 	}
 
-	parsePreprocessor(url, settings, function (newsettings) {
+	parsePreprocessor(mcuurl, settings, function (newsettings) {
 		settings = newsettings;
-		for (var s in settings) {
-			if (settings.hasOwnProperty(s)) {
-				var node = document.querySelector("#" + s);
-				if (node) {
-					switch (node.type) {
-						case 'select-one':
-							node.value = settings[s];
-							break;
-						case 'checkbox':
-							node.checked = true;
-							break;
-						default:
-							node.value = settings[s];
-							break;
-					}
-				}
-			}
+		var boardurl = coreurl + "/uCNC/src/hal/boards/";
+		switch (document.querySelector('#BOARD').value) {
+			case 'BOARD_UNO':
+				boardurl = boardurl + "avr/boardmap_uno.h";
+				break;
+			case 'BOARD_MKS_DLC':
+				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+					settings = newsettings;
+					parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
+						updateFields(newsettings);
+					});
+				});
+				return;
+			case 'BOARD_X_CONTROLLER':
+				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+					settings = newsettings;
+					parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
+						updateFields(newsettings);
+					});
+				});
+				return;
+			case 'BOARD_RAMBO14':
+				boardurl = boardurl + "avr/boardmap_rambo14.h";
+				break;
+			case 'BOARD_MKS_GEN_L_V1':
+				parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
+					settings = newsettings;
+					parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
+						updateFields(newsettings);
+					});
+				});
+				return;
+			case 'BOARD_RAMPS14':
+				boardurl = boardurl + "avr/boardmap_ramps14.h";
+				break;
+			case 'BOARD_BLUEPILL':
+				boardurl = boardurl + "stm32/boardmap_bluepill.h";
+				break;
+			case 'BOARD_BLACKPILL':
+				boardurl = boardurl + "stm32/boardmap_blackpill.h";
+				break;
+			case 'BOARD_MKS_ROBIN_NANO_V1_2':
+				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
+				break;
+			case 'BOARD_SKR_PRO_V1_2':
+				boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
+				break;
+			case 'BOARD_MZERO':
+				boardurl = boardurl + "samd21/boardmap_mzero.h";
+				break;
+			case 'BOARD_ZERO':
+				boardurl = boardurl + "samd21/boardmap_zero.h";
+				break;
+			case 'BOARD_RE_ARM':
+				boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
+				break;
+			case 'BOARD_MKS_BASE13':
+				boardurl = boardurl + "lpc176x/boardmap_mks_base13.h";
+				break;
+			case 'BOARD_SKR_V14_TURBO':
+				boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
+				break;
+			case 'BOARD_WEMOS_D1':
+				boardurl = boardurl + "boardmap_wemos_d1.h";
+				break;
+			case 'BOARD_WEMOS_D1_R32':
+				boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
+				break;
+			case 'BOARD_MKS_TINYBEE':
+				boardurl = boardurl + "esp32/boardmap_mks_tinybee.h";
+				break;
+			case 'BOARD_MKS_DLC32':
+				boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
+				break;
+			default:
+				return;
 		}
+
+		parsePreprocessor(boardurl, settings, function (newsettings) {
+			updateFields(newsettings);
+		});
 	});
 }
 
