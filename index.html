@@ -20,7 +20,11 @@
 <body ng-app="uCNCapp" ng-controller="uCNCcontroller">
 	<header>
 		<!-- place navbar here -->
-		<h1>µCNC config generator</h1>
+		<div class="center-content">
+			<img class="card-img-top logo-sm"
+				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png"
+				alt="µCNC logo">
+		</div><h1>µCNC config generator</h1>
 	</header>
 	<main>
 		<!-- Nav tabs -->
@@ -305,8 +309,8 @@
 
 						<div class="mb-3">
 							<label for="" class="form-label">Select FIRST multi-drive axis second stepper</label>
-							<select class="form-select form-select-md" name="DUAL_DRIVE0_AXIS" id="DUAL_DRIVE0_AXIS"
-								ng-model="DUAL_DRIVE0_AXIS">
+							<select class="form-select form-select-md" name="DUAL_DRIVE0_STEPPER" id="DUAL_DRIVE0_STEPPER"
+								ng-model="DUAL_DRIVE0_STEPPER">
 								<option selected>Select one</option>
 								<option value="0">0</option>
 								<option value="1">1</option>
@@ -339,8 +343,8 @@
 
 						<div class="mb-3">
 							<label for="" class="form-label">Select SECOND multi-drive axis second stepper</label>
-							<select class="form-select form-select-md" name="DUAL_DRIVE1_AXIS" id="DUAL_DRIVE1_AXIS"
-								ng-model="DUAL_DRIVE1_AXIS">
+							<select class="form-select form-select-md" name="DUAL_DRIVE1_STEPPER" id="DUAL_DRIVE1_STEPPER"
+								ng-model="DUAL_DRIVE1_STEPPER">
 								<option value="0">0</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -442,6 +446,12 @@
 							<option value="DOUT30">DOUT30</option>
 							<option value="DOUT31">DOUT31</option>
 						</select>
+
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="INVERT_LASER_PPI_LOGIC"
+								ng-model="INVERT_LASER_PPI_LOGIC">
+							<label class="form-check-label" for="INVERT_LASER_PPI_LOGIC">Invert Laser PPI signal logic</label>
+						</div>
 					</div>
 				</fieldset>
 				<fieldset>

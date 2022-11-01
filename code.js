@@ -510,8 +510,49 @@ function download(filename, text) {
 	document.body.removeChild(element);
 }
 
-function generate_user_config() {
-	var gentext = '#ifndef BOARDMAP_OVERRIDES_H\n#define BOARDMAP_OVERRIDES_H\n#ifdef __cplusplus\nextern "C"\n{\n#endif';
+function generate_user_config(options, defguard) {
+	var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n';
+
+	for (var i = 0; i < options.length; i++) {
+		var node = document.querySelector("#" + options[i]);
+		if (node) {
+			gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
+			switch (node.type) {
+				case 'select-one':
+					if (node.value !== '? undefined:undefined ?') {
+						gentext += "#define " + options[i] + " " + node.value + "\n";
+					}
+					break;
+				case 'checkbox':
+					if (node.checked) {
+						gentext += "#define " + options[i] + "\n";
+					}
+					break;
+				default:
+					gentext += "#define " + options[i] + " " + node.value + "\n";
+					break;
+			}
+		}
+
+	}
+
+	gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	return gentext;
+}
+
+function ready(fn) {
+	if (document.readyState !== 'loading') {
+		fn();
+	} else {
+		document.addEventListener('DOMContentLoaded', fn);
+	}
+}
+
+ready(function () {
+	updateBoardmap();
+});
+
+document.querySelector('#boardmap_overrides').addEventListener('click', function () {
 	var options = [
 		'BOARD',
 		'MCU',
@@ -962,46 +1003,63 @@ function generate_user_config() {
 		'ONESHOT_TIMER',
 		'BOARD_NAME'
 	];
-
-	for (var i = 0; i < options.length; i++) {
-		var node = document.querySelector("#" + options[i]);
-		if (node) {
-			gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
-			switch (node.type) {
-				case 'select-one':
-					if (node.value !== '? undefined:undefined ?') {
-						gentext += "#define " + options[i] + " " + node.value + "\n";
-					}
-					break;
-				case 'checkbox':
-					if (node.checked) {
-						gentext += "#define " + options[i] + "\n";
-					}
-					break;
-				default:
-					gentext += "#define " + options[i] + " " + node.value + "\n";
-					break;
-			}
-		}
-
-	}
-
-	gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif';
-	return gentext;
-}
-
-function ready(fn) {
-	if (document.readyState !== 'loading') {
-		fn();
-	} else {
-		document.addEventListener('DOMContentLoaded', fn);
-	}
-}
-
-ready(function () {
-	updateBoardmap();
+	download('boardmap_overrides.h', generate_user_config(options, 'BOADMAP_OVERRIDES_H'));
 });
 
-document.querySelector('#boardmap_overrides').addEventListener('click', function () {
-	download('boardmap_overrides.h', generate_user_config());
+document.querySelector('#cnc_hal_overrides').addEventListener('click', function () {
+	var options = [
+		'LIMIT_X_PULLUP_ENABLE',
+		'LIMIT_Y_PULLUP_ENABLE',
+		'LIMIT_Z_PULLUP_ENABLE',
+		'LIMIT_X2_PULLUP_ENABLE',
+		'LIMIT_Y2_PULLUP_ENABLE',
+		'LIMIT_Z2_PULLUP_ENABLE',
+		'LIMIT_A_PULLUP_ENABLE',
+		'LIMIT_B_PULLUP_ENABLE',
+		'LIMIT_C_PULLUP_ENABLE',
+		'PROBE_PULLUP_ENABLE',
+		'ESTOP_PULLUP_ENABLE',
+		'SAFETY_DOOR_PULLUP_ENABLE',
+		'FHOLD_PULLUP_ENABLE',
+		'CS_RES_PULLUP_ENABLE',
+		'DISABLE_ALL_LIMITS',
+		'DISABLE_PROBE',
+		'DISABLE_ALL_CONTROLS',
+		'LIMIT_X_DISABLE',
+		'LIMIT_Y_DISABLE',
+		'LIMIT_Z_DISABLE',
+		'LIMIT_X2_DISABLE',
+		'LIMIT_Y2_DISABLE',
+		'LIMIT_Z2_DISABLE',
+		'LIMIT_A_DISABLE',
+		'LIMIT_B_DISABLE',
+		'LIMIT_C_DISABLE',
+		'TOOL1',
+		'TOOL2',
+		'TOOL3',
+		'TOOL4',
+		'TOOL5',
+		'TOOL6',
+		'TOOL7',
+		'TOOL8',
+		'TOOL9',
+		'TOOL10',
+		'TOOL11',
+		'TOOL12',
+		'TOOL13',
+		'TOOL14',
+		'TOOL15',
+		'TOOL16',
+		'ENABLE_DUAL_DRIVE_AXIS',
+		'DUAL_DRIVE0_AXIS',
+		'DUAL_DRIVE0_STEPPER',
+		'DUAL_DRIVE0_ENABLE_SELFSQUARING',
+		'DUAL_DRIVE1_AXIS',
+		'DUAL_DRIVE1_STEPPER',
+		'DUAL_DRIVE1_ENABLE_SELFSQUARING',
+		'ENABLE_LASER_PPI',
+		'LASER_PPI',
+		'INVERT_LASER_PPI_LOGIC'
+	];
+	download('cnc_hal_overrides.h', generate_user_config(options, 'CNC_HAL_OVERRIDES_H'));
 });
