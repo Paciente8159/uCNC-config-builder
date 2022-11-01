@@ -1008,6 +1008,16 @@ document.querySelector('#boardmap_overrides').addEventListener('click', function
 
 document.querySelector('#cnc_hal_overrides').addEventListener('click', function () {
 	var options = [
+		'ENABLE_SKEW_COMPENSATION',
+		'SKEW_COMPENSATION_XY_ONLY',
+		'ENABLE_LINACT_PLANNER',
+		'ENABLE_LINACT_COLD_START',
+		'ENABLE_BACKLASH_COMPENSATION',
+		'ENABLE_S_CURVE_ACCELERATION',
+		'BRESENHAM_16BIT',
+		'ENABLE_EXTRA_SYSTEM_CMDS',
+		'RAM_ONLY_SETTINGS',
+		'STATUS_AUTOMATIC_REPORT_INTERVAL',
 		'LIMIT_X_PULLUP_ENABLE',
 		'LIMIT_Y_PULLUP_ENABLE',
 		'LIMIT_Z_PULLUP_ENABLE',

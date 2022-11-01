@@ -22,9 +22,9 @@
 		<!-- place navbar here -->
 		<div class="center-content">
 			<img class="card-img-top logo-sm"
-				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png"
-				alt="µCNC logo">
-		</div><h1>µCNC config generator</h1>
+				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
+		</div>
+		<h1>µCNC config generator</h1>
 	</header>
 	<main>
 		<!-- Nav tabs -->
@@ -94,6 +94,77 @@
 							ng-model="TOOL_COUNT" ng-options="item as x for x in TOOLS track by x">
 						</select>
 					</div>
+				</fieldset>
+
+				<fieldset>
+					<legend>Advanced settings</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_SKEW_COMPENSATION"
+							ng-model="ENABLE_SKEW_COMPENSATION">
+						<label class="form-check-label" for="ENABLE_SKEW_COMPENSATION">Enable X-Y-Z axis skew
+							compensation</label>
+					</div>
+					<div ng-show="ENABLE_SKEW_COMPENSATION">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="SKEW_COMPENSATION_XY_ONLY"
+								value="SKEW_COMPENSATION_XY_ONLY" ng-model="SKEW_COMPENSATION_XY_ONLY">
+							<label class="form-check-label" for="SKEW_COMPENSATION_XY_ONLY">Enable skew compensation for
+								X-Y axis only</label>
+						</div>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_LINACT_PLANNER"
+							ng-model="ENABLE_LINACT_PLANNER">
+						<label class="form-check-label" for="ENABLE_LINACT_PLANNER">Enable linear actuator planner (for
+							machines with heavy mobile parts)</label>
+					</div>
+					<div ng-show="ENABLE_LINACT_PLANNER">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" id="ENABLE_LINACT_COLD_START"
+								value="ENABLE_LINACT_COLD_START" ng-model="ENABLE_LINACT_COLD_START">
+							<label class="form-check-label" for="ENABLE_LINACT_COLD_START">Linear actuator cold start
+								(stop on every direction change)</label>
+						</div>
+					</div>
+
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_BACKLASH_COMPENSATION"
+							ng-model="ENABLE_BACKLASH_COMPENSATION">
+						<label class="form-check-label" for="ENABLE_BACKLASH_COMPENSATION">Enable backlash
+							compensation</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_S_CURVE_ACCELERATION"
+							ng-model="ENABLE_S_CURVE_ACCELERATION">
+						<label class="form-check-label" for="ENABLE_S_CURVE_ACCELERATION">Enable S-Curve
+							acceleration</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="BRESENHAM_16BIT" ng-model="BRESENHAM_16BIT">
+						<label class="form-check-label" for="BRESENHAM_16BIT">Use 16-bit Bresenham step generation (for
+							machines that run very short segments like deltas or laser engravers)</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_EXTRA_SYSTEM_CMDS"
+							ng-model="ENABLE_EXTRA_SYSTEM_CMDS">
+						<label class="form-check-label" for="ENABLE_EXTRA_SYSTEM_CMDS">Enable extra settings store
+							commands ($SS, $SL, $SR) and pin state print commands ($P)</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="RAM_ONLY_SETTINGS"
+							ng-model="RAM_ONLY_SETTINGS">
+						<label class="form-check-label" for="RAM_ONLY_SETTINGS">Disable EEPROM storing</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE"
+							ng-model="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE">
+						<label class="form-check-label" for="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE">Enable automatic
+							status report</label>
+						<div ng-if="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE">
+							<label for="customRange2" class="form-label">Frequency (ms)</label>
+							<input type="range" class="form-range" min="100" max="1000" id="STATUS_AUTOMATIC_REPORT_INTERVAL"
+								ng-model="STATUS_AUTOMATIC_REPORT_INTERVAL">
+						</div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configboardmap" role="tabpanel" aria-labelledby="configboardmap-tab">
@@ -241,8 +312,8 @@
 					</div>
 					<div ng-hide="DISABLE_ALL_CONTROLS">
 						<div class="form-check form-check-inline" ng-repeat="y in CONTROLS">
-							<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP_ENABLE" value="{{y}}_PULLUP_ENABLE"
-								ng-model-dynamic="{{y.control}}_PULLUP_ENABLE">
+							<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP_ENABLE"
+								value="{{y}}_PULLUP_ENABLE" ng-model-dynamic="{{y.control}}_PULLUP_ENABLE">
 							<label class="form-check-label" for="{{y}}_PULLUP_ENABLE">Enable {{y}} internal pullup
 								resistor</label>
 						</div>
@@ -269,7 +340,8 @@
 							<input class="form-check-input" type="checkbox" id="{{y.limit}}_PULLUP_ENABLE"
 								value="{{y.limit}}_PULLUP_ENABLE" ng-disabled="$parent.{{y.limit}}_DISABLE"
 								ng-model-dynamic="{{y.limit}}_PULLUP_ENABLE">
-							<label class="form-check-label" for="{{y.limit}}_PULLUP_ENABLE">Enable {{y.limit}} internal pullup
+							<label class="form-check-label" for="{{y.limit}}_PULLUP_ENABLE">Enable {{y.limit}} internal
+								pullup
 								resistor</label>
 						</div>
 					</div>
@@ -282,7 +354,8 @@
 					</div>
 					<div ng-hide="DISABLE_PROBE">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" id="PROBE_PULLUP_ENABLE" value="PROBE_PULLUP_ENABLE" ng-model="PROBE_PULLUP_ENABLE">
+							<input class="form-check-input" type="checkbox" id="PROBE_PULLUP_ENABLE"
+								value="PROBE_PULLUP_ENABLE" ng-model="PROBE_PULLUP_ENABLE">
 							<label class="form-check-label" for="">Enable PROBE internal pullup resistor</label>
 						</div>
 					</div>
@@ -309,8 +382,8 @@
 
 						<div class="mb-3">
 							<label for="" class="form-label">Select FIRST multi-drive axis second stepper</label>
-							<select class="form-select form-select-md" name="DUAL_DRIVE0_STEPPER" id="DUAL_DRIVE0_STEPPER"
-								ng-model="DUAL_DRIVE0_STEPPER">
+							<select class="form-select form-select-md" name="DUAL_DRIVE0_STEPPER"
+								id="DUAL_DRIVE0_STEPPER" ng-model="DUAL_DRIVE0_STEPPER">
 								<option selected>Select one</option>
 								<option value="0">0</option>
 								<option value="1">1</option>
@@ -343,8 +416,8 @@
 
 						<div class="mb-3">
 							<label for="" class="form-label">Select SECOND multi-drive axis second stepper</label>
-							<select class="form-select form-select-md" name="DUAL_DRIVE1_STEPPER" id="DUAL_DRIVE1_STEPPER"
-								ng-model="DUAL_DRIVE1_STEPPER">
+							<select class="form-select form-select-md" name="DUAL_DRIVE1_STEPPER"
+								id="DUAL_DRIVE1_STEPPER" ng-model="DUAL_DRIVE1_STEPPER">
 								<option value="0">0</option>
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -450,7 +523,8 @@
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="INVERT_LASER_PPI_LOGIC"
 								ng-model="INVERT_LASER_PPI_LOGIC">
-							<label class="form-check-label" for="INVERT_LASER_PPI_LOGIC">Invert Laser PPI signal logic</label>
+							<label class="form-check-label" for="INVERT_LASER_PPI_LOGIC">Invert Laser PPI signal
+								logic</label>
 						</div>
 					</div>
 				</fieldset>
