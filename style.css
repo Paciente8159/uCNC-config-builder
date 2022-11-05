@@ -10,7 +10,12 @@ body {
 	justify-content: center;
 }
 
-main {
+.input-range {
+	display: flex;
+}
+
+header, main, footer {
+	width: 100%;
 	max-width: 1240px;
 	margin: 20px;
 }
