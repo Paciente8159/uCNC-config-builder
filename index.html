@@ -161,9 +161,10 @@
 						<label class="form-check-label" for="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE">Enable automatic
 							status report</label>
 						<div ng-if="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE">
-							<label for="customRange2" class="form-label">Frequency (ms)</label>
-							<input type="range" class="form-range" min="100" max="1000" id="STATUS_AUTOMATIC_REPORT_INTERVAL"
-								ng-model="STATUS_AUTOMATIC_REPORT_INTERVAL">
+							<label for="customRange2" class="form-label">Frequency: <span
+									ng-bind="STATUS_AUTOMATIC_REPORT_INTERVAL"></span> ms</label>
+							<input type="range" class="form-range" min="100" max="1000"
+								id="STATUS_AUTOMATIC_REPORT_INTERVAL" ng-model="STATUS_AUTOMATIC_REPORT_INTERVAL">
 						</div>
 				</fieldset>
 			</div>
@@ -464,60 +465,10 @@
 					<div class="mb-3" ng-show="ENABLE_LASER_PPI">
 						<label for="" class="form-label">Laser PPI output µCNC pin</label>
 						<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI" ng-model="LASER_PPI">
-							<option value="PWM0" selected>PWM0</option>
-							<option value="PWM1">PWM1</option>
-							<option value="PWM2">PWM2</option>
-							<option value="PWM3">PWM3</option>
-							<option value="PWM4">PWM4</option>
-							<option value="PWM5">PWM5</option>
-							<option value="PWM6">PWM6</option>
-							<option value="PWM7">PWM7</option>
-							<option value="PWM8">PWM8</option>
-							<option value="PWM9">PWM9</option>
-							<option value="PWM10">PWM10</option>
-							<option value="PWM11">PWM11</option>
-							<option value="PWM12">PWM12</option>
-							<option value="PWM13">PWM13</option>
-							<option value="PWM14">PWM14</option>
-							<option value="PWM15">PWM15</option>
-							<option value="SERVO0">SERVO0</option>
-							<option value="SERVO1">SERVO1</option>
-							<option value="SERVO2">SERVO2</option>
-							<option value="SERVO3">SERVO3</option>
-							<option value="SERVO4">SERVO4</option>
-							<option value="SERVO5">SERVO5</option>
-							<option value="DOUT0">DOUT0</option>
-							<option value="DOUT1">DOUT1</option>
-							<option value="DOUT2">DOUT2</option>
-							<option value="DOUT3">DOUT3</option>
-							<option value="DOUT4">DOUT4</option>
-							<option value="DOUT5">DOUT5</option>
-							<option value="DOUT6">DOUT6</option>
-							<option value="DOUT7">DOUT7</option>
-							<option value="DOUT8">DOUT8</option>
-							<option value="DOUT9">DOUT9</option>
-							<option value="DOUT10">DOUT10</option>
-							<option value="DOUT11">DOUT11</option>
-							<option value="DOUT12">DOUT12</option>
-							<option value="DOUT13">DOUT13</option>
-							<option value="DOUT14">DOUT14</option>
-							<option value="DOUT15">DOUT15</option>
-							<option value="DOUT16">DOUT16</option>
-							<option value="DOUT17">DOUT17</option>
-							<option value="DOUT18">DOUT18</option>
-							<option value="DOUT19">DOUT19</option>
-							<option value="DOUT20">DOUT20</option>
-							<option value="DOUT21">DOUT21</option>
-							<option value="DOUT22">DOUT22</option>
-							<option value="DOUT23">DOUT23</option>
-							<option value="DOUT24">DOUT24</option>
-							<option value="DOUT25">DOUT25</option>
-							<option value="DOUT26">DOUT26</option>
-							<option value="DOUT27">DOUT27</option>
-							<option value="DOUT28">DOUT28</option>
-							<option value="DOUT29">DOUT29</option>
-							<option value="DOUT30">DOUT30</option>
-							<option value="DOUT31">DOUT31</option>
+							<option value='{{y.pin}}' ng-repeat="y in UCNCPINS"
+								ng-if="y.type=='pwm' || y.type=='generic_output'">
+								{{y.pin}}
+							</option>
 						</select>
 
 						<div class="form-check form-switch">
@@ -529,75 +480,181 @@
 					</div>
 				</fieldset>
 				<fieldset>
+					<legend>SPI and I2C Expansion interfaces</legend>
+					<p>Software SPI port</p>
+					<label for="SOFT_SPI_CLK" class="form-label">SPI Clock</label>
+					<select class="form-select form-select-md" name="SOFT_SPI_CLK" id="SOFT_SPI_CLK"
+						ng-model="SOFT_SPI_CLK">
+						<option value='{{y.pin}}' ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
+							{{y.pin}}
+						</option>
+					</select>
+					<label for="SOFT_SPI_SDO" class="form-label">SPI Serial Data Out</label>
+					<select class="form-select form-select-md" name="SOFT_SPI_SDO" id="SOFT_SPI_SDO"
+						ng-model="SOFT_SPI_SDO">
+						<option value='{{y.pin}}' ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
+							{{y.pin}}
+						</option>
+					</select>
+					<label for="SOFT_SPI_SDI" class="form-label">SPI Serial Data In</label>
+					<select class="form-select form-select-md" name="SOFT_SPI_SDI" id="SOFT_SPI_SDI"
+						ng-model="SOFT_SPI_SDI">
+						<option value='{{y.pin}}' ng-repeat="y in UCNCPINS | filter: {'type': 'generic_input'}">
+							{{y.pin}}
+						</option>
+					</select>
+				</fieldset>
+				<fieldset>
 					<legend>TMC drivers</legend>
-					<p>Under development</p>
-					<!--<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="STEPPER0_HAS_TMC"
-							ng-model="STEPPER0_HAS_TMC">
-						<label class="form-check-label" for="STEPPER0_HAS_TMC">Stepper0 has TMC driver</label>
-						<div ng-show="STEPPER0_HAS_TMC">
-							<div class="mb-3">
-								<label for="" class="form-label">Stepper0 TMC type</label>
-								<select class="form-select form-select-md" name="STEPPER0_DRIVER_TYPE"
-									id="STEPPER0_DRIVER_TYPE" ng-model="STEPPER0_DRIVER_TYPE">
-									<option value="2202">2202</option>
-									<option value="2208" selected>2208</option>
-									<option value="2209">2209</option>
-									<option value="2225">2225</option>
-									<option value="2226">2226</option>
-									<option value="2130">2130</option>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label for="STEPPER0_TMC_INTERFACE" class="form-label">Stepper0 TMC interface</label>
-								<select class="form-select form-select-md" name="STEPPER0_TMC_INTERFACE"
-									id="STEPPER0_TMC_INTERFACE" ng-model="STEPPER0_TMC_INTERFACE">
-									<option value="TMC_UART" selected>UART</option>
-									<option value="TMC_SPI">SPI</option>
-								</select>
-							</div>
-							<div ng-show='{{STEPPER0_TMC_INTERFACE=="TMC_UART"}}'>
+					<div ng-repeat="x in STEPPERS">
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="STEPPER{{x}}_HAS_TMC"
+								ng-model-dynamic="STEPPER{{x}}_HAS_TMC" ng-change="tmcChanged()">
+							<label class="form-check-label" for="STEPPER{{x}}_HAS_TMC">Stepper{{x}} has TMC
+								driver</label>
+							<div ng-show="STEPPER{{x}}_HAS_TMC">
 								<div class="mb-3">
-									<label for="STEPPER0_UART_TX" class="form-label">Stepper0 TMC UART TX pin</label>
-									<select class="form-select form-select-md" name="STEPPER0_UART_TX"
-										id="STEPPER0_UART_TX" ng-model="STEPPER0_UART_TX">
-										<option value="DOUT0">DOUT0</option>
-										<option value="DOUT1">DOUT1</option>
-										<option value="DOUT2">DOUT2</option>
-										<option value="DOUT3">DOUT3</option>
-										<option value="DOUT4">DOUT4</option>
-										<option value="DOUT5">DOUT5</option>
-										<option value="DOUT6">DOUT6</option>
-										<option value="DOUT7">DOUT7</option>
-										<option value="DOUT8">DOUT8</option>
-										<option value="DOUT9">DOUT9</option>
-										<option value="DOUT10">DOUT10</option>
-										<option value="DOUT11">DOUT11</option>
-										<option value="DOUT12">DOUT12</option>
-										<option value="DOUT13">DOUT13</option>
-										<option value="DOUT14">DOUT14</option>
-										<option value="DOUT15">DOUT15</option>
-										<option value="DOUT16">DOUT16</option>
-										<option value="DOUT17">DOUT17</option>
-										<option value="DOUT18">DOUT18</option>
-										<option value="DOUT19">DOUT19</option>
-										<option value="DOUT20">DOUT20</option>
-										<option value="DOUT21">DOUT21</option>
-										<option value="DOUT22">DOUT22</option>
-										<option value="DOUT23">DOUT23</option>
-										<option value="DOUT24">DOUT24</option>
-										<option value="DOUT25">DOUT25</option>
-										<option value="DOUT26">DOUT26</option>
-										<option value="DOUT27">DOUT27</option>
-										<option value="DOUT28">DOUT28</option>
-										<option value="DOUT29">DOUT29</option>
-										<option value="DOUT30">DOUT30</option>
-										<option value="DOUT31">DOUT31</option>
+									<label for="" class="form-label">Stepper{{x}} TMC type</label>
+									<select class="form-select form-select-md" name="STEPPER{{x}}_DRIVER_TYPE"
+										id="STEPPER{{x}}_DRIVER_TYPE" ng-model-dynamic="STEPPER{{x}}_DRIVER_TYPE">
+										<option value='{{y}}' ng-repeat="y in TMCS">
+											{{y}}
+										</option>
 									</select>
+								</div>
+								<div class="mb-3">
+									<label for="STEPPER{{x}}_TMC_INTERFACE" class="form-label">Stepper{{x}} TMC
+										interface</label>
+									<select class="form-select form-select-md" name="STEPPER{{x}}_TMC_INTERFACE"
+										id="STEPPER{{x}}_TMC_INTERFACE" ng-model-dynamic="STEPPER{{x}}_TMC_INTERFACE">
+										<option value="TMC_UART">UART</option>
+										<option value="TMC_SPI" selected>SPI</option>
+									</select>
+								</div>
+								<div ng-hide='STEPPER{{x}}_TMC_INTERFACE=="TMC_SPI"'>
+									<div class="mb-3">
+										<label for="STEPPER{{x}}_UART_TX" class="form-label">Stepper{{x}} TMC UART TX
+											pin</label>
+										<select class="form-select form-select-md" name="STEPPER{{x}}_UART_TX"
+											id="STEPPER{{x}}_UART_TX" ng-model-dynamic="STEPPER{{x}}_UART_TX">
+											<option value="{{y.pin}}"
+												ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">{{y.pin}}
+											</option>
+										</select>
+										<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} TMC UART RX
+											pin</label>
+										<select class="form-select form-select-md" name="STEPPER{{x}}_UART_RX"
+											id="STEPPER{{x}}_UART_RX" ng-model-dynamic="STEPPER{{x}}_UART_RX">
+											<option value="{{y.pin}}"
+												ng-repeat="y in UCNCPINS | filter: {'type': 'generic_input'}">{{y.pin}}
+											</option>
+										</select>
+									</div>
+								</div>
+								<div ng-show='STEPPER{{x}}_TMC_INTERFACE=="TMC_SPI"'>
+									<div class="mb-3">
+										<label for="STEPPER{{x}}_SPI_CS" class="form-label">Stepper{{x}} TMC SPI CS
+											pin</label>
+										<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CS"
+											id="STEPPER{{x}}_SPI_CS" ng-model-dynamic="STEPPER{{x}}_SPI_CS">
+											<option value="{{y.pin}}"
+												ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">{{y.pin}}
+											</option>
+										</select>
+										<div class="form-check form-switch">
+											<input class="form-check-input" type="checkbox" id="STEPPER{{x}}_SPI_CUSTOM"
+												ng-model-dynamic="STEPPER{{x}}_SPI_CUSTOM">
+											<label class="form-check-label" for="STEPPER{{x}}_SPI_CUSTOM">Enable Soft
+												SPI pins (if disabled uses predifined software SPI port)</label>
+										</div>
+										<div class="mb-3" ng-show="STEPPER{{x}}_SPI_CUSTOM">
+											<label for="STEPPER{{x}}_SPI_CLK" class="form-label">Stepper{{x}} TMC SPI
+												CLK
+												pin</label>
+											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CLK"
+												id="STEPPER{{x}}_SPI_CLK" ng-model-dynamic="STEPPER{{x}}_SPI_CLK">
+												<option value="SOFT_SPI_CLK">SOFT_SPI_CLK</option>
+												<option value="{{y.pin}}"
+													ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
+													{{y.pin}}
+												</option>
+											</select>
+											<label for="STEPPER{{x}}_SPI_SDO" class="form-label">Stepper{{x}} TMC SPI
+												SDO
+												pin</label>
+											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDO"
+												id="STEPPER{{x}}_SPI_SDO" ng-model-dynamic="STEPPER{{x}}_SPI_SDO">
+												<option value="SOFT_SPI_SDO">SOFT_SPI_SDO</option>
+												<option value="{{y.pin}}"
+													ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
+													{{y.pin}}
+												</option>
+											</select>
+											<label for="STEPPER{{x}}_SPI_SDI" class="form-label">Stepper{{x}} TMC SPI
+												SDI
+												pin</label>
+											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDI"
+												id="STEPPER{{x}}_SPI_SDI" ng-model-dynamic="STEPPER{{x}}_SPI_SDI">
+												<option value="SOFT_SPI_SDI">SOFT_SPI_SDI</option>
+												<option value="{{y.pin}}"
+													ng-repeat="y in UCNCPINS | filter: {'type': 'generic_input'}">
+													{{y.pin}}
+												</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<label for="STEPPER{{x}}_CURRENT_MAX" class="form-label">Stepper{{x}} max current: <span
+										ng-bind-dynamic="STEPPER{{x}}_CURRENT_MAX"></span> mA</label>
+								<input type="range" class="form-range" min="0" max="1500"
+									name="STEPPER{{x}}_CURRENT_MAX" id="STEPPER{{x}}_CURRENT_MAX"
+									ng-model-dynamic="STEPPER{{x}}_CURRENT_MAX"  ng-init-dynamic="STEPPER{{x}}_CURRENT_MAX=800">
+								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping</label>
+								<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP"
+									id="STEPPER{{x}}_MICROSTEP" ng-model-dynamic="STEPPER{{x}}_MICROSTEP">
+									<option value=1>1</option>
+									<option value=2>2</option>
+									<option value=4>4</option>
+									<option value=8>8</option>
+									<option value=16>16</option>
+									<option value=32>32</option>
+								</select>
+								<label for="STEPPER{{x}}_RSENSE" class="form-label">Stepper{{x}} RSense: <span
+										ng-bind-dynamic="STEPPER{{x}}_RSENSE"></span> ohms</label>
+								<input type="range" class="form-range" step="0.01" min="0" max="2"
+									name="STEPPER{{x}}_RSENSE" id="STEPPER{{x}}_RSENSE"
+									ng-model-dynamic="STEPPER{{x}}_RSENSE" ng-init-dynamic="STEPPER{{x}}_RSENSE=0.11">
+								<label for="STEPPER{{x}}_HOLD_MULT" class="form-label">Stepper{{x}} Hold multiplier:
+									<span ng-bind-dynamic="STEPPER{{x}}_HOLD_MULT"></span></label>
+								<input type="range" class="form-range" step="0.01" min="0" max="1"
+									name="STEPPER{{x}}_HOLD_MULT" id="STEPPER{{x}}_HOLD_MULT"
+									ng-model-dynamic="STEPPER{{x}}_HOLD_MULT" ng-init-dynamic="STEPPER{{x}}_HOLD_MULT=0.7">
+								<label for="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" class="form-label">Stepper{{x}}
+									stealthchop threshold: <span
+										ng-bind-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"></span> Hz</label>
+								<input type="range" class="form-range" min="0" max="1048575"
+									name="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" id="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
+									ng-model-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" ng-init-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD=0">
+								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping
+									interpolation</label>
+								<select class="form-select form-select-md" name="STEPPER{{x}}_ENABLE_INTERPLATION"
+									id="STEPPER{{x}}_ENABLE_INTERPLATION"
+									ng-model-dynamic="STEPPER{{x}}_ENABLE_INTERPLATION">
+									<option value=false>false</option>
+									<option value=true>true</option>
+								</select>
+
+								<div ng-show="STEPPER{{x}}_DRIVER_TYPE=='2209'">
+									<label for="STEPPER{{x}}_STALL_SENSITIVITY" class="form-label">Stepper{{x}}
+										stall sensitivity:
+										<span ng-bind-dynamic="STEPPER{{x}}_STALL_SENSITIVITY"></span></label>
+									<input type="range" class="form-range" min="0" max="255"
+										name="STEPPER{{x}}_STALL_SENSITIVITY" id="STEPPER{{x}}_STALL_SENSITIVITY"
+										ng-model-dynamic="STEPPER{{x}}_STALL_SENSITIVITY"  ng-init-dynamic="STEPPER{{x}}_STALL_SENSITIVITY=10">
 								</div>
 							</div>
 						</div>
-					</div>-->
+					</div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab"> Under
