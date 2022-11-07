@@ -588,13 +588,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.boardChanged = updateBoardmap;
 
 	$scope.tmcChanged = function () {
-		updateHAL();
+		updateHAL($scope);
 	};
-
-	ready(function () {
-		updateBoardmap($rootScope);
-		updateHAL($rootScope);
-	});
 }]);
 
 app.directive('ngModelDynamic', ['$compile',
@@ -655,6 +650,11 @@ app.directive('ngBindDynamic', ['$compile',
 
 		}
 	}]);
+
+ready(function () {
+	updateBoardmap();
+	updateHAL();
+});
 
 function download(filename, text) {
 	var element = document.createElement('a');
