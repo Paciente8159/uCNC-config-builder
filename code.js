@@ -119,6 +119,17 @@ function updateBoardmap(scope = null) {
 					});
 				});
 				return;
+				case 'BOARD_UNO_SHIELD_V3':
+					parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+						settings = newsettings;
+						parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
+							updateFields(newsettings);
+							if (scope) {
+								scope.$apply();
+							}
+						});
+					});
+					return;
 			case 'BOARD_RAMBO14':
 				boardurl = boardurl + "avr/boardmap_rambo14.h";
 				break;
@@ -133,6 +144,7 @@ function updateBoardmap(scope = null) {
 					});
 				});
 				return;
+				
 			case 'BOARD_RAMPS14':
 				boardurl = boardurl + "avr/boardmap_ramps14.h";
 				break;
@@ -188,7 +200,7 @@ function updateBoardmap(scope = null) {
 	});
 }
 
-var version = 'v1.5.5';
+var version = 'v1.5.7';
 var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
@@ -213,6 +225,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'BOARD_RAMPS14', name: 'Arduino MEGA/RAMPS v1.4', mcu: 'MCU_AVR' },
 		{ id: 'BOARD_MKS_DLC', name: 'MKS DLC', mcu: 'MCU_AVR' },
 		{ id: 'BOARD_X_CONTROLLER', name: 'X-Controller', mcu: 'MCU_AVR' },
+		{ id: 'BOARD_UNO_SHIELD_V3', name: 'Arduino UNO', mcu: 'MCU_AVR' },
 		{ id: 'BOARD_MKS_GEN_L_V1', name: 'MKS Gen L v1', mcu: 'MCU_AVR' },
 		{ id: 'BOARD_BLUEPILL', name: 'Bluepill STM32F103', mcu: 'MCU_STM32F1X' },
 		{ id: 'BOARD_BLACKPILL', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },

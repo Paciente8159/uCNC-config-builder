@@ -161,11 +161,23 @@
 						<label class="form-check-label" for="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE">Enable automatic
 							status report</label>
 						<div ng-if="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE">
-							<label for="customRange2" class="form-label">Frequency: <span
+							<label for="STATUS_AUTOMATIC_REPORT_INTERVAL" class="form-label">Frequency: <span
 									ng-bind="STATUS_AUTOMATIC_REPORT_INTERVAL"></span> ms</label>
 							<input type="range" class="form-range" min="100" max="1000"
 								id="STATUS_AUTOMATIC_REPORT_INTERVAL" ng-model="STATUS_AUTOMATIC_REPORT_INTERVAL">
 						</div>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_G39_H_MAPPING"
+							ng-model="ENABLE_G39_H_MAPPING">
+						<label class="form-check-label" for="ENABLE_G39_H_MAPPING">Enable height map generation</label>
+						<div ng-if="ENABLE_G39_H_MAPPING">
+							<label for="H_MAPING_GRID_FACTOR" class="form-label">Grid factor (number of points is [grid
+								factor]^ 2): <span ng-bind="H_MAPING_GRID_FACTOR"></span></label>
+							<input type="range" class="form-range" min="2" max="6" id="H_MAPING_GRID_FACTOR"
+								ng-model="H_MAPING_GRID_FACTOR">
+						</div>
+					</div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configboardmap" role="tabpanel" aria-labelledby="configboardmap-tab">
@@ -448,7 +460,7 @@
 							ng-dynamic-model="TOOL{{x}}">
 							<option value="spindle_pwm">PWM Spindle</option>
 							<option value="spindle_besc">BESC Spindle</option>
-							<option value="spindle_realy">Relay Spindle</option>
+							<option value="spindle_relay">Relay Spindle</option>
 							<option value="vfd">VFD</option>
 							<option value="laser">PWM Laser</option>
 							<option value="laser_ppi">PPI Laser</option>
@@ -608,7 +620,8 @@
 										ng-bind-dynamic="STEPPER{{x}}_CURRENT_MAX"></span> mA</label>
 								<input type="range" class="form-range" min="0" max="1500"
 									name="STEPPER{{x}}_CURRENT_MAX" id="STEPPER{{x}}_CURRENT_MAX"
-									ng-model-dynamic="STEPPER{{x}}_CURRENT_MAX"  ng-init-dynamic="STEPPER{{x}}_CURRENT_MAX=800">
+									ng-model-dynamic="STEPPER{{x}}_CURRENT_MAX"
+									ng-init-dynamic="STEPPER{{x}}_CURRENT_MAX=800">
 								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping</label>
 								<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP"
 									id="STEPPER{{x}}_MICROSTEP" ng-model-dynamic="STEPPER{{x}}_MICROSTEP">
@@ -628,13 +641,15 @@
 									<span ng-bind-dynamic="STEPPER{{x}}_HOLD_MULT"></span></label>
 								<input type="range" class="form-range" step="0.01" min="0" max="1"
 									name="STEPPER{{x}}_HOLD_MULT" id="STEPPER{{x}}_HOLD_MULT"
-									ng-model-dynamic="STEPPER{{x}}_HOLD_MULT" ng-init-dynamic="STEPPER{{x}}_HOLD_MULT=0.7">
+									ng-model-dynamic="STEPPER{{x}}_HOLD_MULT"
+									ng-init-dynamic="STEPPER{{x}}_HOLD_MULT=0.7">
 								<label for="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" class="form-label">Stepper{{x}}
 									stealthchop threshold: <span
 										ng-bind-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"></span> Hz</label>
 								<input type="range" class="form-range" min="0" max="1048575"
 									name="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" id="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
-									ng-model-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" ng-init-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD=0">
+									ng-model-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
+									ng-init-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD=0">
 								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping
 									interpolation</label>
 								<select class="form-select form-select-md" name="STEPPER{{x}}_ENABLE_INTERPLATION"
@@ -650,14 +665,50 @@
 										<span ng-bind-dynamic="STEPPER{{x}}_STALL_SENSITIVITY"></span></label>
 									<input type="range" class="form-range" min="0" max="255"
 										name="STEPPER{{x}}_STALL_SENSITIVITY" id="STEPPER{{x}}_STALL_SENSITIVITY"
-										ng-model-dynamic="STEPPER{{x}}_STALL_SENSITIVITY"  ng-init-dynamic="STEPPER{{x}}_STALL_SENSITIVITY=10">
+										ng-model-dynamic="STEPPER{{x}}_STALL_SENSITIVITY"
+										ng-init-dynamic="STEPPER{{x}}_STALL_SENSITIVITY=10">
 								</div>
 							</div>
 						</div>
 					</div>
 				</fieldset>
 			</div>
-			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab"> Under
+			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab">
+				<fieldset>
+					<legend>Enable extension options</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_MAIN_LOOP_MODULES"
+							ng-model="ENABLE_MAIN_LOOP_MODULES">
+						<label class="form-check-label" for="ENABLE_SKEW_COMPENSATION">Enable main cnc application loop extension callbacks</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_IO_MODULES"
+							ng-model="ENABLE_IO_MODULES">
+						<label class="form-check-label" for="ENABLE_IO_MODULES">Enable IO extension callbacks</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_PARSER_MODULES"
+							ng-model="ENABLE_PARSER_MODULES">
+						<label class="form-check-label" for="ENABLE_PARSER_MODULES">Enable Gcode and Grbl commands parser extension callbacks</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_MOTION_CONTROL_MODULES"
+							ng-model="ENABLE_MOTION_CONTROL_MODULES">
+						<label class="form-check-label" for="ENABLE_MOTION_CONTROL_MODULES">Enable motion control extension callbacks</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_SETTINGS_MODULES"
+							ng-model="ENABLE_SETTINGS_MODULES">
+						<label class="form-check-label" for="ENABLE_SETTINGS_MODULES">Enable settings storage extension callbacks</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_RT_SYNC_MOTIONS"
+							ng-model="ENABLE_RT_SYNC_MOTIONS">
+						<label class="form-check-label" for="ENABLE_RT_SYNC_MOTIONS">Enable interpolation realtime extension callbacks</label>
+					</div>
+				</fieldset>
+
+				Under
 				development
 			</div>
 			<div class="tab-pane" id="configfiles" role="tabpanel" aria-labelledby="configfiles-tab">
