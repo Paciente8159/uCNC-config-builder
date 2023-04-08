@@ -1,7 +1,7 @@
 <fieldset>
 	<legend>Controls</legend>
 	<div class="form-check form-switch">
-		<input class="form-check-input" type="checkbox" id="DISABLE_ALL_CONTROLS" ng-model="DISABLE_ALL_CONTROLS">
+		<input class="form-check-input" type="checkbox" id="DISABLE_ALL_CONTROLS" ng-model="$parent.DISABLE_ALL_CONTROLS">
 		<label class="form-check-label" for="DISABLE_ALL_CONTROLS">Disable control inputs (E-STOP,
 			Security
 			door,
@@ -19,7 +19,7 @@
 <fieldset>
 	<legend>Limit switches</legend>
 	<div class="form-check form-switch">
-		<input class="form-check-input" type="checkbox" id="DISABLE_ALL_LIMITS" ng-model="DISABLE_ALL_LIMITS">
+		<input class="form-check-input" type="checkbox" id="DISABLE_ALL_LIMITS" ng-model="$parent.DISABLE_ALL_LIMITS">
 		<label class="form-check-label" for="DISABLE_ALL_LIMITS">Disable all limit switches</label>
 	</div>
 	<div ng-hide="DISABLE_ALL_LIMITS">
@@ -43,13 +43,13 @@
 <fieldset>
 	<legend>Probe</legend>
 	<div class="form-check form-switch">
-		<input class="form-check-input" type="checkbox" id="DISABLE_PROBE" ng-model="DISABLE_PROBE">
+		<input class="form-check-input" type="checkbox" id="DISABLE_PROBE" ng-model="$parent.DISABLE_PROBE">
 		<label class="form-check-label" for="DISABLE_PROBE">Disable probe</label>
 	</div>
 	<div ng-hide="DISABLE_PROBE">
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="checkbox" id="PROBE_PULLUP_ENABLE" value="PROBE_PULLUP_ENABLE"
-				ng-model="PROBE_PULLUP_ENABLE">
+				ng-model="$parent.PROBE_PULLUP_ENABLE">
 			<label class="form-check-label" for="">Enable PROBE internal pullup resistor</label>
 		</div>
 	</div>
@@ -58,14 +58,14 @@
 <fieldset>
 	<legend>Multi drive axis</legend>
 	<div class="form-check form-switch">
-		<input class="form-check-input" type="checkbox" id="ENABLE_DUAL_DRIVE_AXIS" ng-model="ENABLE_DUAL_DRIVE_AXIS">
+		<input class="form-check-input" type="checkbox" id="ENABLE_DUAL_DRIVE_AXIS" ng-model="$parent.ENABLE_DUAL_DRIVE_AXIS">
 		<label class="form-check-label" for="ENABLE_DUAL_DRIVE_AXIS">Enable multi-drive AXIS</label>
 	</div>
 	<div ng-show="ENABLE_DUAL_DRIVE_AXIS">
 		<div class="mb-3">
 			<label for="" class="form-label">Select multi-drive FIRST axis</label>
 			<select class="form-select form-select-md" name="DUAL_DRIVE0_AXIS" id="DUAL_DRIVE0_AXIS"
-				ng-model="DUAL_DRIVE0_AXIS">
+				ng-model="$parent.DUAL_DRIVE0_AXIS">
 				<option value="" selected>-</option>
 				<option value="X">X</option>
 				<option value="Y">Y</option>
@@ -76,7 +76,7 @@
 		<div class="mb-3">
 			<label for="" class="form-label">Select FIRST multi-drive axis second stepper</label>
 			<select class="form-select form-select-md" name="DUAL_DRIVE0_STEPPER" id="DUAL_DRIVE0_STEPPER"
-				ng-model="DUAL_DRIVE0_STEPPER">
+				ng-model="$parent.DUAL_DRIVE0_STEPPER">
 				<option selected>Select one</option>
 				<option value="0">0</option>
 				<option value="1">1</option>
@@ -91,7 +91,7 @@
 
 		<div class="form-check form-switch">
 			<input class="form-check-input" type="checkbox" id="DUAL_DRIVE0_ENABLE_SELFSQUARING"
-				ng-model="DUAL_DRIVE0_ENABLE_SELFSQUARING">
+				ng-model="$parent.DUAL_DRIVE0_ENABLE_SELFSQUARING">
 			<label class="form-check-label" for="DUAL_DRIVE0_ENABLE_SELFSQUARING">Enable FIRST axis
 				auto-squaring</label>
 		</div>
@@ -99,7 +99,7 @@
 		<div class="mb-3">
 			<label for="" class="form-label">Select multi-drive SECOND axis</label>
 			<select class="form-select form-select-md" name="DUAL_DRIVE1_AXIS" id="DUAL_DRIVE1_AXIS"
-				ng-model="DUAL_DRIVE1_AXIS">
+				ng-model="$parent.DUAL_DRIVE1_AXIS">
 				<option value="" selected>-</option>
 				<option value="X">X</option>
 				<option value="Y">Y</option>
@@ -110,7 +110,7 @@
 		<div class="mb-3">
 			<label for="" class="form-label">Select SECOND multi-drive axis second stepper</label>
 			<select class="form-select form-select-md" name="DUAL_DRIVE1_STEPPER" id="DUAL_DRIVE1_STEPPER"
-				ng-model="DUAL_DRIVE1_STEPPER">
+				ng-model="$parent.DUAL_DRIVE1_STEPPER">
 				<option value="0">0</option>
 				<option value="1">1</option>
 				<option value="2">2</option>
@@ -124,7 +124,7 @@
 
 		<div class="form-check form-switch">
 			<input class="form-check-input" type="checkbox" id="DUAL_DRIVE1_ENABLE_SELFSQUARING"
-				ng-model="DUAL_DRIVE1_ENABLE_SELFSQUARING">
+				ng-model="$parent.DUAL_DRIVE1_ENABLE_SELFSQUARING">
 			<label class="form-check-label" for="DUAL_DRIVE1_ENABLE_SELFSQUARING">Enable FIRST axis
 				auto-squaring</label>
 		</div>
@@ -136,25 +136,20 @@
 	<legend>Tools options</legend>
 	<div class="mb-3" ng-repeat="x in numSmallerOrEq(TOOLS,'TOOL_COUNT')">
 		<label for="" class="form-label">Select TOOL{{x}}</label>
-		<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-dynamic-model="TOOL{{x}}">
-			<option value="spindle_pwm">PWM Spindle</option>
-			<option value="spindle_besc">BESC Spindle</option>
-			<option value="spindle_relay">Relay Spindle</option>
-			<option value="vfd">VFD</option>
-			<option value="laser">PWM Laser</option>
-			<option value="laser_ppi">PPI Laser</option>
+		<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model-dynamic="TOOL{{x}}" ng-options-dynamic="key as value for (key , value) in TOOL_OPTIONS">
 		</select>
+		<div ng-include-dynamic="'tools/'+TOOL{{x}}+'.html'"></div>
 	</div>
 </fieldset>
 <fieldset>
 	<legend>Laser options</legend>
 	<div class="form-check form-switch">
-		<input class="form-check-input" type="checkbox" id="ENABLE_LASER_PPI" ng-model="ENABLE_LASER_PPI">
+		<input class="form-check-input" type="checkbox" id="ENABLE_LASER_PPI" ng-model="$parent.ENABLE_LASER_PPI">
 		<label class="form-check-label" for="ENABLE_LASER_PPI">Enable Laser PPI</label>
 	</div>
 	<div class="mb-3" ng-show="ENABLE_LASER_PPI">
 		<label for="" class="form-label">Laser PPI output µCNC pin</label>
-		<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI" ng-model="LASER_PPI">
+		<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI" ng-model="$parent.LASER_PPI">
 			<option value='{{y.pin}}' ng-repeat="y in UCNCPINS" ng-if="y.type=='pwm' || y.type=='generic_output'">
 				{{y.pin}}
 			</option>
@@ -162,7 +157,7 @@
 
 		<div class="form-check form-switch">
 			<input class="form-check-input" type="checkbox" id="INVERT_LASER_PPI_LOGIC"
-				ng-model="INVERT_LASER_PPI_LOGIC">
+				ng-model="$parent.INVERT_LASER_PPI_LOGIC">
 			<label class="form-check-label" for="INVERT_LASER_PPI_LOGIC">Invert Laser PPI signal
 				logic</label>
 		</div>
@@ -172,19 +167,19 @@
 	<legend>SPI and I2C Expansion interfaces</legend>
 	<p>Software SPI port</p>
 	<label for="SOFT_SPI_CLK" class="form-label">SPI Clock</label>
-	<select class="form-select form-select-md" name="SOFT_SPI_CLK" id="SOFT_SPI_CLK" ng-model="SOFT_SPI_CLK">
+	<select class="form-select form-select-md" name="SOFT_SPI_CLK" id="SOFT_SPI_CLK" ng-model="$parent.SOFT_SPI_CLK">
 		<option value='{{y.pin}}' ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
 			{{y.pin}}
 		</option>
 	</select>
 	<label for="SOFT_SPI_SDO" class="form-label">SPI Serial Data Out</label>
-	<select class="form-select form-select-md" name="SOFT_SPI_SDO" id="SOFT_SPI_SDO" ng-model="SOFT_SPI_SDO">
+	<select class="form-select form-select-md" name="SOFT_SPI_SDO" id="SOFT_SPI_SDO" ng-model="$parent.SOFT_SPI_SDO">
 		<option value='{{y.pin}}' ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
 			{{y.pin}}
 		</option>
 	</select>
 	<label for="SOFT_SPI_SDI" class="form-label">SPI Serial Data In</label>
-	<select class="form-select form-select-md" name="SOFT_SPI_SDI" id="SOFT_SPI_SDI" ng-model="SOFT_SPI_SDI">
+	<select class="form-select form-select-md" name="SOFT_SPI_SDI" id="SOFT_SPI_SDI" ng-model="$parent.SOFT_SPI_SDI">
 		<option value='{{y.pin}}' ng-repeat="y in UCNCPINS | filter: {'type': 'generic_input'}">
 			{{y.pin}}
 		</option>

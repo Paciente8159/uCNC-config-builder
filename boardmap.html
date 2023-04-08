@@ -2,7 +2,7 @@
 	<legend>Basic board settings</legend>
 	<div class="mb-3">
 		<label for="" class="form-label">What board will you be using?</label>
-		<select class="form-select form-select-md" name="BOARD" id="BOARD" ng-model="BOARD" ng-change="boardChanged()">
+		<select class="form-select form-select-md" name="BOARD" id="BOARD" ng-model="$parent.BOARD" ng-change="boardChanged()">
 			<option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option>
 		</select>
 	</div>
@@ -11,24 +11,24 @@
 	<legend>Special purpose timmers and features</legend>
 	<div class="mb-3">
 		<label for="" class="form-label">The board name printed with $I command?</label>
-		<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME" ng-model="BOARD_NAME"
+		<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME" ng-model="$parent.BOARD_NAME"
 			aria-describedby="helpId" placeholder="">
 		<small id="helpId" class="form-text text-muted">Name must be between quotation marks
 			(string)</small>
 	</div>
 	<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
 		<label for="" class="form-label">In which port are PCINT pins 0 to 7?</label>
-		<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT' ng-model="PCINT0_PORT">
+		<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT' ng-model="$parent.PCINT0_PORT">
 			<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
 			</option>
 		</select>
 		<label for="" class="form-label">In which port are PCINT pins 8 to 15?</label>
-		<select class='form-select form-select-sm' name='PCINT1_PORT' id='PCINT1_PORT' ng-model="PCINT1_PORT">
+		<select class='form-select form-select-sm' name='PCINT1_PORT' id='PCINT1_PORT' ng-model="$parent.PCINT1_PORT">
 			<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
 			</option>
 		</select>
 		<label for="" class="form-label">In which port are PCINT pins 16 to 23?</label>
-		<select class='form-select form-select-sm' name='PCINT2_PORT' id='PCINT2_PORT' ng-model="PCINT2_PORT">
+		<select class='form-select form-select-sm' name='PCINT2_PORT' id='PCINT2_PORT' ng-model="$parent.PCINT2_PORT">
 			<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
 			</option>
 		</select>

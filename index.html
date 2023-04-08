@@ -56,7 +56,7 @@
 		<!-- Tab panes -->
 		<div class="tab-content">
 			<div class="tab-pane active" id="configbasic" role="tabpanel" aria-labelledby="configbasic-tab">
-				<div ng-include="'basic.html'"></div>
+				<div ng-include="'basic.html'" onload="boardChanged()"></div>
 			</div>
 			<div class="tab-pane" id="configboardmap" role="tabpanel" aria-labelledby="configboardmap-tab">
 				<div ng-include="'boardmap.html'"></div>
