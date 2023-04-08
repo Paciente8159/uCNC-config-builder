@@ -33,6 +33,8 @@ header, main, footer {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	text-align: center;
+	flex-direction: column;
 }
 
 fieldset {
@@ -49,4 +51,8 @@ fieldset>legend {
 	left: 20px;
 	background: #fff;
 	width: fit-content;
+}
+
+div.tab-content {
+	padding: 20px;
 }
