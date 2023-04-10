@@ -691,6 +691,8 @@ function updateFields(settings = []) {
 						node.checked = true;
 						break;
 					case 'select-one':
+						nodescope[s] = settings[s];
+						nodescope.$apply();
 						if(node.querySelector('[selected="selected"]')){node.querySelector('[selected="selected"]').removeAttribute('selected');}
 						if(node.querySelector('[value="'+settings[s]+'"]')){node.querySelector('[value="'+settings[s]+'"]').setAttribute('selected', 'selected');}
 						break;
