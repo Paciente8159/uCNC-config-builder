@@ -677,24 +677,25 @@ function updateFields(settings = []) {
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
-			
+
 			if (node) {
 				var nodescope = angular.element(node).scope();
-				if(node.id=='TOOL1'){
+				if (node.id == 'TOOL1') {
 					debugger;
 				}
 				switch (node.type) {
 					case 'range':
-						node.value = nodescope[s] = parseInt(settings[s]);
+						node.value = parseInt(settings[s]);
 						break;
 					case 'checkbox':
-						node.checked = nodescope[s] = true;
+						node.checked = true;
 						break;
 					case 'select-one':
-						node.value = nodescope[s] = settings[s];
+						if(node.querySelector('[selected="selected"]')){node.querySelector('[selected="selected"]').removeAttribute('selected');}
+						if(node.querySelector('[value="'+settings[s]+'"]')){node.querySelector('[value="'+settings[s]+'"]').setAttribute('selected', 'selected');}
 						break;
 					default:
-						node.value = nodescope[s] = settings[s];
+						node.value = settings[s];
 						break;
 				}
 				nodescope.$apply();
@@ -1361,7 +1362,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 	};
 
 	$scope.toolChanged = function (tool) {
-		updateTool($scope, document.querySelector('#TOOL' + tool.x).value.split(':')[1]);
+		updateTool($scope, document.querySelector('#TOOL' + tool.x).value);
 	};
 
 	$scope.buildName = function (pre = '', mid = '', post = '') {
@@ -1400,50 +1401,54 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 app.directive('ngDynamic', ['$compile',
 	function ($compile) {
 		return {
-			priority: -1000000,
 			restrict: 'A',
 			link: function (scope, element, attrs) {
 
-				// Remove ng-model-dynamic to prevent recursive compilation
-				if (element.attr('ng-model-dynamic')) {
-					element.removeAttr('ng-model-dynamic');
-					element.attr('ng-model', attrs.ngModelDynamic);
-					scope[attrs.ngModelDynamic] = null;
-				}
+				// return {
+				// 	pre: function preLink(scope, element, attrs, controller) {
+						// Remove ng-model-dynamic to prevent recursive compilation
+						if (element.attr('ng-model-dynamic')) {
+							element.removeAttr('ng-model-dynamic');
+							element.attr('ng-model', attrs.ngModelDynamic);
+							//scope[attrs.ngModelDynamic] = null;
+						}
 
-				if (element.attr('ng-bind-dynamic')) {
-					element.removeAttr('ng-bind-dynamic');
-					element.attr('ng-bind', attrs.ngBindDynamic);
-				}
+						if (element.attr('ng-bind-dynamic')) {
+							element.removeAttr('ng-bind-dynamic');
+							element.attr('ng-bind', attrs.ngBindDynamic);
+						}
 
-				if (element.attr('ng-init-dynamic')) {
-					element.removeAttr('ng-init-dynamic');
-					element.attr('ng-init', attrs.ngInitDynamic);
-				}
+						if (element.attr('ng-init-dynamic')) {
+							element.removeAttr('ng-init-dynamic');
+							element.attr('ng-init', attrs.ngInitDynamic);
+						}
 
-				if (element.attr('ng-options-dynamic')) {
-					element.removeAttr('ng-options-dynamic');
-					element.attr('ng-options', attrs.ngOptionsDynamic);
-				}
+						if (element.attr('ng-options-dynamic')) {
+							element.removeAttr('ng-options-dynamic');
+							element.attr('ng-options', attrs.ngOptionsDynamic);
+						}
 
-				if (element.attr('ng-include-dynamic')) {
-					element.removeAttr('ng-include-dynamic');
-					element.attr('ng-include', attrs.ngIncludeDynamic);
-				}
+						if (element.attr('ng-include-dynamic')) {
+							element.removeAttr('ng-include-dynamic');
+							element.attr('ng-include', attrs.ngIncludeDynamic);
+						}
 
-				if (element.attr('ng-change-dynamic')) {
-					element.removeAttr('ng-change-dynamic');
-					element.attr('ng-change', attrs.ngChangeDynamic);
-				}
+						if (element.attr('ng-change-dynamic')) {
+							element.removeAttr('ng-change-dynamic');
+							element.attr('ng-change', attrs.ngChangeDynamic);
+						}
 
-				element.removeAttr('ng-dynamic');
+						element.removeAttr('ng-dynamic');
 
-				if (element.attr('ng-dynamic-recompile')) {
-					element.removeAttr('ng-dynamic-recompile');
-					$compile(element)(scope);
-				}
+						if (element.attr('ng-dynamic-recompile')) {
+							element.removeAttr('ng-dynamic-recompile');
+							element.unbind();
+							$compile(element)(scope);
+						}
+					}
+			// 	}
 
-			}
+			// }
 		}
 	}]);
 

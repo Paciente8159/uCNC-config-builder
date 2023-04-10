@@ -142,10 +142,9 @@
 	<div class="mb-3" ng-repeat="x in numSmallerOrEq(TOOLS,'TOOL_COUNT')">
 		<label for="" class="form-label">Select TOOL{{x}}</label>
 		
-		<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model-dynamic="TOOL{{x}}" ng-options-dynamic="key as value for (key , value) in TOOL_OPTIONS" ng-dynamic ng-dynamic-recompile="true"></select>
+		<!-- <select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model-dynamic="TOOL{{x}}" ng-options-dynamic="key as value for (key , value) in TOOL_OPTIONS" ng-dynamic ng-dynamic-recompile="true"></select> -->
 		
-		<!--<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model-dynamic="TOOL{{x}}" ng-dynamic ng-dynamic-recompile="true">
-			<option value=""></option>
+		<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model-dynamic="TOOL{{x}}" ng-dynamic ng-dynamic-recompile="true">
 			<option value="spindle_pwm">Spindle PWM</option>
 			<option value="spindle_besc">BESC Spindle</option>
 			<option value="spindle_relay">Spindle Relay</option>
@@ -154,7 +153,7 @@
 			<option value="vfd_modbus">VFD Modbus</option>
 			<option value="vfd_pwm">VFD PWM</option>
 			<option value="pen_servo">Pen Servo</option>
-		</select>-->
+		</select>
 		<div ng-include-dynamic="'tools/'+TOOL{{x}}+'.html'" onload="toolChanged({x})" ng-dynamic ng-dynamic-recompile="true"></div>
 	</div>
 </fieldset>
