@@ -687,7 +687,6 @@ function updateFields(settings = []) {
 						node.checked = nodescope[s] = true;
 						break;
 					case 'select-one':
-						debugger;
 						nodescope[s] = node.value = settings[s];
 						break;
 					default:
@@ -703,16 +702,20 @@ function updateFields(settings = []) {
 function resetBoardPins() {
 	for (var i = 5; i < board_override_options.length; i++) {
 		var node = document.querySelector("#" + board_override_options[i]);
+		
 		if (node) {
 			switch (node.type) {
-				case 'select-one':
-					node.value = "";
+				case 'range':
+					node.value = '';
 					break;
 				case 'checkbox':
-					node.checked = false;
+					node.checked = nodescope[s] = true;
+					break;
+				case 'select-one':
+					node.value = '';
 					break;
 				default:
-					node.value = "";
+					node.value = '';
 					break;
 			}
 		}
@@ -931,7 +934,7 @@ function updateBoardmap(scope = null) {
 
 var version = 'v1.5.7';
 var app = angular.module("uCNCapp", []);
-var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
+var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function ($scope, $parse) {
 
 	$scope.MCUS = [
 		{ id: 'MCU_AVR', name: 'Atmel AVR' },
@@ -1359,12 +1362,70 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.buildName = function (pre = '', mid = '', post = '') {
 		return pre + mid + post;
 	};
+
+	$scope.expEval = function (scope = null, exp = '') {
+		const regex = /{{(?<params>[^}]*)}}/gm;
+		const m = exp.match(regex)[0].replaceAll('{','').replaceAll('}','');
+		const names = m.split('.');
+		switch (names.length) {
+			case 1:
+				return exp.replace(regex, scope[names[0]]);
+			case 2:
+				return exp.replace(regex, scope[names[0]][names[1]]);
+		}
+
+		return exp;
+	}
 }]);
 
 app.directive('ngDynamic', ['$compile',
 	function ($compile) {
 		return {
+			/*priority: 1000000,
+			terminal: true,
+			restrict: 'A',
+			scope: true,
+			controller: function($scope, $element, $attrs) {},
+			compile: function (element, attrs) {
 
+				var compiled = $compile(element, null, 1000000);
+
+				return function linkFn(scope, element, attrs) {
+
+					// Remove ng-model-dynamic to prevent recursive compilation
+					if (element.attr('ng-model-dynamic')) {
+						element.removeAttr('ng-model-dynamic');
+						element.attr('ng-model', scope.expEval(scope, attrs.ngModelDynamic));
+					}
+
+					if (element.attr('ng-bind-dynamic')) {
+						element.removeAttr('ng-bind-dynamic');
+						element.attr('ng-bind', attrs.ngBindDynamic);
+					}
+
+					if (element.attr('ng-init-dynamic')) {
+						element.removeAttr('ng-init-dynamic');
+						element.attr('ng-init', attrs.ngInitDynamic);
+					}
+
+
+					if (element.attr('ng-options-dynamic')) {
+						element.removeAttr('ng-options-dynamic');
+						element.attr('ng-options', attrs.ngOptionsDynamic);
+					}
+
+					if (element.attr('ng-include-dynamic')) {
+						element.removeAttr('ng-include-dynamic');
+						element.attr('ng-include', attrs.ngIncludeDynamic);
+					}
+
+					element.removeAttr('ng-dynamic');
+					// Recompile the entire element
+					compiled(scope);
+				}
+
+			},*/
+			priority: -1000000,
 			restrict: 'A',
 			link: function (scope, element, attrs) {
 
@@ -1395,9 +1456,14 @@ app.directive('ngDynamic', ['$compile',
 					element.attr('ng-include', attrs.ngIncludeDynamic);
 				}
 
+				if (element.attr('ng-change-dynamic')) {
+					element.removeAttr('ng-change-dynamic');
+					element.attr('ng-change', attrs.ngChangeDynamic);
+				}
+
 				element.removeAttr('ng-dynamic');
 				// Recompile the entire element
-				$compile(element)(scope);
+				//$compile(element)(scope);
 			}
 
 		}
