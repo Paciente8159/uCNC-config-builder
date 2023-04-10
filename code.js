@@ -677,8 +677,12 @@ function updateFields(settings = []) {
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
-			var nodescope = angular.element(node).scope();
+			
 			if (node) {
+				var nodescope = angular.element(node).scope();
+				if(node.id=='TOOL1'){
+					debugger;
+				}
 				switch (node.type) {
 					case 'range':
 						node.value = nodescope[s] = parseInt(settings[s]);
@@ -687,13 +691,13 @@ function updateFields(settings = []) {
 						node.checked = nodescope[s] = true;
 						break;
 					case 'select-one':
-						nodescope[s] = node.value = settings[s];
+						node.value = nodescope[s] = settings[s];
 						break;
 					default:
-						nodescope[s] = node.value = settings[s];
+						node.value = nodescope[s] = settings[s];
 						break;
 				}
-				nodescope.$digest();
+				nodescope.$apply();
 			}
 		}
 	}
@@ -702,7 +706,7 @@ function updateFields(settings = []) {
 function resetBoardPins() {
 	for (var i = 5; i < board_override_options.length; i++) {
 		var node = document.querySelector("#" + board_override_options[i]);
-		
+
 		if (node) {
 			switch (node.type) {
 				case 'range':
@@ -1349,6 +1353,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 
 	$scope.boardChanged = function () {
 		updateBoardmap($scope);
+		updateHAL($scope);
 	};
 
 	$scope.tmcChanged = function () {
@@ -1365,7 +1370,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 
 	$scope.expEval = function (scope = null, exp = '') {
 		const regex = /{{(?<params>[^}]*)}}/gm;
-		const m = exp.match(regex)[0].replaceAll('{','').replaceAll('}','');
+		const m = exp.match(regex)[0].replaceAll('{', '').replaceAll('}', '');
 		const names = m.split('.');
 		switch (names.length) {
 			case 1:
@@ -1378,53 +1383,23 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 	}
 }]);
 
+// app.directive('ngDynamicRecompile', ['$compile',
+// 	function ($compile) {
+// 		return {
+// 			priority: -999999,
+// 			restrict: 'A',
+// 			link: function (scope, element, attrs) {
+// 				if (element.attr('ng-dynamic-recompile')) {
+// 					element.removeAttr('ng-dynamic-recompile');
+// 					$compile(element)(scope);
+// 				}
+// 			}
+// 		}
+// 	}]);
+
 app.directive('ngDynamic', ['$compile',
 	function ($compile) {
 		return {
-			/*priority: 1000000,
-			terminal: true,
-			restrict: 'A',
-			scope: true,
-			controller: function($scope, $element, $attrs) {},
-			compile: function (element, attrs) {
-
-				var compiled = $compile(element, null, 1000000);
-
-				return function linkFn(scope, element, attrs) {
-
-					// Remove ng-model-dynamic to prevent recursive compilation
-					if (element.attr('ng-model-dynamic')) {
-						element.removeAttr('ng-model-dynamic');
-						element.attr('ng-model', scope.expEval(scope, attrs.ngModelDynamic));
-					}
-
-					if (element.attr('ng-bind-dynamic')) {
-						element.removeAttr('ng-bind-dynamic');
-						element.attr('ng-bind', attrs.ngBindDynamic);
-					}
-
-					if (element.attr('ng-init-dynamic')) {
-						element.removeAttr('ng-init-dynamic');
-						element.attr('ng-init', attrs.ngInitDynamic);
-					}
-
-
-					if (element.attr('ng-options-dynamic')) {
-						element.removeAttr('ng-options-dynamic');
-						element.attr('ng-options', attrs.ngOptionsDynamic);
-					}
-
-					if (element.attr('ng-include-dynamic')) {
-						element.removeAttr('ng-include-dynamic');
-						element.attr('ng-include', attrs.ngIncludeDynamic);
-					}
-
-					element.removeAttr('ng-dynamic');
-					// Recompile the entire element
-					compiled(scope);
-				}
-
-			},*/
 			priority: -1000000,
 			restrict: 'A',
 			link: function (scope, element, attrs) {
@@ -1433,6 +1408,7 @@ app.directive('ngDynamic', ['$compile',
 				if (element.attr('ng-model-dynamic')) {
 					element.removeAttr('ng-model-dynamic');
 					element.attr('ng-model', attrs.ngModelDynamic);
+					scope[attrs.ngModelDynamic] = null;
 				}
 
 				if (element.attr('ng-bind-dynamic')) {
@@ -1444,7 +1420,6 @@ app.directive('ngDynamic', ['$compile',
 					element.removeAttr('ng-init-dynamic');
 					element.attr('ng-init', attrs.ngInitDynamic);
 				}
-
 
 				if (element.attr('ng-options-dynamic')) {
 					element.removeAttr('ng-options-dynamic');
@@ -1462,16 +1437,25 @@ app.directive('ngDynamic', ['$compile',
 				}
 
 				element.removeAttr('ng-dynamic');
-				// Recompile the entire element
-				//$compile(element)(scope);
-			}
 
+				if (element.attr('ng-dynamic-recompile')) {
+					element.removeAttr('ng-dynamic-recompile');
+					$compile(element)(scope);
+				}
+
+			}
 		}
 	}]);
 
 ready(function () {
 	/*updateBoardmap();
 	updateHAL();*/
+	// debugger;
+	// setTimeout(function () {
+	// 	document.querySelector('#STEPPER0_HAS_TMC').addEventListener('change', function (e) {
+	// 		updateHAL(angular.element(e.target).scope());
+	// 	});
+	// }, 2000);
 });
 
 function download(filename, text) {
