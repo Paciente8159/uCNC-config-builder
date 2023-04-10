@@ -2,16 +2,17 @@
 	<legend>Spindle PWM settings</legend>
 
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_PWM</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM" id="SPINDLE_PWM">
+		<label for="" class="form-label">Define LASER_PWM</label>
+		<select class="form-select form-select-md" name="LASER_PWM" id="LASER_PWM">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'pwm'}">{{x.pin}}</option>
 		</select>
 	</div>
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_PWM_DIR</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_DIR" id="SPINDLE_PWM_DIR">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
-		</select>
+		<label for="LASER_FREQ" class="form-label">Laser PWM frequency: <span
+			ng-bind="LASER_FREQ"></span> Hz</label>
+	<input type="range" class="form-range" min="50" max="8000" name="LASER_FREQ"
+		id="LASER_FREQ" ng-model="LASER_FREQ"
+		ng-init="LASER_FREQ=1000">
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
@@ -25,5 +26,4 @@
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
-	
 </fieldset>

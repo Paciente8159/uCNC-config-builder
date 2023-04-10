@@ -13,17 +13,16 @@
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
-	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
+	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
 		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_FLOOD" id="SPINDLE_PWM_COOLANT_FLOOD">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
-	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
+	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_MIST</label>
 		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_MIST" id="SPINDLE_PWM_COOLANT_MIST">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
-	
 </fieldset>

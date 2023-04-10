@@ -3,7 +3,7 @@
 	<div class="mb-3">
 		<label for="" class="form-label">What board will you be using?</label>
 		<select class="form-select form-select-md" name="BOARD" id="BOARD" ng-model="$parent.BOARD" ng-change="boardChanged()">
-			<option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option>
+			<option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': $parent.MCU}">{{x.name}}</option>
 		</select>
 	</div>
 </fieldset>
@@ -11,24 +11,24 @@
 	<legend>Special purpose timmers and features</legend>
 	<div class="mb-3">
 		<label for="" class="form-label">The board name printed with $I command?</label>
-		<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME" ng-model="$parent.BOARD_NAME"
+		<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME" ng-model="BOARD_NAME"
 			aria-describedby="helpId" placeholder="">
 		<small id="helpId" class="form-text text-muted">Name must be between quotation marks
 			(string)</small>
 	</div>
 	<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
 		<label for="" class="form-label">In which port are PCINT pins 0 to 7?</label>
-		<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT' ng-model="$parent.PCINT0_PORT">
+		<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT' ng-model="PCINT0_PORT">
 			<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
 			</option>
 		</select>
 		<label for="" class="form-label">In which port are PCINT pins 8 to 15?</label>
-		<select class='form-select form-select-sm' name='PCINT1_PORT' id='PCINT1_PORT' ng-model="$parent.PCINT1_PORT">
+		<select class='form-select form-select-sm' name='PCINT1_PORT' id='PCINT1_PORT' ng-model="PCINT1_PORT">
 			<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
 			</option>
 		</select>
 		<label for="" class="form-label">In which port are PCINT pins 16 to 23?</label>
-		<select class='form-select form-select-sm' name='PCINT2_PORT' id='PCINT2_PORT' ng-model="$parent.PCINT2_PORT">
+		<select class='form-select form-select-sm' name='PCINT2_PORT' id='PCINT2_PORT' ng-model="PCINT2_PORT">
 			<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
 			</option>
 		</select>
@@ -37,7 +37,7 @@
 		<label for="{{x.timer}}_TIMER" class="form-label">Which Timer will be used as
 			{{x.timer}}_TIMER?</label>
 		<select class='form-select form-select-sm' name='{{x.timer}}_TIMER' id='{{x.timer}}_TIMER'
-			ng-model-dynamic="{{x.timer}}_TIMER">
+			ng-model-dynamic="{{x.timer}}_TIMER" ng-dynamic>
 			<option value='{{y.timer}}' ng-repeat="y in TIMERS | filter: {'mcu': MCU}">
 				{{y.timer}}
 			</option>
@@ -62,28 +62,28 @@
 		<tr ng-repeat="x in UCNCPINS">
 			<th scope='row'>{{x.pin}}</th>
 			<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
-					ng-model-dynamic="{{x.pin}}_BIT">
+					ng-model-dynamic="{{x.pin}}_BIT" ng-dynamic>
 					<option value='{{y.pin}}' ng-repeat="y in PINS | filter: {'mcu': MCU}">{{y.pin}}
 					</option>
 				</select></td>
 			<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
-					ng-model-dynamic="{{x.pin}}_PORT">
+					ng-model-dynamic="{{x.pin}}_PORT" ng-dynamic>
 					<option value='{{z.port}}' ng-repeat="z in PORTS | filter: {'mcu': MCU}">{{z.port}}
 					</option>
 				</select></td>
 			<td>
 				<div class="form-check form-switch" ng-if='x.type=="input" || x.type=="input_interruptable"'>
 					<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP' id='{{x.pin}}_PULLUP'
-						ng-model-dynamic="{{x.pin}}_PULLUP">
+						ng-model-dynamic="{{x.pin}}_PULLUP" ng-dynamic>
 				</div>
 			</td>
 			<td>
 				<div class="form-check form-switch" ng-if='x.type=="input_interruptable"'>
 					<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
-						ng-model-dynamic="{{x.pin}}_ISR" ng-if='MCU!="MCU_AVR"'>
+						ng-model-dynamic="{{x.pin}}_ISR" ng-if='MCU!="MCU_AVR"' ng-dynamic>
 					<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
 						<select class='form-select form-select-sm' name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
-							ng-model-dynamic="{{x.pin}}_ISR">
+							ng-model-dynamic="{{x.pin}}_ISR" ng-dynamic>
 							<option value='{{y.isr}}' ng-repeat="y in ISRS | filter: {'mcu': MCU}">
 								{{y.isr}}
 							</option>
@@ -96,7 +96,7 @@
 			</td>
 			<td>
 				<div ng-if='x.type=="pwm" || x.type=="analog"'><select class='form-select form-select-sm'
-						name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL' ng-model-dynamic="{{x.pin}}_CHANNEL">
+						name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL' ng-model-dynamic="{{x.pin}}_CHANNEL" ng-dynamic>
 						<option value='{{y.channel}}' ng-repeat="y in CHANNELS | filter: {'mcu': MCU}">
 							{{y.channel}}
 						</option>
@@ -104,7 +104,7 @@
 			</td>
 			<td>
 				<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_TIMER'
-						id='{{x.pin}}_TIMER' ng-model-dynamic="{{x.pin}}_TIMER">
+						id='{{x.pin}}_TIMER' ng-model-dynamic="{{x.pin}}_TIMER" ng-dynamic>
 						<option value='{{y.timer}}' ng-repeat="y in TIMERS | filter: {'mcu': MCU}">
 							{{y.timer}}
 						</option>
@@ -112,7 +112,7 @@
 			</td>
 			<td>
 				<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_MUX'
-						id='{{x.pin}}_MUX' ng-model-dynamic="{{x.pin}}_MUX">
+						id='{{x.pin}}_MUX' ng-model-dynamic="{{x.pin}}_MUX" ng-dynamic>
 						<option value='{{y.mux}}' ng-repeat="y in MUXS | filter: {'mcu': MCU}">{{y.mux}}
 						</option>
 					</select></div>

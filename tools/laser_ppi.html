@@ -1,0 +1,23 @@
+<fieldset ng-if="ENABLE_LASER_PPI">
+	<legend>Spindle PWM settings</legend>
+
+	<div class="mb-3">
+		<label for="" class="form-label">Define LASER_PPI</label>
+		<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI" ng-model="LASER_PPI">
+			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
+		</select>
+	</div>
+	<div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" id="INVERT_LASER_PPI_LOGIC" ng-model="INVERT_LASER_PPI_LOGIC">
+		<label class="form-check-label" for="INVERT_LASER_PPI_LOGIC">Enable INVERT_LASER_PPI_LOGIC</label>
+	</div>
+	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
+		<label for="" class="form-label">Define LASER_PPI_AIR_ASSIST</label>
+		<select class="form-select form-select-md" name="LASER_PPI_AIR_ASSIST" id="LASER_PPI_AIR_ASSIST" ng-model="LASER_PPI_AIR_ASSIST">
+			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
+		</select>
+	</div>
+</fieldset>
+<div ng-if="!ENABLE_LASER_PPI" class="alert alert-danger">
+	ENABLE_LASER_PPI is not enabled!
+</div>

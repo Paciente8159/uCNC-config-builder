@@ -450,6 +450,7 @@ const board_override_options = [
 ];
 
 const hal_override_options = [
+	'ENABLE_COOLANT',
 	'ENABLE_SKEW_COMPENSATION',
 	'SKEW_COMPENSATION_XY_ONLY',
 	'ENABLE_LINACT_PLANNER',
@@ -676,18 +677,24 @@ function updateFields(settings = []) {
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
+			var nodescope = angular.element(node).scope();
 			if (node) {
 				switch (node.type) {
-					case 'select-one':
-						node.value = settings[s];
+					case 'range':
+						node.value = nodescope[s] = parseInt(settings[s]);
 						break;
 					case 'checkbox':
-						node.checked = true;
+						node.checked = nodescope[s] = true;
+						break;
+					case 'select-one':
+						debugger;
+						nodescope[s] = node.value = settings[s];
 						break;
 					default:
-						node.value = settings[s];
+						nodescope[s] = node.value = settings[s];
 						break;
 				}
+				nodescope.$digest();
 			}
 		}
 	}
@@ -718,6 +725,24 @@ function updateHAL(scope = null) {
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
 	parsePreprocessor(hal, settings, function (newsettings) {
+		updateFields(newsettings);
+		if (scope) {
+			scope.$apply();
+		}
+	});
+}
+
+
+function updateTool(scope = null, tool = null) {
+	var settings = [];
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
+	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
+
+	if (!tool) {
+		return;
+	}
+
+	parsePreprocessor(tool, settings, function (newsettings) {
 		updateFields(newsettings);
 		if (scope) {
 			scope.$apply();
@@ -1272,7 +1297,13 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.TOOL_OPTIONS = {
 		"spindle_pwm": "Spindle PWM",
-		"spindle_besc": "BESC Spindle"
+		"spindle_besc": "BESC Spindle",
+		"spindle_relay": "Spindle Relay",
+		"laser_pwm": "Laser PWM",
+		"laser_ppi": "Laser PPI",
+		"vfd_modbus": "VFD Modbus",
+		"vfd_pwm": "VFD PWM",
+		"pen_servo": "Pen Servo"
 	};
 
 	$scope.STEPPERS = [
@@ -1302,6 +1333,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.KINEMATIC = "KINEMATIC_CARTESIAN";
 	$scope.AXIS_COUNT = '3';
 	$scope.TOOL_COUNT = 1;
+	$scope.ENABLE_COOLANT = false;
 
 	$scope.numSmallerOrEq = function (arr, ref) {
 		var refval = document.querySelector("#" + ref);
@@ -1319,104 +1351,51 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.tmcChanged = function () {
 		updateHAL($scope);
 	};
+
+	$scope.toolChanged = function (tool) {
+		updateTool($scope, document.querySelector('#TOOL' + tool.x).value.split(':')[1]);
+	};
+
+	$scope.buildName = function (pre = '', mid = '', post = '') {
+		return pre + mid + post;
+	};
 }]);
 
-app.directive('ngModelDynamic', ['$compile',
+app.directive('ngDynamic', ['$compile',
 	function ($compile) {
 		return {
 
 			restrict: 'A',
 			link: function (scope, element, attrs) {
-
-				if (element.attr('ng-model')) {
-					return;
-				}
 
 				// Remove ng-model-dynamic to prevent recursive compilation
-				element.removeAttr('ng-model-dynamic');
-
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-model', attrs.ngModelDynamic);
-
-				// Recompile the entire element
-				$compile(element)(scope);
-				updateBoardmap(scope);
-				updateHAL(scope);
-			}
-
-		}
-	}]);
-
-app.directive('ngOptionsDynamic', ['$compile',
-	function ($compile) {
-		return {
-
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				element.removeAttr('ng-options-dynamic');
-
-				if (!element.attr('ng-model')) {
+				if (element.attr('ng-model-dynamic')) {
 					element.removeAttr('ng-model-dynamic');
 					element.attr('ng-model', attrs.ngModelDynamic);
 				}
 
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-options', attrs.ngOptionsDynamic);
+				if (element.attr('ng-bind-dynamic')) {
+					element.removeAttr('ng-bind-dynamic');
+					element.attr('ng-bind', attrs.ngBindDynamic);
+				}
 
-				// Recompile the entire element
-				$compile(element)(scope);
-			}
-		}
-	}]);
+				if (element.attr('ng-init-dynamic')) {
+					element.removeAttr('ng-init-dynamic');
+					element.attr('ng-init', attrs.ngInitDynamic);
+				}
 
-app.directive('ngIncludeDynamic', ['$compile',
-	function ($compile) {
-		return {
 
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				element.removeAttr('ng-include-dynamic');
+				if (element.attr('ng-options-dynamic')) {
+					element.removeAttr('ng-options-dynamic');
+					element.attr('ng-options', attrs.ngOptionsDynamic);
+				}
 
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-include', attrs.ngIncludeDynamic);
+				if (element.attr('ng-include-dynamic')) {
+					element.removeAttr('ng-include-dynamic');
+					element.attr('ng-include', attrs.ngIncludeDynamic);
+				}
 
-				// Recompile the entire element
-				$compile(element)(scope);
-			}
-		}
-	}]);
-
-app.directive('ngInitDynamic', ['$compile',
-	function ($compile) {
-		return {
-
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				// Remove ng-model-dynamic to prevent recursive compilation
-				element.removeAttr('ng-init-dynamic');
-
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-init', attrs.ngInitDynamic);
-
-				// Recompile the entire element
-				$compile(element)(scope);
-			}
-
-		}
-	}]);
-
-app.directive('ngBindDynamic', ['$compile',
-	function ($compile) {
-		return {
-
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				// Remove ng-model-dynamic to prevent recursive compilation
-				element.removeAttr('ng-bind-dynamic');
-
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-bind', attrs.ngBindDynamic);
-
+				element.removeAttr('ng-dynamic');
 				// Recompile the entire element
 				$compile(element)(scope);
 			}

@@ -10,7 +10,7 @@
 	<div ng-hide="DISABLE_ALL_CONTROLS">
 		<div class="form-check form-check-inline" ng-repeat="y in CONTROLS">
 			<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP_ENABLE" value="{{y}}_PULLUP_ENABLE"
-				ng-model-dynamic="{{y.control}}_PULLUP_ENABLE">
+				ng-model-dynamic="{{y.control}}_PULLUP_ENABLE" ng-dynamic>
 			<label class="form-check-label" for="{{y}}_PULLUP_ENABLE">Enable {{y}} internal pullup
 				resistor</label>
 		</div>
@@ -25,7 +25,7 @@
 	<div ng-hide="DISABLE_ALL_LIMITS">
 		<div class="form-check form-check-inline" ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
 			<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE" value="{{y.limit}}_DISABLE"
-				ng-model-dynamic="$parent.{{y.limit}}_DISABLE">
+				ng-model-dynamic="$parent.{{y.limit}}_DISABLE" ng-dynamic>
 			<label class="form-check-label" for="{{y.limit}}_DISABLE">Disable {{y.limit}}</label>
 		</div>
 	</div>
@@ -33,7 +33,7 @@
 		<div class="form-check form-check-inline" ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
 			<input class="form-check-input" type="checkbox" id="{{y.limit}}_PULLUP_ENABLE"
 				value="{{y.limit}}_PULLUP_ENABLE" ng-disabled="$parent.{{y.limit}}_DISABLE"
-				ng-model-dynamic="{{y.limit}}_PULLUP_ENABLE">
+				ng-model-dynamic="{{y.limit}}_PULLUP_ENABLE" ng-dynamic>
 			<label class="form-check-label" for="{{y.limit}}_PULLUP_ENABLE">Enable {{y.limit}} internal
 				pullup
 				resistor</label>
@@ -134,11 +134,15 @@
 
 <fieldset>
 	<legend>Tools options</legend>
+	<div class="mb-3 alert alert-warning" ng-if="!$parent.$parent.ENABLE_COOLANT">
+		ENABLE_COOLANT is disabled!
+		Some options might be ommited.
+	</div>
 	<div class="mb-3" ng-repeat="x in numSmallerOrEq(TOOLS,'TOOL_COUNT')">
 		<label for="" class="form-label">Select TOOL{{x}}</label>
-		<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model-dynamic="TOOL{{x}}" ng-options-dynamic="key as value for (key , value) in TOOL_OPTIONS">
+		<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model-dynamic="TOOL{{x}}" ng-options-dynamic="key as value for (key , value) in TOOL_OPTIONS" ng-dynamic>
 		</select>
-		<div ng-include-dynamic="'tools/'+TOOL{{x}}+'.html'"></div>
+		<div ng-include-dynamic="'tools/'+TOOL{{x}}+'.html'" onload="toolChanged({x})" ng-dynamic></div>
 	</div>
 </fieldset>
 <fieldset>
@@ -190,14 +194,14 @@
 	<div ng-repeat="x in STEPPERS">
 		<div class="form-check form-switch">
 			<input class="form-check-input" type="checkbox" id="STEPPER{{x}}_HAS_TMC"
-				ng-model-dynamic="STEPPER{{x}}_HAS_TMC" ng-change="tmcChanged()">
+				ng-model-dynamic="STEPPER{{x}}_HAS_TMC" ng-change="tmcChanged()" ng-dynamic>
 			<label class="form-check-label" for="STEPPER{{x}}_HAS_TMC">Stepper{{x}} has TMC
 				driver</label>
 			<div ng-show="STEPPER{{x}}_HAS_TMC">
 				<div class="mb-3">
 					<label for="" class="form-label">Stepper{{x}} TMC type</label>
 					<select class="form-select form-select-md" name="STEPPER{{x}}_DRIVER_TYPE"
-						id="STEPPER{{x}}_DRIVER_TYPE" ng-model-dynamic="STEPPER{{x}}_DRIVER_TYPE">
+						id="STEPPER{{x}}_DRIVER_TYPE" ng-model-dynamic="STEPPER{{x}}_DRIVER_TYPE" ng-dynamic>
 						<option value='{{y}}' ng-repeat="y in TMCS">
 							{{y}}
 						</option>
@@ -207,7 +211,7 @@
 					<label for="STEPPER{{x}}_TMC_INTERFACE" class="form-label">Stepper{{x}} TMC
 						interface</label>
 					<select class="form-select form-select-md" name="STEPPER{{x}}_TMC_INTERFACE"
-						id="STEPPER{{x}}_TMC_INTERFACE" ng-model-dynamic="STEPPER{{x}}_TMC_INTERFACE">
+						id="STEPPER{{x}}_TMC_INTERFACE" ng-model-dynamic="STEPPER{{x}}_TMC_INTERFACE" ng-dynamic>
 						<option value="TMC_UART">UART</option>
 						<option value="TMC_SPI" selected>SPI</option>
 					</select>
@@ -217,7 +221,7 @@
 						<label for="STEPPER{{x}}_UART_TX" class="form-label">Stepper{{x}} TMC UART TX
 							pin</label>
 						<select class="form-select form-select-md" name="STEPPER{{x}}_UART_TX" id="STEPPER{{x}}_UART_TX"
-							ng-model-dynamic="STEPPER{{x}}_UART_TX">
+							ng-model-dynamic="STEPPER{{x}}_UART_TX" ng-dynamic>
 							<option value="{{y.pin}}" ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
 								{{y.pin}}
 							</option>
@@ -225,7 +229,7 @@
 						<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} TMC UART RX
 							pin</label>
 						<select class="form-select form-select-md" name="STEPPER{{x}}_UART_RX" id="STEPPER{{x}}_UART_RX"
-							ng-model-dynamic="STEPPER{{x}}_UART_RX">
+							ng-model-dynamic="STEPPER{{x}}_UART_RX" ng-dynamic>
 							<option value="{{y.pin}}" ng-repeat="y in UCNCPINS | filter: {'type': 'generic_input'}">
 								{{y.pin}}
 							</option>
@@ -237,14 +241,14 @@
 						<label for="STEPPER{{x}}_SPI_CS" class="form-label">Stepper{{x}} TMC SPI CS
 							pin</label>
 						<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CS" id="STEPPER{{x}}_SPI_CS"
-							ng-model-dynamic="STEPPER{{x}}_SPI_CS">
+							ng-model-dynamic="STEPPER{{x}}_SPI_CS" ng-dynamic>
 							<option value="{{y.pin}}" ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
 								{{y.pin}}
 							</option>
 						</select>
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="STEPPER{{x}}_SPI_CUSTOM"
-								ng-model-dynamic="STEPPER{{x}}_SPI_CUSTOM">
+								ng-model-dynamic="STEPPER{{x}}_SPI_CUSTOM" ng-dynamic>
 							<label class="form-check-label" for="STEPPER{{x}}_SPI_CUSTOM">Enable Soft
 								SPI pins (if disabled uses predifined software SPI port)</label>
 						</div>
@@ -253,7 +257,7 @@
 								CLK
 								pin</label>
 							<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CLK"
-								id="STEPPER{{x}}_SPI_CLK" ng-model-dynamic="STEPPER{{x}}_SPI_CLK">
+								id="STEPPER{{x}}_SPI_CLK" ng-model-dynamic="STEPPER{{x}}_SPI_CLK" ng-dynamic>
 								<option value="SOFT_SPI_CLK">SOFT_SPI_CLK</option>
 								<option value="{{y.pin}}"
 									ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
@@ -264,7 +268,7 @@
 								SDO
 								pin</label>
 							<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDO"
-								id="STEPPER{{x}}_SPI_SDO" ng-model-dynamic="STEPPER{{x}}_SPI_SDO">
+								id="STEPPER{{x}}_SPI_SDO" ng-model-dynamic="STEPPER{{x}}_SPI_SDO" ng-dynamic>
 								<option value="SOFT_SPI_SDO">SOFT_SPI_SDO</option>
 								<option value="{{y.pin}}"
 									ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
@@ -275,7 +279,7 @@
 								SDI
 								pin</label>
 							<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDI"
-								id="STEPPER{{x}}_SPI_SDI" ng-model-dynamic="STEPPER{{x}}_SPI_SDI">
+								id="STEPPER{{x}}_SPI_SDI" ng-model-dynamic="STEPPER{{x}}_SPI_SDI" ng-dynamic>
 								<option value="SOFT_SPI_SDI">SOFT_SPI_SDI</option>
 								<option value="{{y.pin}}" ng-repeat="y in UCNCPINS | filter: {'type': 'generic_input'}">
 									{{y.pin}}
@@ -285,13 +289,13 @@
 					</div>
 				</div>
 				<label for="STEPPER{{x}}_CURRENT_MAX" class="form-label">Stepper{{x}} max current: <span
-						ng-bind-dynamic="STEPPER{{x}}_CURRENT_MAX"></span> mA</label>
+						ng-bind-dynamic="STEPPER{{x}}_CURRENT_MAX" ng-dynamic></span> mA</label>
 				<input type="range" class="form-range" min="0" max="1500" name="STEPPER{{x}}_CURRENT_MAX"
 					id="STEPPER{{x}}_CURRENT_MAX" ng-model-dynamic="STEPPER{{x}}_CURRENT_MAX"
-					ng-init-dynamic="STEPPER{{x}}_CURRENT_MAX=800">
+					ng-init-dynamic="STEPPER{{x}}_CURRENT_MAX=800" ng-dynamic>
 				<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping</label>
 				<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP" id="STEPPER{{x}}_MICROSTEP"
-					ng-model-dynamic="STEPPER{{x}}_MICROSTEP">
+					ng-model-dynamic="STEPPER{{x}}_MICROSTEP" ng-dynamic>
 					<option value=1>1</option>
 					<option value=2>2</option>
 					<option value=4>4</option>
@@ -300,24 +304,24 @@
 					<option value=32>32</option>
 				</select>
 				<label for="STEPPER{{x}}_RSENSE" class="form-label">Stepper{{x}} RSense: <span
-						ng-bind-dynamic="STEPPER{{x}}_RSENSE"></span> ohms</label>
+						ng-bind-dynamic="STEPPER{{x}}_RSENSE" ng-dynamic></span> ohms</label>
 				<input type="range" class="form-range" step="0.01" min="0" max="2" name="STEPPER{{x}}_RSENSE"
 					id="STEPPER{{x}}_RSENSE" ng-model-dynamic="STEPPER{{x}}_RSENSE"
-					ng-init-dynamic="STEPPER{{x}}_RSENSE=0.11">
+					ng-init-dynamic="STEPPER{{x}}_RSENSE=0.11" ng-dynamic>
 				<label for="STEPPER{{x}}_HOLD_MULT" class="form-label">Stepper{{x}} Hold multiplier:
 					<span ng-bind-dynamic="STEPPER{{x}}_HOLD_MULT"></span></label>
 				<input type="range" class="form-range" step="0.01" min="0" max="1" name="STEPPER{{x}}_HOLD_MULT"
 					id="STEPPER{{x}}_HOLD_MULT" ng-model-dynamic="STEPPER{{x}}_HOLD_MULT"
-					ng-init-dynamic="STEPPER{{x}}_HOLD_MULT=0.7">
+					ng-init-dynamic="STEPPER{{x}}_HOLD_MULT=0.7" ng-dynamic>
 				<label for="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" class="form-label">Stepper{{x}}
-					stealthchop threshold: <span ng-bind-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"></span> Hz</label>
+					stealthchop threshold: <span ng-bind-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" ng-dynamic></span> Hz</label>
 				<input type="range" class="form-range" min="0" max="1048575" name="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
 					id="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" ng-model-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
-					ng-init-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD=0">
+					ng-init-dynamic="STEPPER{{x}}_STEALTHCHOP_THERSHOLD=0" ng-dynamic>
 				<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping
 					interpolation</label>
 				<select class="form-select form-select-md" name="STEPPER{{x}}_ENABLE_INTERPLATION"
-					id="STEPPER{{x}}_ENABLE_INTERPLATION" ng-model-dynamic="STEPPER{{x}}_ENABLE_INTERPLATION">
+					id="STEPPER{{x}}_ENABLE_INTERPLATION" ng-model-dynamic="STEPPER{{x}}_ENABLE_INTERPLATION" ng-dynamic>
 					<option value=false>false</option>
 					<option value=true>true</option>
 				</select>
@@ -325,10 +329,10 @@
 				<div ng-show="STEPPER{{x}}_DRIVER_TYPE=='2209'">
 					<label for="STEPPER{{x}}_STALL_SENSITIVITY" class="form-label">Stepper{{x}}
 						stall sensitivity:
-						<span ng-bind-dynamic="STEPPER{{x}}_STALL_SENSITIVITY"></span></label>
+						<span ng-bind-dynamic="STEPPER{{x}}_STALL_SENSITIVITY" ng-dynamic></span></label>
 					<input type="range" class="form-range" min="0" max="255" name="STEPPER{{x}}_STALL_SENSITIVITY"
 						id="STEPPER{{x}}_STALL_SENSITIVITY" ng-model-dynamic="STEPPER{{x}}_STALL_SENSITIVITY"
-						ng-init-dynamic="STEPPER{{x}}_STALL_SENSITIVITY=10">
+						ng-init-dynamic="STEPPER{{x}}_STALL_SENSITIVITY=10" ng-dynamic>
 				</div>
 			</div>
 		</div>
