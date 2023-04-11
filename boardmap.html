@@ -62,7 +62,7 @@
 		<tr ng-repeat="x in UCNCPINS">
 			<th scope='row'>{{x.pin}}</th>
 			<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
-					ng-model-dynamic="{{x.pin}}_BIT" ng-dynamic>
+					ng-model="$parent.BOARDMAP['BIT'][x.pin]">
 					<option value=''></option>
 					<option value='{{y.pin}}' ng-repeat="y in PINS | filter: {'mcu': MCU}">{{y.pin}}
 					</option>

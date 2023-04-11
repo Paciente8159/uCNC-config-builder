@@ -655,6 +655,7 @@ function ready(fn) {
 }
 
 function parsePreprocessor(file, settings = [], callback) {
+	document.querySelector('#reloading').style.display = "block";
 	const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
 	var txtFile = new XMLHttpRequest();
 	txtFile.open("GET", file, true);
@@ -669,38 +670,92 @@ function parsePreprocessor(file, settings = [], callback) {
 				callback(settings);
 			}
 		}
+
+		document.querySelector('#reloading').style.display = "none";
+	}
+	txtFile.onerror = function () {
+		document.querySelector('#reloading').style.display = "none";
 	}
 	txtFile.send(null);
+}
+
+function updateScope(scope = null, node = null, val = null) {
+	if (!scope || !node) {
+		return;
+	}
+
+	var v;
+
+	switch (node.getAttribute('var-type')) {
+		case 'int':
+			v = (val) ? parseInt(val) : {};
+			break;
+		default:
+			v = val;
+			break;
+	}
+
+	if (node.hasAttribute('model-scope-name')) {
+		var arr = node.getAttribute('model-scope-name').split('.');
+
+		if (arr.length > 0 && !scope[arr[0]]) {
+			scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+		else if (arr.length == 1) {
+			scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+
+		if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
+			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+		else if (arr.length == 2) {
+			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+
+		if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
+			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+		else if (arr.length == 3) {
+			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+
+		if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+		else if (arr.length == 4) {
+			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+	}
+	else {
+		scope[node.id] = v;
+	}
+
+	if (val) {
+		scope.$apply();
+	}
 }
 
 function updateFields(settings = []) {
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
-
+			// if(s=="PWM0_TIMER"){debugger;}
 			if (node) {
 				var nodescope = angular.element(node).scope();
-				if (node.id == 'TOOL1') {
-					debugger;
-				}
 				switch (node.type) {
 					case 'range':
-						node.value = parseInt(settings[s]);
+						updateScope(nodescope, node, settings[s]);
 						break;
 					case 'checkbox':
-						node.checked = true;
+						updateScope(nodescope, node, true);
 						break;
 					case 'select-one':
-						nodescope[s] = settings[s];
-						nodescope.$apply();
-						if(node.querySelector('[selected="selected"]')){node.querySelector('[selected="selected"]').removeAttribute('selected');}
-						if(node.querySelector('[value="'+settings[s]+'"]')){node.querySelector('[value="'+settings[s]+'"]').setAttribute('selected', 'selected');}
+						updateScope(nodescope, node, settings[s]);
 						break;
 					default:
-						node.value = settings[s];
+						updateScope(nodescope, node, settings[s]);
 						break;
 				}
-				nodescope.$apply();
 			}
 		}
 	}
@@ -711,25 +766,14 @@ function resetBoardPins() {
 		var node = document.querySelector("#" + board_override_options[i]);
 
 		if (node) {
-			switch (node.type) {
-				case 'range':
-					node.value = '';
-					break;
-				case 'checkbox':
-					node.checked = nodescope[s] = true;
-					break;
-				case 'select-one':
-					node.value = '';
-					break;
-				default:
-					node.value = '';
-					break;
-			}
+			var nodescope = angular.element(node).scope();
+			updateScope(nodescope, node);
 		}
 	}
 }
 
 function updateHAL(scope = null) {
+	document.getElementById('loadingtext').innerText = "Fetching HAL...";
 	var settings = [];
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
@@ -744,6 +788,7 @@ function updateHAL(scope = null) {
 
 
 function updateTool(scope = null, tool = null) {
+	document.getElementById('loadingtext').innerText = "Fetching tools...";
 	var settings = [];
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
 	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
@@ -761,6 +806,7 @@ function updateTool(scope = null, tool = null) {
 }
 
 function updateBoardmap(scope = null) {
+	document.getElementById('loadingtext').innerText = "Fetching processor...";
 	var settings = [];
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
 
@@ -809,6 +855,7 @@ function updateBoardmap(scope = null) {
 	}
 
 	parsePreprocessor(mcuurl, settings, function (newsettings) {
+		document.getElementById('loadingtext').innerText = "Fetching board...";
 		settings = newsettings;
 		var boardurl = coreurl + "/uCNC/src/hal/boards/";
 		switch (scope.BOARD) {
@@ -1305,16 +1352,18 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 		16
 	];
 
-	$scope.TOOL_OPTIONS = {
-		"spindle_pwm": "Spindle PWM",
-		"spindle_besc": "BESC Spindle",
-		"spindle_relay": "Spindle Relay",
-		"laser_pwm": "Laser PWM",
-		"laser_ppi": "Laser PPI",
-		"vfd_modbus": "VFD Modbus",
-		"vfd_pwm": "VFD PWM",
-		"pen_servo": "Pen Servo"
-	};
+	$scope.DYNAMIC = {};
+
+	$scope.TOOL_OPTIONS = [
+		{ id: 'spindle_pwm', name: 'Spindle PWM' },
+		{ id: 'spindle_besc', name: 'BESC Spindle' },
+		{ id: 'spindle_relay', name: 'Spindle Relay' },
+		{ id: 'laser_pwm', name: 'Laser PWM' },
+		{ id: 'laser_ppi', name: 'Laser PPI' },
+		{ id: 'vfd_modbus', name: 'VFD Modbus' },
+		{ id: 'vfd_pwm', name: 'VFD PWM' },
+		{ id: 'pen_servo', name: 'Pen Servo' }
+	];
 
 	$scope.STEPPERS = [
 		0,
@@ -1386,83 +1435,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 	}
 }]);
 
-// app.directive('ngDynamicRecompile', ['$compile',
-// 	function ($compile) {
-// 		return {
-// 			priority: -999999,
-// 			restrict: 'A',
-// 			link: function (scope, element, attrs) {
-// 				if (element.attr('ng-dynamic-recompile')) {
-// 					element.removeAttr('ng-dynamic-recompile');
-// 					$compile(element)(scope);
-// 				}
-// 			}
-// 		}
-// 	}]);
-
-app.directive('ngDynamic', ['$compile',
-	function ($compile) {
-		return {
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-
-				// return {
-				// 	pre: function preLink(scope, element, attrs, controller) {
-						// Remove ng-model-dynamic to prevent recursive compilation
-						if (element.attr('ng-model-dynamic')) {
-							element.removeAttr('ng-model-dynamic');
-							element.attr('ng-model', attrs.ngModelDynamic);
-							//scope[attrs.ngModelDynamic] = null;
-						}
-
-						if (element.attr('ng-bind-dynamic')) {
-							element.removeAttr('ng-bind-dynamic');
-							element.attr('ng-bind', attrs.ngBindDynamic);
-						}
-
-						if (element.attr('ng-init-dynamic')) {
-							element.removeAttr('ng-init-dynamic');
-							element.attr('ng-init', attrs.ngInitDynamic);
-						}
-
-						if (element.attr('ng-options-dynamic')) {
-							element.removeAttr('ng-options-dynamic');
-							element.attr('ng-options', attrs.ngOptionsDynamic);
-						}
-
-						if (element.attr('ng-include-dynamic')) {
-							element.removeAttr('ng-include-dynamic');
-							element.attr('ng-include', attrs.ngIncludeDynamic);
-						}
-
-						if (element.attr('ng-change-dynamic')) {
-							element.removeAttr('ng-change-dynamic');
-							element.attr('ng-change', attrs.ngChangeDynamic);
-						}
-
-						element.removeAttr('ng-dynamic');
-
-						if (element.attr('ng-dynamic-recompile')) {
-							element.removeAttr('ng-dynamic-recompile');
-							element.unbind();
-							$compile(element)(scope);
-						}
-					}
-			// 	}
-
-			// }
-		}
-	}]);
-
 ready(function () {
-	/*updateBoardmap();
-	updateHAL();*/
-	// debugger;
-	// setTimeout(function () {
-	// 	document.querySelector('#STEPPER0_HAS_TMC').addEventListener('change', function (e) {
-	// 		updateHAL(angular.element(e.target).scope());
-	// 	});
-	// }, 2000);
+	var scope = angular.element(document.querySelector('#MCU')).scope();
+	updateBoardmap(scope);
+	updateHAL(scope);
 });
 
 function download(filename, text) {
