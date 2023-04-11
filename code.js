@@ -655,7 +655,7 @@ function ready(fn) {
 }
 
 function parsePreprocessor(file, settings = [], callback) {
-	document.querySelector('#reloading').style.display = "block";
+	document.getElementById('reloading').style.display = "block";
 	const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
 	var txtFile = new XMLHttpRequest();
 	txtFile.open("GET", file, true);
@@ -671,10 +671,10 @@ function parsePreprocessor(file, settings = [], callback) {
 			}
 		}
 
-		document.querySelector('#reloading').style.display = "none";
+		document.getElementById('reloading').style.display = "none";
 	}
 	txtFile.onerror = function () {
-		document.querySelector('#reloading').style.display = "none";
+		document.getElementById('reloading').style.display = "none";
 	}
 	txtFile.send(null);
 }
@@ -690,6 +690,11 @@ function updateScope(scope = null, node = null, val = null) {
 		case 'int':
 			v = (val) ? parseInt(val) : {};
 			break;
+		case 'float':
+			v = (val) ? parseFloat(val) : {};
+			break;
+		case 'bool':
+			v = (val) ? (val === 'true') : {};
 		default:
 			v = val;
 			break;
@@ -736,10 +741,12 @@ function updateScope(scope = null, node = null, val = null) {
 }
 
 function updateFields(settings = []) {
+	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+	document.getElementById('reloading').style.display = "block";
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
-			// if(s=="PWM0_TIMER"){debugger;}
+			// if(s=="STEPPER0_RSENSE"){debugger;}
 			if (node) {
 				var nodescope = angular.element(node).scope();
 				switch (node.type) {
@@ -747,7 +754,7 @@ function updateFields(settings = []) {
 						updateScope(nodescope, node, settings[s]);
 						break;
 					case 'checkbox':
-						updateScope(nodescope, node, true);
+						updateScope(nodescope, node, (settings[s]) ? settings[s] : true);
 						break;
 					case 'select-one':
 						updateScope(nodescope, node, settings[s]);
@@ -759,6 +766,7 @@ function updateFields(settings = []) {
 			}
 		}
 	}
+	document.getElementById('reloading').style.display = "none";
 }
 
 function resetBoardPins() {
@@ -1385,6 +1393,20 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 		2130
 	];
 
+	$scope.TMCS_COM = [
+		{ id: 'TMC_UART', name: 'UART' },
+		{ id: 'TMC_SPI', name: 'SPI' },
+	];
+
+	$scope.MICROSTEPS = [
+		1,
+		2,
+		4,
+		8,
+		16,
+		32
+	];
+
 	$scope.PREV_MCU = "";
 	$scope.MCU = "MCU_AVR";
 	$scope.PREV_BOARD = "";
@@ -1484,11 +1506,48 @@ function generate_user_config(options, defguard) {
 	return gentext;
 }
 
-document.querySelector('#boardmap_overrides').addEventListener('click', function () {
+document.getElementById('boardmap_overrides').addEventListener('click', function () {
 	download('boardmap_overrides.h', generate_user_config(board_override_options, 'BOADMAP_OVERRIDES_H'));
 });
 
-document.querySelector('#cnc_hal_overrides').addEventListener('click', function () {
-
+document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
 	download('cnc_hal_overrides.h', generate_user_config(hal_override_options, 'CNC_HAL_OVERRIDES_H'));
 });
+
+document.getElementById('store_settings').addEventListener('click', function () {
+	var key_values = {};
+	document.querySelectorAll('input[ng-model],select[ng-model]').forEach((e, i, p) => {
+		// var val;
+		// switch (e.getAttribute('type')) {
+		// 	case "checkbox":
+		// 		val = e.checked;
+		// 		break;
+		// 	case "range":
+		// 		val = (e.getAttribute('var-type') != 'float') ? parseInt(e.value.replace('number:', '')) : parseFloat(e.value.replace('number:', ''));
+		// 		break;
+		// 	default:
+		// 		val = e.value;//(e.value.match('number:')) ? parseInt(e.value.replace('number:', '')) : e.value.replace('string:', '');
+		// 		break;
+		// }
+		key_values[e.id] = e.value;
+	});
+
+	download('ucnc_build.json', JSON.stringify(key_values));
+});
+
+document.getElementById('load_settings').addEventListener('change', function (e) {
+	var file = e.target.files[0];
+	if (!file) {
+		return;
+	}
+	var reader = new FileReader();
+	reader.onload = function (e) {
+		var contents = e.target.result;
+		debugger;
+		var build = JSON.parse(contents);
+		for (const [key, value] of Object.entries(build)) {
+			document.getElementById(key).value = value;
+		}
+	};
+	reader.readAsText(file);
+}, false);
