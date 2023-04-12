@@ -1412,6 +1412,21 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 		{ id: 'pen_servo', name: 'Pen Servo' }
 	];
 
+	$scope.MODULES_OPTIONS = [
+		{ id: 'parser_g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
+		{ id: 'parser_g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
+		{ id: 'parser_g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
+		{ id: 'parser_g7_g8', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
+		{ id: 'parser_g7_g8', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
+		{ id: 'parser_g7_g8', name: 'LinuxCNC M62-M65 and allows to turn on and off any generic digital pin (synched or immediately)' },
+		{ id: 'parser_g7_g8', name: 'LinuxCNC M67-M68 and allows to turn on and off any analog pin (synched or immediately)' },
+		{ id: 'parser_g7_g8', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
+		{ id: 'lcddriver', name: 'Support for an I2C LCD that display the current machine position and limits state' },
+		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
+		{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI' },
+		{ id: 'bltouch', name: 'Support for BLTouch probe' },
+	];
+
 	$scope.STEPPERS = [
 		0,
 		1,

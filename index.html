@@ -594,11 +594,6 @@
 											id="STEPPER{{x}}_UART_TX" ng-model="DYNAMIC['STEPPER_UART_TX'][x]"
 											model-scope-name="DYNAMIC.STEPPER_UART_TX.{{x}}"
 											ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}">
-											<!-- <option value=''></option>
-											<option value="{{y.pin}}"
-												ng-repeat="y in UCNCPINS | filter: {'type': 'generic_output'}">
-												{{y.pin}}
-											</option> -->
 										</select>
 										<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} TMC UART RX
 											pin</label>
@@ -760,8 +755,17 @@
 					</div>
 				</fieldset>
 
-				Under
-				development
+				<fieldset>
+					<legend>Enable extension modules</legend>
+					This is still 
+					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS">
+						<input class="form-check-input" type="checkbox" name="DYNAMIC.MODULES.{{x.id}}" id="DYNAMIC.MODULES.{{x.id}}"
+							ng-model="DYNAMIC['MODULES'][x.id]"
+							model-scope-name="DYNAMIC.MODULES.{{x.id}}">
+						<label class="form-check-label" for="DYNAMIC.MODULES.{{x.id}}">{{x.name}}</label>
+						<div ng-include="'modules/'+DYNAMIC['MODULES'][x.id]+'.html'"></div>
+					</div>
+				</fieldset>
 			</div>
 			<div class="tab-pane" id="configfiles" role="tabpanel" aria-labelledby="configfiles-tab">
 				<div class="card">
