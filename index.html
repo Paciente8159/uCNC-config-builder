@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 
-<body ng-app="uCNCapp" ng-controller="uCNCcontroller">
+<body id="uCNCapp" ng-app="uCNCapp" ng-controller="uCNCcontroller">
 	<header>
 		<!-- place navbar here -->
 		<div class="center-content">
@@ -87,20 +87,20 @@
 					<div class="mb-3">
 						<label for="" class="form-label">How many axis does your machine have?</label>
 						<select class="form-select form-select-md" name="AXIS_COUNT" id="AXIS_COUNT"
-							ng-model="AXIS_COUNT">
-							<option value=1>1</option>
+							ng-model="AXIS_COUNT" ng-options="x as x for x in AXIS">
+							<!-- <option value=1>1</option>
 							<option value=2>2</option>
 							<option value=3>3</option>
 							<option value=4>4</option>
 							<option value=5>5</option>
-							<option value=6>6</option>
+							<option value=6>6</option> -->
 						</select>
 					</div>
 
 					<div class="mb-3">
 						<label for="" class="form-label">How many tools do you have on your machine</label>
 						<select class="form-select form-select-md" name="TOOL_COUNT" id="TOOL_COUNT"
-							ng-model="TOOL_COUNT" ng-options="item as x for x in TOOLS track by x">
+							ng-model="TOOL_COUNT" ng-options="x as x for x in TOOLS">
 						</select>
 					</div>
 

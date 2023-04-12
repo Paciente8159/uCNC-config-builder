@@ -646,6 +646,10 @@ const hal_override_options = [
 	'STEPPER7_STALL_SENSITIVITY'
 ];
 
+const boardloaded = new Event('boardloaded');
+const halloaded = new Event('halloaded');
+const toolloaded = new Event('toolloaded');
+
 function ready(fn) {
 	if (document.readyState !== 'loading') {
 		fn();
@@ -740,7 +744,7 @@ function updateScope(scope = null, node = null, val = null) {
 	}
 }
 
-function updateFields(settings = []) {
+function updateFields(settings = [], loadedevent = null) {
 	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
 	document.getElementById('reloading').style.display = "block";
 	for (var s in settings) {
@@ -767,6 +771,10 @@ function updateFields(settings = []) {
 		}
 	}
 	document.getElementById('reloading').style.display = "none";
+
+	if (loadedevent) {
+		document.dispatchEvent(loadedevent);
+	}
 }
 
 function resetBoardPins() {
@@ -782,12 +790,13 @@ function resetBoardPins() {
 
 function updateHAL(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching HAL...";
+	document.getElementById('reloading').style.display = "block";
 	var settings = [];
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
 	parsePreprocessor(hal, settings, function (newsettings) {
-		updateFields(newsettings);
+		updateFields(newsettings, halloaded);
 		if (scope) {
 			scope.$apply();
 		}
@@ -797,6 +806,7 @@ function updateHAL(scope = null) {
 
 function updateTool(scope = null, tool = null) {
 	document.getElementById('loadingtext').innerText = "Fetching tools...";
+	document.getElementById('reloading').style.display = "block";
 	var settings = [];
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
 	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
@@ -806,7 +816,7 @@ function updateTool(scope = null, tool = null) {
 	}
 
 	parsePreprocessor(tool, settings, function (newsettings) {
-		updateFields(newsettings);
+		updateFields(newsettings, toolloaded);
 		if (scope) {
 			scope.$apply();
 		}
@@ -815,6 +825,7 @@ function updateTool(scope = null, tool = null) {
 
 function updateBoardmap(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching processor...";
+	document.getElementById('reloading').style.display = "block";
 	var settings = [];
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
 
@@ -874,7 +885,7 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
@@ -885,7 +896,7 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
@@ -896,7 +907,7 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
@@ -910,7 +921,7 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
@@ -939,7 +950,7 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "samd21/boardmap_mzero.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "samd21/boardmap_zero.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
@@ -974,7 +985,7 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico_w.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
@@ -986,7 +997,7 @@ function updateBoardmap(scope = null) {
 		}
 
 		parsePreprocessor(boardurl, settings, function (newsettings) {
-			updateFields(newsettings);
+			updateFields(newsettings, boardloaded);
 			if (scope) {
 				scope.$apply();
 			}
@@ -1360,6 +1371,34 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 		16
 	];
 
+	$scope.TOOLS = [
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10,
+		11,
+		12,
+		13,
+		14,
+		15,
+		16
+	];
+
+	$scope.AXIS = [
+		1,
+		2,
+		3,
+		4,
+		5,
+		6
+	];
+
 	$scope.DYNAMIC = {};
 
 	$scope.TOOL_OPTIONS = [
@@ -1417,17 +1456,16 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 	$scope.ENABLE_COOLANT = false;
 
 	$scope.numSmallerOrEq = function (arr, ref) {
-		var refval = document.querySelector("#" + ref);
+		var refval = $scope[ref];
 		if (!refval) {
 			return [];
 		}
-		const res = arr.filter(val => val <= parseInt(refval.value));
+		const res = arr.filter(val => val <= parseInt(refval));
 		return res;
 	}
 
 	$scope.boardChanged = function () {
 		updateBoardmap($scope);
-		updateHAL($scope);
 	};
 
 	$scope.tmcChanged = function () {
@@ -1459,8 +1497,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 
 ready(function () {
 	var scope = angular.element(document.querySelector('#MCU')).scope();
-	updateBoardmap(scope);
-	updateHAL(scope);
+	document.addEventListener('boardloaded', function(e){
+		updateHAL(scope);
+	});
+	scope.boardChanged();
 });
 
 function download(filename, text) {
@@ -1516,21 +1556,15 @@ document.getElementById('cnc_hal_overrides').addEventListener('click', function 
 
 document.getElementById('store_settings').addEventListener('click', function () {
 	var key_values = {};
-	document.querySelectorAll('input[ng-model],select[ng-model]').forEach((e, i, p) => {
-		// var val;
-		// switch (e.getAttribute('type')) {
-		// 	case "checkbox":
-		// 		val = e.checked;
-		// 		break;
-		// 	case "range":
-		// 		val = (e.getAttribute('var-type') != 'float') ? parseInt(e.value.replace('number:', '')) : parseFloat(e.value.replace('number:', ''));
-		// 		break;
-		// 	default:
-		// 		val = e.value;//(e.value.match('number:')) ? parseInt(e.value.replace('number:', '')) : e.value.replace('string:', '');
-		// 		break;
-		// }
-		key_values[e.id] = e.value;
-	});
+	var scope = angular.element(document.getElementById('uCNCapp')).scope();
+
+	key_values['MCU'] = scope['MCU'];
+	key_values['BOARD'] = scope['BOARD'];
+	key_values['KINEMATIC'] = scope['KINEMATIC'];
+	key_values['AXIS_COUNT'] = scope['AXIS_COUNT'];
+	key_values['TOOL_COUNT'] = scope['TOOL_COUNT'];
+	key_values['ENABLE_COOLANT'] = scope['ENABLE_COOLANT'];
+	key_values['DYNAMIC'] = scope['DYNAMIC'];
 
 	download('ucnc_build.json', JSON.stringify(key_values));
 });
@@ -1543,11 +1577,16 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 	var reader = new FileReader();
 	reader.onload = function (e) {
 		var contents = e.target.result;
-		debugger;
 		var build = JSON.parse(contents);
-		for (const [key, value] of Object.entries(build)) {
-			document.getElementById(key).value = value;
-		}
+		var scope = angular.element(document.getElementById('uCNCapp')).scope();
+		scope['MCU'] = build['MCU'];
+		scope['BOARD'] = build['BOARD'];
+		scope['KINEMATIC'] = build['KINEMATIC'];
+		scope['AXIS_COUNT'] = build['AXIS_COUNT'];
+		scope['TOOL_COUNT'] = build['TOOL_COUNT'];
+		scope['ENABLE_COOLANT'] = build['ENABLE_COOLANT'];
+		scope['DYNAMIC'] = build['DYNAMIC'];
+		scope.$apply();
 	};
 	reader.readAsText(file);
 }, false);
