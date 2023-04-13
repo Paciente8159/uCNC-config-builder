@@ -35,16 +35,17 @@ function parsePreprocessor(file, settings = [], callback) {
 	txtFile.send(null);
 }
 
-function getScope(scope = null, node = null, final = true) {
-	if (!scope || !node) {
-		return;
+function getScope(node = null, final = true) {
+	if (!node) {
+		return null;
 	}
 
 	var val;
+	var scope;
 
 	if (node.hasAttribute('model-scope-name')) {
 		var arr = node.getAttribute('model-scope-name').split('.');
-
+		scope = angular.element(document.getElementById('uCNCapp')).scope();
 		switch (arr.length) {
 			case 1:
 				val = (scope[arr[0]]) ? scope[arr[0]] : null;
@@ -65,18 +66,20 @@ function getScope(scope = null, node = null, final = true) {
 		}
 	}
 	else {
-		val = scope[node.id];
+		scope = angular.element(node).scope();
+		val (scope[node.id]) ? scope[node.id] : null;
 	}
 
-	return (final && (typeof val!=='object')) ? val : null;
+	return (final && (typeof val !== 'object')) ? val : null;
 }
 
-function updateScope(scope = null, node = null, val = null) {
-	if (!scope || !node) {
+function updateScope(node = null, val = null) {
+	if (!node) {
 		return;
 	}
 
 	var v;
+	var scope;
 
 	switch (node.getAttribute('var-type')) {
 		case 'int':
@@ -94,6 +97,7 @@ function updateScope(scope = null, node = null, val = null) {
 
 	if (node.hasAttribute('model-scope-name')) {
 		var arr = node.getAttribute('model-scope-name').split('.');
+		scope = angular.element(document.getElementById('uCNCapp')).scope();
 
 		if (arr.length > 0 && !scope[arr[0]]) {
 			scope[arr[0]] = (arr.length == 1) ? v : {};
@@ -124,6 +128,7 @@ function updateScope(scope = null, node = null, val = null) {
 		}
 	}
 	else {
+		scope = angular.element(node).scope();
 		scope[node.id] = v;
 	}
 
@@ -140,19 +145,18 @@ function updateFields(settings = [], loadedevent = null) {
 			var node = document.querySelector("#" + s);
 			// if(s=="STEPPER0_RSENSE"){debugger;}
 			if (node) {
-				var nodescope = angular.element(node).scope();
 				switch (node.type) {
 					case 'range':
-						updateScope(nodescope, node, settings[s]);
+						updateScope(node, settings[s]);
 						break;
 					case 'checkbox':
-						updateScope(nodescope, node, (settings[s]) ? settings[s] : true);
+						updateScope(node, (settings[s]) ? settings[s] : true);
 						break;
 					case 'select-one':
-						updateScope(nodescope, node, settings[s]);
+						updateScope(node, settings[s]);
 						break;
 					default:
-						updateScope(nodescope, node, settings[s]);
+						updateScope(node, settings[s]);
 						break;
 				}
 			}
@@ -877,7 +881,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 	};
 
 	$scope.toolChanged = function (tool) {
-		updateTool($scope, getScope($scope, document.querySelector('#TOOL' + tool.x)));
+		updateTool($scope, getScope(document.querySelector('#TOOL' + tool.x)));
 	};
 
 	$scope.buildName = function (pre = '', mid = '', post = '') {
@@ -922,15 +926,14 @@ function download(filename, text) {
 
 function generate_user_config(options, defguard) {
 	var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n';
-	var scope = angular.element(document.getElementById('uCNCapp')).scope();
 	for (var i = 0; i < options.length; i++) {
 		var node = document.querySelector("#" + options[i]);
 		if (node) {
 			gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
 			switch (node.type) {
 				case 'select-one':
-					if (getScope(scope, node)) {
-						gentext += "#define " + options[i] + " " + getScope(scope, node) + "\n";
+					if (getScope(node)) {
+						gentext += "#define " + options[i] + " " + getScope(node) + "\n";
 					}
 					break;
 				case 'checkbox':
@@ -939,7 +942,7 @@ function generate_user_config(options, defguard) {
 					}
 					break;
 				default:
-					gentext += "#define " + options[i] + " " + getScope(scope, node) + "\n";
+					gentext += "#define " + options[i] + " " + getScope(node) + "\n";
 					break;
 			}
 		}
@@ -951,11 +954,11 @@ function generate_user_config(options, defguard) {
 }
 
 document.getElementById('boardmap_overrides').addEventListener('click', function () {
-	download('boardmap_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x=>x.id), 'BOADMAP_OVERRIDES_H'));
+	download('boardmap_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_OVERRIDES_H'));
 });
 
 document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
-	download('cnc_hal_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x=>x.id), 'CNC_HAL_OVERRIDES_H'));
+	download('cnc_hal_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_OVERRIDES_H'));
 });
 
 document.getElementById('store_settings').addEventListener('click', function () {

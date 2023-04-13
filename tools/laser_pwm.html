@@ -3,8 +3,7 @@
 
 	<div class="mb-3">
 		<label for="" class="form-label">Define LASER_PWM</label>
-		<select class="form-select form-select-md" name="LASER_PWM" id="LASER_PWM" config-file="hal" config-file="hal">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'pwm'}">{{x.pin}}</option>
+		<select class="form-select form-select-md" name="LASER_PWM" id="LASER_PWM" ng-model="LASER_PWM" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}">
 		</select>
 	</div>
 	<div class="mb-3">
@@ -16,14 +15,12 @@
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_FLOOD" id="SPINDLE_PWM_COOLANT_FLOOD" config-file="hal">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
+		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_FLOOD" id="SPINDLE_PWM_COOLANT_FLOOD" ng-model="SPINDLE_PWM_COOLANT_FLOOD" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_MIST</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_MIST" id="SPINDLE_PWM_COOLANT_MIST" config-file="hal">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
+		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_MIST" id="SPINDLE_PWM_COOLANT_MIST" ng-model="SPINDLE_PWM_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 	</div>
 </fieldset>
