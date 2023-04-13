@@ -3,26 +3,22 @@
 
 	<div class="mb-3">
 		<label for="" class="form-label">Define SPINDLE_PWM</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM" id="SPINDLE_PWM">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'pwm'}">{{x.pin}}</option>
+		<select class="form-select form-select-md" name="SPINDLE_PWM" id="SPINDLE_PWM" config-file="hal" ng-options="x.pin as x.pin for x in UCNCPINS | filter: {'type': 'pwm'}">
 		</select>
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">Define SPINDLE_PWM_DIR</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_DIR" id="SPINDLE_PWM_DIR">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
+		<select class="form-select form-select-md" name="SPINDLE_PWM_DIR" id="SPINDLE_PWM_DIR" config-file="hal" ng-options="x.pin as x.pin for x in UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_FLOOD" id="SPINDLE_PWM_COOLANT_FLOOD">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
+		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_FLOOD" id="SPINDLE_PWM_COOLANT_FLOOD" config-file="hal" ng-options="x.pin as x.pin for x in UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_MIST</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_MIST" id="SPINDLE_PWM_COOLANT_MIST">
-			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
+		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_MIST" id="SPINDLE_PWM_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 	</div>
 	

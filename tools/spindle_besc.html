@@ -2,26 +2,26 @@
 	<legend>Spindle PWM settings</legend>
 
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_PWM</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM" id="SPINDLE_PWM">
+		<label for="" class="form-label">Define SPINDLE_BESC_PWM</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM" id="SPINDLE_BESC_PWM" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'pwm'}">{{x.pin}}</option>
 		</select>
 	</div>
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_PWM_DIR</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_DIR" id="SPINDLE_PWM_DIR">
+		<label for="" class="form-label">Define SPINDLE_BESC_PWM_DIR</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM_DIR" id="SPINDLE_BESC_PWM_DIR" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
 	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
-		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_FLOOD" id="SPINDLE_PWM_COOLANT_FLOOD">
+		<label for="" class="form-label">Define SPINDLE_BESC_PWM_COOLANT_FLOOD</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM_COOLANT_FLOOD" id="SPINDLE_BESC_PWM_COOLANT_FLOOD" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
 	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
-		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_MIST</label>
-		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_MIST" id="SPINDLE_PWM_COOLANT_MIST">
+		<label for="" class="form-label">Define SPINDLE_BESC_PWM_COOLANT_MIST</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM_COOLANT_MIST" id="SPINDLE_BESC_PWM_COOLANT_MIST" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>

@@ -3,25 +3,25 @@
 
 	<div class="mb-3">
 		<label for="" class="form-label">Define SPINDLE_RELAY_FWD</label>
-		<select class="form-select form-select-md" name="SPINDLE_RELAY_FWD" id="SPINDLE_RELAY_FWD">
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_FWD" id="SPINDLE_RELAY_FWD" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">Define SPINDLE_RELAY_REV</label>
-		<select class="form-select form-select-md" name="SPINDLE_RELAY_REV" id="SPINDLE_RELAY_REV">
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_REV" id="SPINDLE_RELAY_REV" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_RELAY_COOLANT_FLOOD</label>
-		<select class="form-select form-select-md" name="SPINDLE_RELAY_COOLANT_FLOOD" id="SPINDLE_RELAY_COOLANT_FLOOD">
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_COOLANT_FLOOD" id="SPINDLE_RELAY_COOLANT_FLOOD" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_RELAY_COOLANT_MIST</label>
-		<select class="form-select form-select-md" name="SPINDLE_RELAY_COOLANT_MIST" id="SPINDLE_RELAY_COOLANT_MIST">
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_COOLANT_MIST" id="SPINDLE_RELAY_COOLANT_MIST" config-file="hal">
 			<option value="{{x.pin}}" ng-repeat="x in UCNCPINS | filter: {'type': 'generic_output'}">{{x.pin}}</option>
 		</select>
 	</div>
