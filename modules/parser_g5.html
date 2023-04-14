@@ -1,0 +1,8 @@
+<div>
+        <label for="G5_MAX_SEGMENT_LENGTH" class="form-label">G5 segment maximum length: <span
+                ng-bind="DYNAMIC['MODULES']['parser_g5']['G5_MAX_SEGMENT_LENGTH']"></span> mm</label>
+        <input type="range" class="form-range" min="0" max="10" step="0.1"
+            id="G5_MAX_SEGMENT_LENGTH"
+            ng-model="DYNAMIC['MODULES']['parser_g5']['G5_MAX_SEGMENT_LENGTH']"
+            model-scope-name="DYNAMIC.MODULES.parser_g5.G5_MAX_SEGMENT_LENGTH" config-file="hal" var-type="float" ng-init="1">
+</div>

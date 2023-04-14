@@ -27,10 +27,8 @@ function parsePreprocessor(file, settings = [], callback) {
 			}
 		}
 
-		document.getElementById('reloading').style.display = "none";
 	}
 	txtFile.onerror = function () {
-		document.getElementById('reloading').style.display = "none";
 	}
 	txtFile.send(null);
 }
@@ -41,11 +39,10 @@ function getScope(node = null, final = true) {
 	}
 
 	var val;
-	var scope;
+	var scope = angular.element(node).scope();
 
 	if (node.hasAttribute('model-scope-name')) {
 		var arr = node.getAttribute('model-scope-name').split('.');
-		scope = angular.element(document.getElementById('uCNCapp')).scope();
 		switch (arr.length) {
 			case 1:
 				val = (scope[arr[0]]) ? scope[arr[0]] : null;
@@ -66,8 +63,7 @@ function getScope(node = null, final = true) {
 		}
 	}
 	else {
-		scope = angular.element(node).scope();
-		val (scope[node.id]) ? scope[node.id] : null;
+		val(scope[node.id]) ? scope[node.id] : null;
 	}
 
 	return (final && (typeof val !== 'object')) ? val : null;
@@ -79,25 +75,24 @@ function updateScope(node = null, val = null) {
 	}
 
 	var v;
-	var scope;
+	var scope = angular.element(node).scope();
 
 	switch (node.getAttribute('var-type')) {
 		case 'int':
-			v = (val) ? parseInt(val) : {};
+			v = (val) ? parseInt(val) : null;
 			break;
 		case 'float':
-			v = (val) ? parseFloat(val) : {};
+			v = (val) ? parseFloat(val) : null;
 			break;
 		case 'bool':
-			v = (val) ? (val === 'true') : {};
+			v = (val) ? (val === 'true') : false;
 		default:
-			v = val;
+			v = (val) ? val : null;
 			break;
 	}
 
 	if (node.hasAttribute('model-scope-name')) {
 		var arr = node.getAttribute('model-scope-name').split('.');
-		scope = angular.element(document.getElementById('uCNCapp')).scope();
 
 		if (arr.length > 0 && !scope[arr[0]]) {
 			scope[arr[0]] = (arr.length == 1) ? v : {};
@@ -128,7 +123,6 @@ function updateScope(node = null, val = null) {
 		}
 	}
 	else {
-		scope = angular.element(node).scope();
 		scope[node.id] = v;
 	}
 
@@ -162,23 +156,21 @@ function updateFields(settings = [], loadedevent = null) {
 			}
 		}
 	}
-	document.getElementById('reloading').style.display = "none";
 
+	document.getElementById('reloading').style.display = "none";
 	if (loadedevent) {
 		document.dispatchEvent(loadedevent);
 	}
 }
 
 function resetBoardPins() {
-	var scope = angular.element(document.getElementById('uCNCapp')).scope();
-	scope['MCU'] = "MCU_AVR";
-	scope['BOARD'] = "BOARD_UNO";
-	scope['AXIS_COUNT'] = 3;
-	scope['TOOL_COUNT'] = 1;
-	scope['KINEMATIC'] = "KINEMATIC_CARTESIAN";
-	scope['ENABLE_COOLANT'] = false;
-	scope['DYNAMIC'] = {};
-	scope.$apply();
+	const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT'];
+
+	document.querySelectorAll('[config-file="boardmap"]').forEach((e, i, p) => {
+		if (!excludeids.includes(e.id)) {
+			updateScope(e, null);
+		}
+	});
 }
 
 function updateHAL(scope = null) {
@@ -263,11 +255,13 @@ function updateBoardmap(scope = null) {
 			mcuurl = mcuurl + "rp2040/mcumap_rp2040.h";
 			break;
 		default:
+			document.getElementById('reloading').style.display = "none";
 			return;
 	}
 
 	parsePreprocessor(mcuurl, settings, function (newsettings) {
 		document.getElementById('loadingtext').innerText = "Fetching board...";
+		document.getElementById('reloading').style.display = "block";
 		settings = newsettings;
 		var boardurl = coreurl + "/uCNC/src/hal/boards/";
 		switch (scope.BOARD) {
@@ -386,6 +380,7 @@ function updateBoardmap(scope = null) {
 				});
 				return;
 			default:
+				document.getElementById('reloading').style.display = "none";
 				return;
 		}
 
@@ -400,7 +395,7 @@ function updateBoardmap(scope = null) {
 
 var version = 'v1.5.7';
 var app = angular.module("uCNCapp", []);
-var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function ($scope, $parse) {
+var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	$scope.MCUS = [
 		{ id: 'MCU_AVR', name: 'Atmel AVR' },
@@ -871,6 +866,11 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$parse', function 
 		const res = arr.filter(val => val <= parseInt(refval));
 		return res;
 	}
+
+	$scope.mcuChanged = function () {
+		updateScope(document.getElementById('BOARD'), null);
+		updateBoardmap($scope);
+	};
 
 	$scope.boardChanged = function () {
 		updateBoardmap($scope);

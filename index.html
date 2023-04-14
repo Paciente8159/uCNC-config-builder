@@ -73,7 +73,7 @@
 					<div class="mb-3">
 						<label for="" class="form-label">What MCU family will you be using?</label>
 						<select class="form-select form-select-md" name="MCU" id="MCU" ng-model="MCU"
-							ng-change="boardChanged()" ng-options="y.id as y.name for y in MCUS" config-file="boardmap">
+							ng-change="mcuChanged()" ng-options="y.id as y.name for y in MCUS" config-file="boardmap">
 						</select>
 					</div>
 
@@ -730,7 +730,7 @@
 						<input class="form-check-input" type="checkbox" id="ENABLE_MAIN_LOOP_MODULES"
 							ng-model="DYNAMIC['ENABLE_MAIN_LOOP_MODULES']"
 							model-scope-name="DYNAMIC.ENABLE_MAIN_LOOP_MODULES" config-file="hal">
-						<label class="form-check-label" for="ENABLE_SKEW_COMPENSATION">Enable main cnc application loop
+						<label class="form-check-label" for="ENABLE_MAIN_LOOP_MODULES">Enable main cnc application loop
 							extension
 							callbacks</label>
 					</div>
@@ -781,7 +781,7 @@
 							id="DYNAMIC.MODULES.{{x.id}}" ng-model="DYNAMIC['MODULES'][x.id]"
 							model-scope-name="DYNAMIC.MODULES.{{x.id}}">
 						<label class="form-check-label" for="DYNAMIC.MODULES.{{x.id}}">{{x.name}}</label>
-						<div ng-include="'modules/'+DYNAMIC['MODULES'][x.id]+'.html'"></div>
+						<div ng-if="DYNAMIC['MODULES'][x.id]" ng-include="'./modules/'+x.id+'.html'"></div>
 					</div>
 				</fieldset>
 			</div>
