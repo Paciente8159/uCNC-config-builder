@@ -67,6 +67,13 @@
 					<input class="form-control form-control" id="load_settings" type="file">
 				</div>
 
+				<div class="mb-3">
+					<label for="" class="form-label">What version will you be using?</label>
+					<select class="form-select form-select-md" name="VERSION" id="VERSION" ng-model="VERSION"
+						ng-options="x as x for x in VERSIONS" config-file="none" ng-init="VERSION='master'">
+					</select>
+				</div>
+
 				<fieldset>
 					<legend>Basic settings</legend>
 
@@ -796,8 +803,10 @@
 						<p class="card-text"><i>To build your custom version of µCNC follow these steps:</i></p>
 					</div>
 					<ul class="list-group list-group-flush">
-						<li class="list-group-item"><a href="https://github.com/Paciente8159/uCNC/"
-								target="_blank">Download and unzip the latest version of µCNC</a></li>
+
+						<li class="list-group-item"><a class="btn btn-secondary" ng-if="VERSION!='master'" href="https://github.com/Paciente8159/uCNC/archive/refs/tags/{{VERSION}}.zip"
+								target="_blank">Download and unzip µCNC ({{VERSION}})</a><a class="btn btn-secondary" ng-if="VERSION=='master'" href="https://github.com/Paciente8159/uCNC/archive/refs/heads/{{VERSION}}.zip"
+								target="_blank">Download and unzip µCNC ({{VERSION}})</a></li>
 						<li class="list-group-item"><a name="boardmap_overrides" id="boardmap_overrides"
 								class="btn btn-primary" href="#" role="button">Download boardmap_overrides.h</a>
 							<small id="helpId" class="form-text text-muted">And replace the existing file inside

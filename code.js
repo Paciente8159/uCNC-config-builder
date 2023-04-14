@@ -177,7 +177,7 @@ function updateHAL(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching HAL...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
 	parsePreprocessor(hal, settings, function (newsettings) {
@@ -193,7 +193,7 @@ function updateTool(scope = null, tool = null) {
 	document.getElementById('loadingtext').innerText = "Fetching tools...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
 	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
 
 	if (!tool) {
@@ -212,7 +212,7 @@ function updateBoardmap(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching processor...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
 
 	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
 
@@ -393,9 +393,13 @@ function updateBoardmap(scope = null) {
 	});
 }
 
-var version = 'v1.5.7';
 var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
+
+	$scope.VERSIONS = [
+		'master',
+		'v1.6.0',
+	]
 
 	$scope.MCUS = [
 		{ id: 'MCU_AVR', name: 'Atmel AVR' },
