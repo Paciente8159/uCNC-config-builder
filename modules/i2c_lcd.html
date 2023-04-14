@@ -1,0 +1,18 @@
+<div>
+	<label for="LCD_ROWS" class="form-label">LCD nº of rows: <span ng-bind="LCD_ROWS"></span> lines</label>
+	<input type="range" class="form-range" min="0" max="4" step="1" id="LCD_ROWS" ng-model="LCD_ROWS" config-file="hal"
+		var-type="int" ng-init="LCD_ROWS=2">
+	<label for="LCD_COLUMNS" class="form-label">LCD nº of columns: <span ng-bind="LCD_COLUMNS"></span> lines</label>
+	<input type="range" class="form-range" min="0" max="32" step="1" id="LCD_COLUMNS" ng-model="LCD_COLUMNS"
+		config-file="hal" var-type="int" ng-init="LCD_COLUMNS=16">
+	<label for="LCD_I2C_SCL" class="form-label">Define LCD_I2C_SCL</label>
+	<select class="form-select form-select-md" name="LCD_I2C_SCL" id="LCD_I2C_SCL" ng-model="LCD_I2C_SCL"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+		config-file="hal" ng-init="LCD_I2C_SCL='DIN30'">
+	</select>
+	<label for="LCD_I2C_SDA" class="form-label">Define LCD_I2C_SDA</label>
+	<select class="form-select form-select-md" name="LCD_I2C_SDA" id="LCD_I2C_SDA" ng-model="LCD_I2C_SDA"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+		config-file="hal" ng-init="LCD_I2C_SDA='DIN31'">
+	</select>
+</div>

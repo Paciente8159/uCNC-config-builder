@@ -1,0 +1,6 @@
+<div>
+	<label for="S_CLUSTER_SIZE" class="form-label">Smoothie clustering max size: <span ng-bind="S_CLUSTER_SIZE"></span>
+		points</label>
+	<input type="range" class="form-range" min="0" max="16" step="1" id="S_CLUSTER_SIZE" ng-model="S_CLUSTER_SIZE"
+		config-file="hal" var-type="int" ng-init="S_CLUSTER_SIZE=8">
+</div>

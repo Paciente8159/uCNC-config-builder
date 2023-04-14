@@ -63,7 +63,7 @@ function getScope(node = null, final = true) {
 		}
 	}
 	else {
-		val(scope[node.id]) ? scope[node.id] : null;
+		val = (scope[node.id]) ? scope[node.id] : null;
 	}
 
 	return (final && (typeof val !== 'object')) ? val : null;
@@ -804,12 +804,12 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'parser_g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
 		{ id: 'parser_g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
 		{ id: 'parser_g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
-		{ id: 'parser_g7_g8', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
-		{ id: 'parser_g7_g8', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
-		{ id: 'parser_g7_g8', name: 'LinuxCNC M62-M65 and allows to turn on and off any generic digital pin (synched or immediately)' },
-		{ id: 'parser_g7_g8', name: 'LinuxCNC M67-M68 and allows to turn on and off any analog pin (synched or immediately)' },
-		{ id: 'parser_g7_g8', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
-		{ id: 'lcddriver', name: 'Support for an I2C LCD that display the current machine position and limits state' },
+		{ id: 'parser_m17_m18', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
+		{ id: 'parser_m42', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
+		{ id: 'parser_m62_m65', name: 'LinuxCNC M62-M65 and allows to turn on and off any generic digital pin (synched or immediately)' },
+		{ id: 'parser_m67_m68', name: 'LinuxCNC M67-M68 and allows to turn on and off any analog pin (synched or immediately)' },
+		{ id: 'parser_m80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
+		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
 		{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
@@ -924,7 +924,7 @@ function download(filename, text) {
 	document.body.removeChild(element);
 }
 
-function generate_user_config(options, defguard) {
+function generate_user_config(options, defguard, close = true) {
 	var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n';
 	for (var i = 0; i < options.length; i++) {
 		var node = document.querySelector("#" + options[i]);
@@ -949,7 +949,9 @@ function generate_user_config(options, defguard) {
 
 	}
 
-	gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	if (close) {
+		gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	}
 	return gentext;
 }
 
@@ -958,20 +960,27 @@ document.getElementById('boardmap_overrides').addEventListener('click', function
 });
 
 document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
-	download('cnc_hal_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_OVERRIDES_H'));
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_OVERRIDES_H', false);
+	var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
+
+	if(modules.length){
+		overrides += "\n#define LOAD_MODULES_OVERRIDE() ({"
+		for(var i=0; i<modules.length; i++){
+			overrides += "LOAD_MODULE(" + modules[i] + ");";
+		}
+		overrides += "})\n"
+	}
+
+	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+
+	download('cnc_hal_overrides.h', overrides);
 });
 
 document.getElementById('store_settings').addEventListener('click', function () {
 	var key_values = {};
-	var scope = angular.element(document.getElementById('uCNCapp')).scope();
-
-	key_values['MCU'] = scope['MCU'];
-	key_values['BOARD'] = scope['BOARD'];
-	key_values['KINEMATIC'] = scope['KINEMATIC'];
-	key_values['AXIS_COUNT'] = scope['AXIS_COUNT'];
-	key_values['TOOL_COUNT'] = scope['TOOL_COUNT'];
-	key_values['ENABLE_COOLANT'] = scope['ENABLE_COOLANT'];
-	key_values['DYNAMIC'] = scope['DYNAMIC'];
+	document.querySelectorAll('[config-file]').forEach((e, i, p) => {
+		key_values[e.id] = getScope(e);
+	});
 
 	download('ucnc_build.json', JSON.stringify(key_values));
 });
@@ -985,15 +994,9 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 	reader.onload = function (e) {
 		var contents = e.target.result;
 		var build = JSON.parse(contents);
-		var scope = angular.element(document.getElementById('uCNCapp')).scope();
-		scope['MCU'] = build['MCU'];
-		scope['BOARD'] = build['BOARD'];
-		scope['KINEMATIC'] = build['KINEMATIC'];
-		scope['AXIS_COUNT'] = build['AXIS_COUNT'];
-		scope['TOOL_COUNT'] = build['TOOL_COUNT'];
-		scope['ENABLE_COOLANT'] = build['ENABLE_COOLANT'];
-		scope['DYNAMIC'] = build['DYNAMIC'];
-		scope.$apply();
+		for (const [k, v] of Object.entries(build)) {
+			updateScope(document.getElementById(k), v);
+		}
 	};
 	reader.readAsText(file);
 }, false);
