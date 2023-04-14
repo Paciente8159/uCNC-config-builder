@@ -1,0 +1,24 @@
+<fieldset>
+	<legend>Spindle Relay settings</legend>
+
+	<div class="mb-3">
+		<label for="" class="form-label">Define SPINDLE_RELAY_FWD</label>
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_FWD" id="SPINDLE_RELAY_FWD" ng-model="SPINDLE_RELAY_FWD" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Define SPINDLE_RELAY_REV</label>
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_REV" id="SPINDLE_RELAY_REV" ng-model="SPINDLE_RELAY_REV" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+	</div>
+	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
+		<label for="" class="form-label">Define SPINDLE_RELAY_COOLANT_FLOOD</label>
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_COOLANT_FLOOD" id="SPINDLE_RELAY_COOLANT_FLOOD" ng-model="SPINDLE_RELAY_COOLANT_FLOOD" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+	</div>
+	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
+		<label for="" class="form-label">Define SPINDLE_RELAY_COOLANT_MIST</label>
+		<select class="form-select form-select-md" name="SPINDLE_RELAY_COOLANT_MIST" id="SPINDLE_RELAY_COOLANT_MIST" ng-model="SPINDLE_RELAY_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+	</div>
+</fieldset>

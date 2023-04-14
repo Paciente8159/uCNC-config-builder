@@ -1,0 +1,24 @@
+<fieldset>
+	<legend>Pen Servo settings</legend>
+
+	<div class="mb-3">
+		<label for="" class="form-label">Define SPINDLE_PWM</label>
+		<select class="form-select form-select-md" name="PEN_SERVO_PWM" id="PEN_SERVO_PWM" ng-model="PEN_SERVO_PWM" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}">
+		</select>
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Define SPINDLE_PWM_DIR</label>
+		<select class="form-select form-select-md" name="PEN_SERVO_PWM_DIR" id="PEN_SERVO_PWM_DIR" ng-model="PEN_SERVO_PWM_DIR" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+	</div>
+	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
+		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
+		<select class="form-select form-select-md" name="PEN_SERVO_COOLANT_FLOOD" id="PEN_SERVO_COOLANT_FLOOD" ng-model="LASEPEN_SERVO_COOLANT_FLOODR_PPI_AIR_ASSIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+	</div>
+	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
+		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_MIST</label>
+		<select class="form-select form-select-md" name="PEN_SERVO_COOLANT_MIST" id="PEN_SERVO_COOLANT_MIST" ng-model="PEN_SERVO_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+	</div>
+</fieldset>

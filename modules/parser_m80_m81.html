@@ -1,0 +1,11 @@
+<div>
+	<label for="PSU_PIN" class="form-label">Define PSU_PIN</label>
+	<select class="form-select form-select-md" name="PSU_PIN" id="PSU_PIN" ng-model="PSU_PIN"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="PSU_PIN='DOUT31'">
+	</select>
+	<div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" id="PSU_ON" ng-model="PSU_ON" config-file="hal">
+		<label class="form-check-label" for="PSU_ON" ng-init="PSU_ON=true">PSU on pin logic value</label>
+	</div>
+</div>

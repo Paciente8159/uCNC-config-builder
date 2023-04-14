@@ -1,0 +1,7 @@
+<div>
+	<label for="BLTOUCH_PROBE_SERVO" class="form-label">Define BLTOUCH_PROBE_SERVO</label>
+	<select class="form-select form-select-md" name="BLTOUCH_PROBE_SERVO" id="BLTOUCH_PROBE_SERVO" ng-model="BLTOUCH_PROBE_SERVO"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'servo'}"
+		config-file="hal" ng-init="BLTOUCH_PROBE_SERVO='SERVO0'">
+	</select>
+</div>

@@ -1,3 +1,7 @@
+const boardloaded = new Event('boardloaded');
+const halloaded = new Event('halloaded');
+const toolloaded = new Event('toolloaded');
+
 function ready(fn) {
 	if (document.readyState !== 'loading') {
 		fn();
@@ -7,6 +11,7 @@ function ready(fn) {
 }
 
 function parsePreprocessor(file, settings = [], callback) {
+	document.getElementById('reloading').style.display = "block";
 	const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
 	var txtFile = new XMLHttpRequest();
 	txtFile.open("GET", file, true);
@@ -21,38 +26,182 @@ function parsePreprocessor(file, settings = [], callback) {
 				callback(settings);
 			}
 		}
+
+	}
+	txtFile.onerror = function () {
 	}
 	txtFile.send(null);
 }
 
-function updateFields(settings = []) {
+function getScope(node = null, final = true) {
+	if (!node) {
+		return null;
+	}
+
+	var val;
+	var scope = angular.element(node).scope();
+
+	if (node.hasAttribute('model-scope-name')) {
+		var arr = node.getAttribute('model-scope-name').split('.');
+		switch (arr.length) {
+			case 1:
+				val = (scope[arr[0]]) ? scope[arr[0]] : null;
+				break;
+			case 2:
+				val = (scope[arr[0]] && scope[arr[0]][arr[1]]) ? scope[arr[0]][arr[1]] : null;
+				break;
+			case 3:
+				val = (scope[arr[0]] && scope[arr[0]][arr[1]] && scope[arr[0]][arr[1]][arr[2]]) ? scope[arr[0]][arr[1]][arr[2]] : null;
+				break;
+			case 4:
+				val = (scope[arr[0]] && scope[arr[0]][arr[1]] && scope[arr[0]][arr[1]][arr[2]] && scope[arr[0]][arr[1]][arr[2]][arr[3]]) ? scope[arr[0]][arr[1]][arr[2]][arr[3]] : null;
+				break;
+			default:
+				val = scope[node.id];
+				break;
+
+		}
+	}
+	else {
+		val = (scope[node.id]) ? scope[node.id] : null;
+	}
+
+	return (final && (typeof val !== 'object')) ? val : null;
+}
+
+function updateScope(node = null, val = null) {
+	if (!node) {
+		return;
+	}
+
+	var v;
+	var scope = angular.element(node).scope();
+
+	switch (node.getAttribute('var-type')) {
+		case 'int':
+			v = (val) ? parseInt(val) : null;
+			break;
+		case 'float':
+			v = (val) ? parseFloat(val) : null;
+			break;
+		case 'bool':
+			v = (val) ? (val === 'true') : false;
+		default:
+			v = (val) ? val : null;
+			break;
+	}
+
+	if (node.hasAttribute('model-scope-name')) {
+		var arr = node.getAttribute('model-scope-name').split('.');
+
+		if (arr.length > 0 && !scope[arr[0]]) {
+			scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+		else if (arr.length == 1) {
+			scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+
+		if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
+			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+		else if (arr.length == 2) {
+			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+
+		if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
+			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+		else if (arr.length == 3) {
+			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+
+		if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+		else if (arr.length == 4) {
+			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+	}
+	else {
+		scope[node.id] = v;
+	}
+
+	if (val) {
+		scope.$apply();
+	}
+}
+
+function updateFields(settings = [], loadedevent = null) {
+	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+	document.getElementById('reloading').style.display = "block";
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
+			// if(s=="STEPPER0_RSENSE"){debugger;}
 			if (node) {
 				switch (node.type) {
-					case 'select-one':
-						node.value = settings[s];
+					case 'range':
+						updateScope(node, settings[s]);
 						break;
 					case 'checkbox':
-						node.checked = true;
+						updateScope(node, (settings[s]) ? settings[s] : true);
+						break;
+					case 'select-one':
+						updateScope(node, settings[s]);
 						break;
 					default:
-						node.value = settings[s];
+						updateScope(node, settings[s]);
 						break;
 				}
 			}
 		}
 	}
+
+	document.getElementById('reloading').style.display = "none";
+	if (loadedevent) {
+		document.dispatchEvent(loadedevent);
+	}
+}
+
+function resetBoardPins() {
+	const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT'];
+
+	document.querySelectorAll('[config-file="boardmap"]').forEach((e, i, p) => {
+		if (!excludeids.includes(e.id)) {
+			updateScope(e, null);
+		}
+	});
 }
 
 function updateHAL(scope = null) {
+	document.getElementById('loadingtext').innerText = "Fetching HAL...";
+	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
 	parsePreprocessor(hal, settings, function (newsettings) {
-		updateFields(newsettings);
+		updateFields(newsettings, halloaded);
+		if (scope) {
+			scope.$apply();
+		}
+	});
+}
+
+
+function updateTool(scope = null, tool = null) {
+	document.getElementById('loadingtext').innerText = "Fetching tools...";
+	document.getElementById('reloading').style.display = "block";
+	var settings = [];
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
+	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
+
+	if (!tool) {
+		return;
+	}
+
+	parsePreprocessor(tool, settings, function (newsettings) {
+		updateFields(newsettings, toolloaded);
 		if (scope) {
 			scope.$apply();
 		}
@@ -60,11 +209,27 @@ function updateHAL(scope = null) {
 }
 
 function updateBoardmap(scope = null) {
+	document.getElementById('loadingtext').innerText = "Fetching processor...";
+	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version;
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
 
 	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
-	switch (document.querySelector('#MCU').value) {
+
+	if (!scope) {
+		return;
+	}
+
+	if (scope.MCU === scope.PREV_MCU && scope.BOARD === scope.PREV_BOARD) {
+		return;
+	}
+
+	scope.PREV_MCU = scope.MCU;
+	scope.PREV_BOARD = scope.BOARD;
+
+	resetBoardPins();
+
+	switch (scope.MCU) {
 		case 'MCU_AVR':
 			mcuurl = mcuurl + "avr/mcumap_avr.h";
 			break;
@@ -86,14 +251,20 @@ function updateBoardmap(scope = null) {
 		case 'MCU_ESP32':
 			mcuurl = mcuurl + "esp32/mcumap_esp32.h";
 			break;
+		case 'RP2040':
+			mcuurl = mcuurl + "rp2040/mcumap_rp2040.h";
+			break;
 		default:
+			document.getElementById('reloading').style.display = "none";
 			return;
 	}
 
 	parsePreprocessor(mcuurl, settings, function (newsettings) {
+		document.getElementById('loadingtext').innerText = "Fetching board...";
+		document.getElementById('reloading').style.display = "block";
 		settings = newsettings;
 		var boardurl = coreurl + "/uCNC/src/hal/boards/";
-		switch (document.querySelector('#BOARD').value) {
+		switch (scope.BOARD) {
 			case 'BOARD_UNO':
 				boardurl = boardurl + "avr/boardmap_uno.h";
 				break;
@@ -101,7 +272,7 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
@@ -112,24 +283,24 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
 					});
 				});
 				return;
-				case 'BOARD_UNO_SHIELD_V3':
-					parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-						settings = newsettings;
-						parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
-							updateFields(newsettings);
-							if (scope) {
-								scope.$apply();
-							}
-						});
+			case 'BOARD_UNO_SHIELD_V3':
+				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+					settings = newsettings;
+					parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
+						updateFields(newsettings, boardloaded);
+						if (scope) {
+							scope.$apply();
+						}
 					});
-					return;
+				});
+				return;
 			case 'BOARD_RAMBO14':
 				boardurl = boardurl + "avr/boardmap_rambo14.h";
 				break;
@@ -137,14 +308,13 @@ function updateBoardmap(scope = null) {
 				parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
 					settings = newsettings;
 					parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
-						updateFields(newsettings);
+						updateFields(newsettings, boardloaded);
 						if (scope) {
 							scope.$apply();
 						}
 					});
 				});
 				return;
-				
 			case 'BOARD_RAMPS14':
 				boardurl = boardurl + "avr/boardmap_ramps14.h";
 				break;
@@ -164,8 +334,16 @@ function updateBoardmap(scope = null) {
 				boardurl = boardurl + "samd21/boardmap_mzero.h";
 				break;
 			case 'BOARD_ZERO':
-				boardurl = boardurl + "samd21/boardmap_zero.h";
-				break;
+				parsePreprocessor(boardurl + "samd21/boardmap_mzero.h", settings, function (newsettings) {
+					settings = newsettings;
+					parsePreprocessor(boardurl + "samd21/boardmap_zero.h", settings, function (newsettings) {
+						updateFields(newsettings, boardloaded);
+						if (scope) {
+							scope.$apply();
+						}
+					});
+				});
+				return;
 			case 'BOARD_RE_ARM':
 				boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
 				break;
@@ -187,12 +365,27 @@ function updateBoardmap(scope = null) {
 			case 'BOARD_MKS_DLC32':
 				boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
 				break;
+			case 'BOARD_RPI_PICO':
+				boardurl = boardurl + "rp2040/boardmap_rpi_pico.h";
+				break;
+			case 'BOARD_RPI_PICO_W':
+				parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico.h", settings, function (newsettings) {
+					settings = newsettings;
+					parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico_w.h", settings, function (newsettings) {
+						updateFields(newsettings, boardloaded);
+						if (scope) {
+							scope.$apply();
+						}
+					});
+				});
+				return;
 			default:
+				document.getElementById('reloading').style.display = "none";
 				return;
 		}
 
 		parsePreprocessor(boardurl, settings, function (newsettings) {
-			updateFields(newsettings);
+			updateFields(newsettings, boardloaded);
 			if (scope) {
 				scope.$apply();
 			}
@@ -200,9 +393,13 @@ function updateBoardmap(scope = null) {
 	});
 }
 
-var version = 'v1.5.7';
 var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
+
+	$scope.VERSIONS = [
+		'master',
+		'v1.6.0',
+	]
 
 	$scope.MCUS = [
 		{ id: 'MCU_AVR', name: 'Atmel AVR' },
@@ -211,7 +408,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'MCU_STM32F4X', name: 'STM32F4X' },
 		{ id: 'MCU_LPC176X', name: 'LPC176X' },
 		{ id: 'MCU_ESP8266', name: 'ESP8266' },
-		{ id: 'MCU_ESP32', name: 'ESP32' }
+		{ id: 'MCU_ESP32', name: 'ESP32' },
+		{ id: 'MCU_RP2040', name: 'RPi RP2040' }
 	];
 	$scope.KINEMATICS = [
 		{ id: 'KINEMATIC_CARTESIAN', name: 'Cartesian' },
@@ -240,7 +438,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'BOARD_WEMOS_D1_R32', name: 'Wemos D1 R32', mcu: 'MCU_ESP32' },
 		{ id: 'BOARD_MKS_TINYBEE', name: 'MKS Tinybee', mcu: 'MCU_ESP32' },
 		{ id: 'BOARD_MKS_DLC32', name: 'MKS DLC32', mcu: 'MCU_ESP32' },
-		{ id: 'BOARD_CUSTOM', name: 'Custom board', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' }
+		{ id: 'BOARD_RPI_PICO', name: 'RPi Pico', mcu: 'MCU_RP2040' },
+		{ id: 'BOARD_RPI_PICO_W', name: 'RPi Pico W', mcu: 'MCU_RP2040' },
+		{ id: 'BOARD_CUSTOM', name: 'Custom board', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' }
 	];
 
 	$scope.UCNCPINS = [
@@ -397,38 +597,38 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.PINS = [
-		{ pin: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 6, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 7, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 10, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 11, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 12, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 13, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 14, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 15, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 16, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
-		{ pin: 17, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP33' },
-		{ pin: 18, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP34' },
-		{ pin: 19, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP35' },
-		{ pin: 20, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP36' },
-		{ pin: 21, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP37' },
-		{ pin: 22, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP38' },
-		{ pin: 23, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP39' },
-		{ pin: 24, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP40' },
-		{ pin: 25, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP41' },
-		{ pin: 26, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP42' },
-		{ pin: 27, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP43' },
-		{ pin: 28, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP44' },
-		{ pin: 29, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP45' },
-		{ pin: 30, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP46' },
-		{ pin: 31, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP47' }
+		{ pin: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 6, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 7, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 10, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 11, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 12, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 13, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 14, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 15, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 16, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 17, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 18, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 19, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 20, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 21, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 22, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 23, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 24, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 25, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 26, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 27, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 28, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 29, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+		{ pin: 30, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' },
+		{ pin: 31, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32' }
 	];
 
 	$scope.PORTS = [
@@ -489,10 +689,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.TIMERS = [
-		{ timer: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ timer: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ timer: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ timer: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ timer: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
+		{ timer: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
+		{ timer: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
+		{ timer: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
 		{ timer: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
 		{ timer: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
 		{ timer: 6, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
@@ -508,10 +708,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.UCNCTIMERS = [
-		{ timer: 'ITP', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32' },
-		{ timer: 'RTC', mcu: 'MCU_AVR' },
-		{ timer: 'SERVO', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32' },
-		{ timer: 'ONESHOT', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32' }
+		{ timer: 'ITP', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ timer: 'RTC', mcu: 'MCU_AVR,MCU_RP2040' },
+		{ timer: 'SERVO', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ timer: 'ONESHOT', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' }
 	];
 
 	$scope.MUXS = [
@@ -563,6 +763,62 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		16
 	];
 
+	$scope.TOOLS = [
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10,
+		11,
+		12,
+		13,
+		14,
+		15,
+		16
+	];
+
+	$scope.AXIS = [
+		1,
+		2,
+		3,
+		4,
+		5,
+		6
+	];
+
+	$scope.DYNAMIC = {};
+
+	$scope.TOOL_OPTIONS = [
+		{ id: 'spindle_pwm', name: 'Spindle PWM' },
+		{ id: 'spindle_besc', name: 'BESC Spindle' },
+		{ id: 'spindle_relay', name: 'Spindle Relay' },
+		{ id: 'laser_pwm', name: 'Laser PWM' },
+		{ id: 'laser_ppi', name: 'Laser PPI' },
+		{ id: 'vfd_modbus', name: 'VFD Modbus' },
+		{ id: 'vfd_pwm', name: 'VFD PWM' },
+		{ id: 'pen_servo', name: 'Pen Servo' }
+	];
+
+	$scope.MODULES_OPTIONS = [
+		{ id: 'parser_g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
+		{ id: 'parser_g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
+		{ id: 'parser_g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
+		{ id: 'parser_m17_m18', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
+		{ id: 'parser_m42', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
+		{ id: 'parser_m62_m65', name: 'LinuxCNC M62-M65 and allows to turn on and off any generic digital pin (synched or immediately)' },
+		{ id: 'parser_m67_m68', name: 'LinuxCNC M67-M68 and allows to turn on and off any analog pin (synched or immediately)' },
+		{ id: 'parser_m80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
+		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
+		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
+		{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI' },
+		{ id: 'bltouch', name: 'Support for BLTouch probe' },
+	];
+
 	$scope.STEPPERS = [
 		0,
 		1,
@@ -583,90 +839,80 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		2130
 	];
 
+	$scope.TMCS_COM = [
+		{ id: 'TMC_UART', name: 'UART' },
+		{ id: 'TMC_SPI', name: 'SPI' },
+	];
+
+	$scope.MICROSTEPS = [
+		1,
+		2,
+		4,
+		8,
+		16,
+		32
+	];
+
+	$scope.PREV_MCU = "";
 	$scope.MCU = "MCU_AVR";
+	$scope.PREV_BOARD = "";
 	$scope.BOARD = "BOARD_UNO";
 	$scope.KINEMATIC = "KINEMATIC_CARTESIAN";
-	$scope.AXIS_COUNT = '3';
+	$scope.AXIS_COUNT = 3;
 	$scope.TOOL_COUNT = 1;
+	$scope.ENABLE_COOLANT = false;
 
 	$scope.numSmallerOrEq = function (arr, ref) {
-		var refval = document.querySelector("#" + ref);
+		var refval = $scope[ref];
 		if (!refval) {
 			return [];
 		}
-		const res = arr.filter(val => val <= parseInt(refval.value));
+		const res = arr.filter(val => val <= parseInt(refval));
 		return res;
 	}
 
-	$scope.boardChanged = updateBoardmap;
+	$scope.mcuChanged = function () {
+		updateScope(document.getElementById('BOARD'), null);
+		updateBoardmap($scope);
+	};
+
+	$scope.boardChanged = function () {
+		updateBoardmap($scope);
+	};
 
 	$scope.tmcChanged = function () {
 		updateHAL($scope);
 	};
+
+	$scope.toolChanged = function (tool) {
+		updateTool($scope, getScope(document.querySelector('#TOOL' + tool.x)));
+	};
+
+	$scope.buildName = function (pre = '', mid = '', post = '') {
+		return pre + mid + post;
+	};
+
+	$scope.expEval = function (scope = null, exp = '') {
+		const regex = /{{(?<params>[^}]*)}}/gm;
+		const m = exp.match(regex)[0].replaceAll('{', '').replaceAll('}', '');
+		const names = m.split('.');
+		switch (names.length) {
+			case 1:
+				return exp.replace(regex, scope[names[0]]);
+			case 2:
+				return exp.replace(regex, scope[names[0]][names[1]]);
+		}
+
+		return exp;
+	}
 }]);
 
-app.directive('ngModelDynamic', ['$compile',
-	function ($compile) {
-		return {
-
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				// Remove ng-model-dynamic to prevent recursive compilation
-				element.removeAttr('ng-model-dynamic');
-
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-model', attrs.ngModelDynamic);
-
-				// Recompile the entire element
-				$compile(element)(scope);
-				updateBoardmap(scope);
-				updateHAL(scope);
-			}
-
-		}
-	}]);
-
-app.directive('ngInitDynamic', ['$compile',
-	function ($compile) {
-		return {
-
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				// Remove ng-model-dynamic to prevent recursive compilation
-				element.removeAttr('ng-init-dynamic');
-
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-init', attrs.ngInitDynamic);
-
-				// Recompile the entire element
-				$compile(element)(scope);
-			}
-
-		}
-	}]);
-
-app.directive('ngBindDynamic', ['$compile',
-	function ($compile) {
-		return {
-
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				// Remove ng-model-dynamic to prevent recursive compilation
-				element.removeAttr('ng-bind-dynamic');
-
-				// Add ng-model with a value set to the now evaluated expression
-				element.attr('ng-bind', attrs.ngBindDynamic);
-
-				// Recompile the entire element
-				$compile(element)(scope);
-			}
-
-		}
-	}]);
-
 ready(function () {
-	updateBoardmap();
-	updateHAL();
+	var scope = angular.element(document.querySelector('#MCU')).scope();
+	document.addEventListener('boardloaded', function (e) {
+		updateHAL(scope);
+	});
+	scope.boardChanged();
 });
 
 function download(filename, text) {
@@ -682,17 +928,16 @@ function download(filename, text) {
 	document.body.removeChild(element);
 }
 
-function generate_user_config(options, defguard) {
+function generate_user_config(options, defguard, close = true) {
 	var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n';
-
 	for (var i = 0; i < options.length; i++) {
 		var node = document.querySelector("#" + options[i]);
 		if (node) {
 			gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
 			switch (node.type) {
 				case 'select-one':
-					if (node.value !== '? undefined:undefined ?') {
-						gentext += "#define " + options[i] + " " + node.value + "\n";
+					if (getScope(node)) {
+						gentext += "#define " + options[i] + " " + getScope(node) + "\n";
 					}
 					break;
 				case 'checkbox':
@@ -701,670 +946,61 @@ function generate_user_config(options, defguard) {
 					}
 					break;
 				default:
-					gentext += "#define " + options[i] + " " + node.value + "\n";
+					gentext += "#define " + options[i] + " " + getScope(node) + "\n";
 					break;
 			}
 		}
 
 	}
 
-	gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	if (close) {
+		gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	}
 	return gentext;
 }
 
-
-
-
-
-document.querySelector('#boardmap_overrides').addEventListener('click', function () {
-	var options = [
-		'BOARD',
-		'MCU',
-		'KINEMATIC',
-		'AXIS_COUNT',
-		'TOOL_COUNT',
-		'STEP0_BIT',
-		'STEP1_BIT',
-		'STEP2_BIT',
-		'STEP3_BIT',
-		'STEP4_BIT',
-		'STEP5_BIT',
-		'STEP6_BIT',
-		'STEP7_BIT',
-		'DIR0_BIT',
-		'DIR1_BIT',
-		'DIR2_BIT',
-		'DIR3_BIT',
-		'DIR4_BIT',
-		'DIR5_BIT',
-		'DIR6_BIT',
-		'DIR7_BIT',
-		'STEP0_EN_BIT',
-		'STEP1_EN_BIT',
-		'STEP2_EN_BIT',
-		'STEP3_EN_BIT',
-		'STEP4_EN_BIT',
-		'STEP5_EN_BIT',
-		'STEP6_EN_BIT',
-		'STEP7_EN_BIT',
-		'PWM0_BIT',
-		'PWM1_BIT',
-		'PWM2_BIT',
-		'PWM3_BIT',
-		'PWM4_BIT',
-		'PWM5_BIT',
-		'PWM6_BIT',
-		'PWM7_BIT',
-		'PWM8_BIT',
-		'PWM9_BIT',
-		'PWM10_BIT',
-		'PWM11_BIT',
-		'PWM12_BIT',
-		'PWM13_BIT',
-		'PWM14_BIT',
-		'PWM15_BIT',
-		'SERVO0_BIT',
-		'SERVO1_BIT',
-		'SERVO2_BIT',
-		'SERVO3_BIT',
-		'SERVO4_BIT',
-		'SERVO5_BIT',
-		'DOUT0_BIT',
-		'DOUT1_BIT',
-		'DOUT2_BIT',
-		'DOUT3_BIT',
-		'DOUT4_BIT',
-		'DOUT5_BIT',
-		'DOUT6_BIT',
-		'DOUT7_BIT',
-		'DOUT8_BIT',
-		'DOUT9_BIT',
-		'DOUT10_BIT',
-		'DOUT11_BIT',
-		'DOUT12_BIT',
-		'DOUT13_BIT',
-		'DOUT14_BIT',
-		'DOUT15_BIT',
-		'DOUT16_BIT',
-		'DOUT17_BIT',
-		'DOUT18_BIT',
-		'DOUT19_BIT',
-		'DOUT20_BIT',
-		'DOUT21_BIT',
-		'DOUT22_BIT',
-		'DOUT23_BIT',
-		'DOUT24_BIT',
-		'DOUT25_BIT',
-		'DOUT26_BIT',
-		'DOUT27_BIT',
-		'DOUT28_BIT',
-		'DOUT29_BIT',
-		'DOUT30_BIT',
-		'DOUT31_BIT',
-		'LIMIT_X_BIT',
-		'LIMIT_Y_BIT',
-		'LIMIT_Z_BIT',
-		'LIMIT_X2_BIT',
-		'LIMIT_Y2_BIT',
-		'LIMIT_Z2_BIT',
-		'LIMIT_A_BIT',
-		'LIMIT_B_BIT',
-		'LIMIT_C_BIT',
-		'PROBE_BIT',
-		'ESTOP_BIT',
-		'SAFETY_DOOR_BIT',
-		'FHOLD_BIT',
-		'CS_RES_BIT',
-		'ANALOG0_BIT',
-		'ANALOG1_BIT',
-		'ANALOG2_BIT',
-		'ANALOG3_BIT',
-		'ANALOG4_BIT',
-		'ANALOG5_BIT',
-		'ANALOG6_BIT',
-		'ANALOG7_BIT',
-		'ANALOG8_BIT',
-		'ANALOG9_BIT',
-		'ANALOG10_BIT',
-		'ANALOG11_BIT',
-		'ANALOG12_BIT',
-		'ANALOG13_BIT',
-		'ANALOG14_BIT',
-		'ANALOG15_BIT',
-		'DIN0_BIT',
-		'DIN1_BIT',
-		'DIN2_BIT',
-		'DIN3_BIT',
-		'DIN4_BIT',
-		'DIN5_BIT',
-		'DIN6_BIT',
-		'DIN7_BIT',
-		'DIN8_BIT',
-		'DIN9_BIT',
-		'DIN10_BIT',
-		'DIN11_BIT',
-		'DIN12_BIT',
-		'DIN13_BIT',
-		'DIN14_BIT',
-		'DIN15_BIT',
-		'DIN16_BIT',
-		'DIN17_BIT',
-		'DIN18_BIT',
-		'DIN19_BIT',
-		'DIN20_BIT',
-		'DIN21_BIT',
-		'DIN22_BIT',
-		'DIN23_BIT',
-		'DIN24_BIT',
-		'DIN25_BIT',
-		'DIN26_BIT',
-		'DIN27_BIT',
-		'DIN28_BIT',
-		'DIN29_BIT',
-		'DIN30_BIT',
-		'DIN31_BIT',
-		'TX_BIT',
-		'RX_BIT',
-		'USB_DM_BIT',
-		'USB_DP_BIT',
-		'SPI_CLK_BIT',
-		'SPI_SDI_BIT',
-		'SPI_SDO_BIT',
-		'SPI_CS_BIT',
-		'I2C_SCL_BIT',
-		'I2C_SDA_BIT',
-		'STEP0_PORT',
-		'STEP1_PORT',
-		'STEP2_PORT',
-		'STEP3_PORT',
-		'STEP4_PORT',
-		'STEP5_PORT',
-		'STEP6_PORT',
-		'STEP7_PORT',
-		'DIR0_PORT',
-		'DIR1_PORT',
-		'DIR2_PORT',
-		'DIR3_PORT',
-		'DIR4_PORT',
-		'DIR5_PORT',
-		'DIR6_PORT',
-		'DIR7_PORT',
-		'STEP0_EN_PORT',
-		'STEP1_EN_PORT',
-		'STEP2_EN_PORT',
-		'STEP3_EN_PORT',
-		'STEP4_EN_PORT',
-		'STEP5_EN_PORT',
-		'STEP6_EN_PORT',
-		'STEP7_EN_PORT',
-		'PWM0_PORT',
-		'PWM1_PORT',
-		'PWM2_PORT',
-		'PWM3_PORT',
-		'PWM4_PORT',
-		'PWM5_PORT',
-		'PWM6_PORT',
-		'PWM7_PORT',
-		'PWM8_PORT',
-		'PWM9_PORT',
-		'PWM10_PORT',
-		'PWM11_PORT',
-		'PWM12_PORT',
-		'PWM13_PORT',
-		'PWM14_PORT',
-		'PWM15_PORT',
-		'SERVO0_PORT',
-		'SERVO1_PORT',
-		'SERVO2_PORT',
-		'SERVO3_PORT',
-		'SERVO4_PORT',
-		'SERVO5_PORT',
-		'DOUT0_PORT',
-		'DOUT1_PORT',
-		'DOUT2_PORT',
-		'DOUT3_PORT',
-		'DOUT4_PORT',
-		'DOUT5_PORT',
-		'DOUT6_PORT',
-		'DOUT7_PORT',
-		'DOUT8_PORT',
-		'DOUT9_PORT',
-		'DOUT10_PORT',
-		'DOUT11_PORT',
-		'DOUT12_PORT',
-		'DOUT13_PORT',
-		'DOUT14_PORT',
-		'DOUT15_PORT',
-		'DOUT16_PORT',
-		'DOUT17_PORT',
-		'DOUT18_PORT',
-		'DOUT19_PORT',
-		'DOUT20_PORT',
-		'DOUT21_PORT',
-		'DOUT22_PORT',
-		'DOUT23_PORT',
-		'DOUT24_PORT',
-		'DOUT25_PORT',
-		'DOUT26_PORT',
-		'DOUT27_PORT',
-		'DOUT28_PORT',
-		'DOUT29_PORT',
-		'DOUT30_PORT',
-		'DOUT31_PORT',
-		'LIMIT_X_PORT',
-		'LIMIT_Y_PORT',
-		'LIMIT_Z_PORT',
-		'LIMIT_X2_PORT',
-		'LIMIT_Y2_PORT',
-		'LIMIT_Z2_PORT',
-		'LIMIT_A_PORT',
-		'LIMIT_B_PORT',
-		'LIMIT_C_PORT',
-		'PROBE_PORT',
-		'ESTOP_PORT',
-		'SAFETY_DOOR_PORT',
-		'FHOLD_PORT',
-		'CS_RES_PORT',
-		'ANALOG0_PORT',
-		'ANALOG1_PORT',
-		'ANALOG2_PORT',
-		'ANALOG3_PORT',
-		'ANALOG4_PORT',
-		'ANALOG5_PORT',
-		'ANALOG6_PORT',
-		'ANALOG7_PORT',
-		'ANALOG8_PORT',
-		'ANALOG9_PORT',
-		'ANALOG10_PORT',
-		'ANALOG11_PORT',
-		'ANALOG12_PORT',
-		'ANALOG13_PORT',
-		'ANALOG14_PORT',
-		'ANALOG15_PORT',
-		'DIN0_PORT',
-		'DIN1_PORT',
-		'DIN2_PORT',
-		'DIN3_PORT',
-		'DIN4_PORT',
-		'DIN5_PORT',
-		'DIN6_PORT',
-		'DIN7_PORT',
-		'DIN8_PORT',
-		'DIN9_PORT',
-		'DIN10_PORT',
-		'DIN11_PORT',
-		'DIN12_PORT',
-		'DIN13_PORT',
-		'DIN14_PORT',
-		'DIN15_PORT',
-		'DIN16_PORT',
-		'DIN17_PORT',
-		'DIN18_PORT',
-		'DIN19_PORT',
-		'DIN20_PORT',
-		'DIN21_PORT',
-		'DIN22_PORT',
-		'DIN23_PORT',
-		'DIN24_PORT',
-		'DIN25_PORT',
-		'DIN26_PORT',
-		'DIN27_PORT',
-		'DIN28_PORT',
-		'DIN29_PORT',
-		'DIN30_PORT',
-		'DIN31_PORT',
-		'TX_PORT',
-		'RX_PORT',
-		'USB_DM_PORT',
-		'USB_DP_PORT',
-		'SPI_CLK_PORT',
-		'SPI_SDI_PORT',
-		'SPI_SDO_PORT',
-		'SPI_CS_PORT',
-		'I2C_SCL_PORT',
-		'I2C_SDA_PORT',
-		'LIMIT_X_PULLUP',
-		'LIMIT_Y_PULLUP',
-		'LIMIT_Z_PULLUP',
-		'LIMIT_X2_PULLUP',
-		'LIMIT_Y2_PULLUP',
-		'LIMIT_Z2_PULLUP',
-		'LIMIT_A_PULLUP',
-		'LIMIT_B_PULLUP',
-		'LIMIT_C_PULLUP',
-		'PROBE_PULLUP',
-		'ESTOP_PULLUP',
-		'SAFETY_DOOR_PULLUP',
-		'FHOLD_PULLUP',
-		'CS_RES_PULLUP',
-		'DIN0_PULLUP',
-		'DIN1_PULLUP',
-		'DIN2_PULLUP',
-		'DIN3_PULLUP',
-		'DIN4_PULLUP',
-		'DIN5_PULLUP',
-		'DIN6_PULLUP',
-		'DIN7_PULLUP',
-		'DIN8_PULLUP',
-		'DIN9_PULLUP',
-		'DIN10_PULLUP',
-		'DIN11_PULLUP',
-		'DIN12_PULLUP',
-		'DIN13_PULLUP',
-		'DIN14_PULLUP',
-		'DIN15_PULLUP',
-		'DIN16_PULLUP',
-		'DIN17_PULLUP',
-		'DIN18_PULLUP',
-		'DIN19_PULLUP',
-		'DIN20_PULLUP',
-		'DIN21_PULLUP',
-		'DIN22_PULLUP',
-		'DIN23_PULLUP',
-		'DIN24_PULLUP',
-		'DIN25_PULLUP',
-		'DIN26_PULLUP',
-		'DIN27_PULLUP',
-		'DIN28_PULLUP',
-		'DIN29_PULLUP',
-		'DIN30_PULLUP',
-		'DIN31_PULLUP',
-		'RX_PULLUP',
-		'USB_DM_PULLUP',
-		'USB_DP_PULLUP',
-		'SPI_SDI_PULLUP',
-		'I2C_SCL_PULLUP',
-		'I2C_SDA_PULLUP',
-		'LIMIT_X_ISR',
-		'LIMIT_Y_ISR',
-		'LIMIT_Z_ISR',
-		'LIMIT_X2_ISR',
-		'LIMIT_Y2_ISR',
-		'LIMIT_Z2_ISR',
-		'LIMIT_A_ISR',
-		'LIMIT_B_ISR',
-		'LIMIT_C_ISR',
-		'PROBE_ISR',
-		'ESTOP_ISR',
-		'SAFETY_DOOR_ISR',
-		'FHOLD_ISR',
-		'CS_RES_ISR',
-		'DIN0_ISR',
-		'DIN1_ISR',
-		'DIN2_ISR',
-		'DIN3_ISR',
-		'DIN4_ISR',
-		'DIN5_ISR',
-		'DIN6_ISR',
-		'DIN7_ISR',
-		'PWM0_CHANNEL',
-		'PWM1_CHANNEL',
-		'PWM2_CHANNEL',
-		'PWM3_CHANNEL',
-		'PWM4_CHANNEL',
-		'PWM5_CHANNEL',
-		'PWM6_CHANNEL',
-		'PWM7_CHANNEL',
-		'PWM8_CHANNEL',
-		'PWM9_CHANNEL',
-		'PWM10_CHANNEL',
-		'PWM11_CHANNEL',
-		'PWM12_CHANNEL',
-		'PWM13_CHANNEL',
-		'PWM14_CHANNEL',
-		'PWM15_CHANNEL',
-		'PWM0_TIMER',
-		'PWM1_TIMER',
-		'PWM2_TIMER',
-		'PWM3_TIMER',
-		'PWM4_TIMER',
-		'PWM5_TIMER',
-		'PWM6_TIMER',
-		'PWM7_TIMER',
-		'PWM8_TIMER',
-		'PWM9_TIMER',
-		'PWM10_TIMER',
-		'PWM11_TIMER',
-		'PWM12_TIMER',
-		'PWM13_TIMER',
-		'PWM14_TIMER',
-		'PWM15_TIMER',
-		'PWM0_MUX',
-		'PWM1_MUX',
-		'PWM2_MUX',
-		'PWM3_MUX',
-		'PWM4_MUX',
-		'PWM5_MUX',
-		'PWM6_MUX',
-		'PWM7_MUX',
-		'PWM8_MUX',
-		'PWM9_MUX',
-		'PWM10_MUX',
-		'PWM11_MUX',
-		'PWM12_MUX',
-		'PWM13_MUX',
-		'PWM14_MUX',
-		'PWM15_MUX',
-		'ANALOG0_CHANNEL',
-		'ANALOG1_CHANNEL',
-		'ANALOG2_CHANNEL',
-		'ANALOG3_CHANNEL',
-		'ANALOG4_CHANNEL',
-		'ANALOG5_CHANNEL',
-		'ANALOG6_CHANNEL',
-		'ANALOG7_CHANNEL',
-		'ANALOG8_CHANNEL',
-		'ANALOG9_CHANNEL',
-		'ANALOG10_CHANNEL',
-		'ANALOG11_CHANNEL',
-		'ANALOG12_CHANNEL',
-		'ANALOG13_CHANNEL',
-		'ANALOG14_CHANNEL',
-		'ANALOG15_CHANNEL',
-		'ITP_TIMER',
-		'RTC_TIMER',
-		'SERVO_TIMER',
-		'ONESHOT_TIMER',
-		'BOARD_NAME'
-	];
-	download('boardmap_overrides.h', generate_user_config(options, 'BOADMAP_OVERRIDES_H'));
+document.getElementById('boardmap_overrides').addEventListener('click', function () {
+	download('boardmap_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_OVERRIDES_H'));
 });
 
-document.querySelector('#cnc_hal_overrides').addEventListener('click', function () {
-	var options = [
-		'ENABLE_SKEW_COMPENSATION',
-		'SKEW_COMPENSATION_XY_ONLY',
-		'ENABLE_LINACT_PLANNER',
-		'ENABLE_LINACT_COLD_START',
-		'ENABLE_BACKLASH_COMPENSATION',
-		'ENABLE_S_CURVE_ACCELERATION',
-		'BRESENHAM_16BIT',
-		'ENABLE_EXTRA_SYSTEM_CMDS',
-		'RAM_ONLY_SETTINGS',
-		'STATUS_AUTOMATIC_REPORT_INTERVAL',
-		'LIMIT_X_PULLUP_ENABLE',
-		'LIMIT_Y_PULLUP_ENABLE',
-		'LIMIT_Z_PULLUP_ENABLE',
-		'LIMIT_X2_PULLUP_ENABLE',
-		'LIMIT_Y2_PULLUP_ENABLE',
-		'LIMIT_Z2_PULLUP_ENABLE',
-		'LIMIT_A_PULLUP_ENABLE',
-		'LIMIT_B_PULLUP_ENABLE',
-		'LIMIT_C_PULLUP_ENABLE',
-		'PROBE_PULLUP_ENABLE',
-		'ESTOP_PULLUP_ENABLE',
-		'SAFETY_DOOR_PULLUP_ENABLE',
-		'FHOLD_PULLUP_ENABLE',
-		'CS_RES_PULLUP_ENABLE',
-		'DISABLE_ALL_LIMITS',
-		'DISABLE_PROBE',
-		'DISABLE_ALL_CONTROLS',
-		'LIMIT_X_DISABLE',
-		'LIMIT_Y_DISABLE',
-		'LIMIT_Z_DISABLE',
-		'LIMIT_X2_DISABLE',
-		'LIMIT_Y2_DISABLE',
-		'LIMIT_Z2_DISABLE',
-		'LIMIT_A_DISABLE',
-		'LIMIT_B_DISABLE',
-		'LIMIT_C_DISABLE',
-		'TOOL1',
-		'TOOL2',
-		'TOOL3',
-		'TOOL4',
-		'TOOL5',
-		'TOOL6',
-		'TOOL7',
-		'TOOL8',
-		'TOOL9',
-		'TOOL10',
-		'TOOL11',
-		'TOOL12',
-		'TOOL13',
-		'TOOL14',
-		'TOOL15',
-		'TOOL16',
-		'ENABLE_DUAL_DRIVE_AXIS',
-		'DUAL_DRIVE0_AXIS',
-		'DUAL_DRIVE0_STEPPER',
-		'DUAL_DRIVE0_ENABLE_SELFSQUARING',
-		'DUAL_DRIVE1_AXIS',
-		'DUAL_DRIVE1_STEPPER',
-		'DUAL_DRIVE1_ENABLE_SELFSQUARING',
-		'ENABLE_LASER_PPI',
-		'LASER_PPI',
-		'INVERT_LASER_PPI_LOGIC',
-		'SOFT_SPI_CLK',
-		'SOFT_SPI_SDO',
-		'SOFT_SPI_SDI',
-		'STEPPER0_HAS_TMC',
-		'STEPPER0_DRIVER_TYPE',
-		'STEPPER0_TMC_INTERFACE',
-		'STEPPER0_UART_TX',
-		'STEPPER0_UART_RX',
-		'STEPPER0_SPI_SDO',
-		'STEPPER0_SPI_SDI',
-		'STEPPER0_SPI_CLK',
-		'STEPPER0_SPI_CS',
-		'STEPPER0_CURRENT_MA',
-		'STEPPER0_MICROSTEP',
-		'STEPPER0_RSENSE',
-		'STEPPER0_HOLD_MULT',
-		'STEPPER0_STEALTHCHOP_THERSHOLD',
-		'STEPPER0_ENABLE_INTERPLATION',
-		'STEPPER0_STALL_SENSITIVITY',
-		'STEPPER1_HAS_TMC',
-		'STEPPER1_DRIVER_TYPE',
-		'STEPPER1_TMC_INTERFACE',
-		'STEPPER1_UART_TX',
-		'STEPPER1_UART_RX',
-		'STEPPER1_SPI_SDO',
-		'STEPPER1_SPI_SDI',
-		'STEPPER1_SPI_CLK',
-		'STEPPER1_SPI_CS',
-		'STEPPER1_CURRENT_MA',
-		'STEPPER1_MICROSTEP',
-		'STEPPER1_RSENSE',
-		'STEPPER1_HOLD_MULT',
-		'STEPPER1_STEALTHCHOP_THERSHOLD',
-		'STEPPER1_ENABLE_INTERPLATION',
-		'STEPPER1_STALL_SENSITIVITY',
-		'STEPPER2_HAS_TMC',
-		'STEPPER2_DRIVER_TYPE',
-		'STEPPER2_TMC_INTERFACE',
-		'STEPPER2_UART_TX',
-		'STEPPER2_UART_RX',
-		'STEPPER2_SPI_SDO',
-		'STEPPER2_SPI_SDI',
-		'STEPPER2_SPI_CLK',
-		'STEPPER2_SPI_CS',
-		'STEPPER2_CURRENT_MA',
-		'STEPPER2_MICROSTEP',
-		'STEPPER2_RSENSE',
-		'STEPPER2_HOLD_MULT',
-		'STEPPER2_STEALTHCHOP_THERSHOLD',
-		'STEPPER2_ENABLE_INTERPLATION',
-		'STEPPER2_STALL_SENSITIVITY',
-		'STEPPER3_HAS_TMC',
-		'STEPPER3_DRIVER_TYPE',
-		'STEPPER3_TMC_INTERFACE',
-		'STEPPER3_UART_TX',
-		'STEPPER3_UART_RX',
-		'STEPPER3_SPI_SDO',
-		'STEPPER3_SPI_SDI',
-		'STEPPER3_SPI_CLK',
-		'STEPPER3_SPI_CS',
-		'STEPPER3_CURRENT_MA',
-		'STEPPER3_MICROSTEP',
-		'STEPPER3_RSENSE',
-		'STEPPER3_HOLD_MULT',
-		'STEPPER3_STEALTHCHOP_THERSHOLD',
-		'STEPPER3_ENABLE_INTERPLATION',
-		'STEPPER3_STALL_SENSITIVITY',
-		'STEPPER4_HAS_TMC',
-		'STEPPER4_DRIVER_TYPE',
-		'STEPPER4_TMC_INTERFACE',
-		'STEPPER4_UART_TX',
-		'STEPPER4_UART_RX',
-		'STEPPER4_SPI_SDO',
-		'STEPPER4_SPI_SDI',
-		'STEPPER4_SPI_CLK',
-		'STEPPER4_SPI_CS',
-		'STEPPER4_CURRENT_MA',
-		'STEPPER4_MICROSTEP',
-		'STEPPER4_RSENSE',
-		'STEPPER4_HOLD_MULT',
-		'STEPPER4_STEALTHCHOP_THERSHOLD',
-		'STEPPER4_ENABLE_INTERPLATION',
-		'STEPPER4_STALL_SENSITIVITY',
-		'STEPPER5_HAS_TMC',
-		'STEPPER5_DRIVER_TYPE',
-		'STEPPER5_TMC_INTERFACE',
-		'STEPPER5_UART_TX',
-		'STEPPER5_UART_RX',
-		'STEPPER5_SPI_SDO',
-		'STEPPER5_SPI_SDI',
-		'STEPPER5_SPI_CLK',
-		'STEPPER5_SPI_CS',
-		'STEPPER5_CURRENT_MA',
-		'STEPPER5_MICROSTEP',
-		'STEPPER5_RSENSE',
-		'STEPPER5_HOLD_MULT',
-		'STEPPER5_STEALTHCHOP_THERSHOLD',
-		'STEPPER5_ENABLE_INTERPLATION',
-		'STEPPER5_STALL_SENSITIVITY',
-		'STEPPER6_HAS_TMC',
-		'STEPPER6_DRIVER_TYPE',
-		'STEPPER6_TMC_INTERFACE',
-		'STEPPER6_UART_TX',
-		'STEPPER6_UART_RX',
-		'STEPPER6_SPI_SDO',
-		'STEPPER6_SPI_SDI',
-		'STEPPER6_SPI_CLK',
-		'STEPPER6_SPI_CS',
-		'STEPPER6_CURRENT_MA',
-		'STEPPER6_MICROSTEP',
-		'STEPPER6_RSENSE',
-		'STEPPER6_HOLD_MULT',
-		'STEPPER6_STEALTHCHOP_THERSHOLD',
-		'STEPPER6_ENABLE_INTERPLATION',
-		'STEPPER6_STALL_SENSITIVITY',
-		'STEPPER7_HAS_TMC',
-		'STEPPER7_DRIVER_TYPE',
-		'STEPPER7_TMC_INTERFACE',
-		'STEPPER7_UART_TX',
-		'STEPPER7_UART_RX',
-		'STEPPER7_SPI_SDO',
-		'STEPPER7_SPI_SDI',
-		'STEPPER7_SPI_CLK',
-		'STEPPER7_SPI_CS',
-		'STEPPER7_CURRENT_MA',
-		'STEPPER7_MICROSTEP',
-		'STEPPER7_RSENSE',
-		'STEPPER7_HOLD_MULT',
-		'STEPPER7_STEALTHCHOP_THERSHOLD',
-		'STEPPER7_ENABLE_INTERPLATION',
-		'STEPPER7_STALL_SENSITIVITY'
-	];
-	download('cnc_hal_overrides.h', generate_user_config(options, 'CNC_HAL_OVERRIDES_H'));
+document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_OVERRIDES_H', false);
+	var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
+
+	if(modules.length){
+		overrides += "\n#define LOAD_MODULES_OVERRIDE() ({"
+		for(var i=0; i<modules.length; i++){
+			overrides += "LOAD_MODULE(" + modules[i] + ");";
+		}
+		overrides += "})\n"
+	}
+
+	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+
+	download('cnc_hal_overrides.h', overrides);
 });
+
+document.getElementById('store_settings').addEventListener('click', function () {
+	var key_values = {};
+	document.querySelectorAll('[config-file]').forEach((e, i, p) => {
+		key_values[e.id] = getScope(e);
+	});
+
+	download('ucnc_build.json', JSON.stringify(key_values));
+});
+
+document.getElementById('load_settings').addEventListener('change', function (e) {
+	var file = e.target.files[0];
+	if (!file) {
+		return;
+	}
+	var reader = new FileReader();
+	reader.onload = function (e) {
+		var contents = e.target.result;
+		var build = JSON.parse(contents);
+		for (const [k, v] of Object.entries(build)) {
+			updateScope(document.getElementById(k), v);
+		}
+	};
+	reader.readAsText(file);
+}, false);
