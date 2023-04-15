@@ -5,6 +5,11 @@
 		<label for="" class="form-label">Define LASER_PWM</label>
 		<select class="form-select form-select-md" name="LASER_PWM" id="LASER_PWM" ng-model="LASER_PWM" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}">
 		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(LASER_PWM)">
+			{{LASER_PWM}} pin is not defined for
+			your board!
+		</div>
 	</div>
 	<div class="mb-3">
 		<label for="LASER_FREQ" class="form-label">Laser PWM frequency: <span
@@ -17,10 +22,20 @@
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
 		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_FLOOD" id="SPINDLE_PWM_COOLANT_FLOOD" ng-model="SPINDLE_PWM_COOLANT_FLOOD" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_PWM_COOLANT_FLOOD)">
+			{{SPINDLE_PWM_COOLANT_FLOOD}} pin is not defined for
+			your board!
+		</div>
 	</div>
 	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
 		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_MIST</label>
 		<select class="form-select form-select-md" name="SPINDLE_PWM_COOLANT_MIST" id="SPINDLE_PWM_COOLANT_MIST" ng-model="SPINDLE_PWM_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_PWM_COOLANT_MIST)">
+			{{SPINDLE_PWM_COOLANT_MIST}} pin is not defined for
+			your board!
+		</div>
 	</div>
 </fieldset>

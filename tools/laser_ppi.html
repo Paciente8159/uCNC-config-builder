@@ -5,6 +5,11 @@
 		<label for="" class="form-label">Define LASER_PPI</label>
 		<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI" ng-model="LASER_PPI" ng-model="LASER_PPI" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(LASER_PPI)">
+			{{LASER_PPI}} pin is not defined for
+			your board!
+		</div>
 	</div>
 	<div class="form-check form-switch">
 		<input class="form-check-input" type="checkbox" id="INVERT_LASER_PPI_LOGIC" ng-model="INVERT_LASER_PPI_LOGIC" config-file="hal" ng-model="INVERT_LASER_PPI_LOGIC">
@@ -14,6 +19,11 @@
 		<label for="" class="form-label">Define LASER_PPI_AIR_ASSIST</label>
 		<select class="form-select form-select-md" name="LASER_PPI_AIR_ASSIST" id="LASER_PPI_AIR_ASSIST" ng-model="LASER_PPI_AIR_ASSIST" ng-model="LASER_PPI_AIR_ASSIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(LASER_PPI_AIR_ASSIST)">
+			{{LASER_PPI_AIR_ASSIST}} pin is not defined for
+			your board!
+		</div>
 	</div>
 </fieldset>
 <div ng-if="!ENABLE_LASER_PPI" class="alert alert-danger">
