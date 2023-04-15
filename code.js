@@ -157,6 +157,8 @@ function updateFields(settings = [], loadedevent = null) {
 		}
 	}
 
+	angular.element(document.getElementById("uCNCapp")).scope().definedPins();
+
 	document.getElementById('reloading').style.display = "none";
 	if (loadedevent) {
 		document.dispatchEvent(loadedevent);
@@ -861,6 +863,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.AXIS_COUNT = 3;
 	$scope.TOOL_COUNT = 1;
 	$scope.ENABLE_COOLANT = false;
+	$scope.DEFINED_PINS = [];
 
 	$scope.numSmallerOrEq = function (arr, ref) {
 		var refval = $scope[ref];
@@ -882,6 +885,29 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.tmcChanged = function () {
 		updateHAL($scope);
+	};
+
+	$scope.definedPins = function () {
+		var pins = $scope.UCNCPINS.map(x => x.pin);
+		$scope.DEFINED_PINS = [];
+		pins.forEach(pin => {
+			if ($scope.DYNAMIC['PINS'] && $scope.DYNAMIC['PINS'][pin] && $scope.DYNAMIC['PINS'][pin]['BIT']) {
+				switch ($scope.MCU == '') {
+					case 'MCU_ESP8266':
+					case 'MCU_ESP32':
+					case 'MCU_RP2040':
+						$scope.DEFINED_PINS.push(pin);
+						break;
+					default:
+						if ($scope.DYNAMIC['PINS'][pin]['PORT']) {
+							$scope.DEFINED_PINS.push(pin);
+						}
+						break;
+				}
+				
+			}
+		});
+
 	};
 
 	$scope.toolChanged = function (tool) {
@@ -906,6 +932,18 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		return exp;
 	}
 }]);
+
+var orfilter = app.filter("orTypeFilter",function(){
+	return function(items, arg){
+	  var filtered = [];
+	  angular.forEach(items, function(value, key) {
+
+		if(arg.includes(value.type)){
+		  this.push(value);
+		}
+	  }, filtered);
+	  return filtered;
+	}});
 
 ready(function () {
 	var scope = angular.element(document.querySelector('#MCU')).scope();
@@ -967,9 +1005,9 @@ document.getElementById('cnc_hal_overrides').addEventListener('click', function 
 	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_OVERRIDES_H', false);
 	var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
 
-	if(modules.length){
+	if (modules.length) {
 		overrides += "\n#define LOAD_MODULES_OVERRIDE() ({"
-		for(var i=0; i<modules.length; i++){
+		for (var i = 0; i < modules.length; i++) {
 			overrides += "LOAD_MODULE(" + modules[i] + ");";
 		}
 		overrides += "})\n"

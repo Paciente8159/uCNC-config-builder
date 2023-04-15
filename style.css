@@ -101,3 +101,7 @@ div.tab-content {
 	text-decoration: none;
 	cursor: pointer;
   }
+
+  .form-check.form-switch {
+	margin-top: 20px;
+  }
