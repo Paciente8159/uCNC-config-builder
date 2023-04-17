@@ -253,7 +253,7 @@ function updateBoardmap(scope = null) {
 		case 'MCU_ESP32':
 			mcuurl = mcuurl + "esp32/mcumap_esp32.h";
 			break;
-		case 'RP2040':
+		case 'MCU_RP2040':
 			mcuurl = mcuurl + "rp2040/mcumap_rp2040.h";
 			break;
 		default:
