@@ -40,21 +40,22 @@ function getScope(node = null, final = true) {
 
 	var val;
 	var scope = angular.element(node).scope();
+	var notempty = node.classList.contains('ng-not-empty');
 
 	if (node.hasAttribute('model-scope-name')) {
 		var arr = node.getAttribute('model-scope-name').split('.');
 		switch (arr.length) {
 			case 1:
-				val = (scope[arr[0]]) ? scope[arr[0]] : null;
+				val = (notempty) ? scope[arr[0]] : null;
 				break;
 			case 2:
-				val = (scope[arr[0]] && scope[arr[0]][arr[1]]) ? scope[arr[0]][arr[1]] : null;
+				val = (notempty) ? scope[arr[0]][arr[1]] : null;
 				break;
 			case 3:
-				val = (scope[arr[0]] && scope[arr[0]][arr[1]] && scope[arr[0]][arr[1]][arr[2]]) ? scope[arr[0]][arr[1]][arr[2]] : null;
+				val = (notempty) ? scope[arr[0]][arr[1]][arr[2]] : null;
 				break;
 			case 4:
-				val = (scope[arr[0]] && scope[arr[0]][arr[1]] && scope[arr[0]][arr[1]][arr[2]] && scope[arr[0]][arr[1]][arr[2]][arr[3]]) ? scope[arr[0]][arr[1]][arr[2]][arr[3]] : null;
+				val = (notempty) ? scope[arr[0]][arr[1]][arr[2]][arr[3]] : null;
 				break;
 			default:
 				val = scope[node.id];
@@ -63,7 +64,7 @@ function getScope(node = null, final = true) {
 		}
 	}
 	else {
-		val = (scope[node.id]) ? scope[node.id] : null;
+		val = (notempty) ? scope[node.id] : null;
 	}
 
 	return (final && (typeof val !== 'object')) ? val : null;
@@ -917,7 +918,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 						}
 						break;
 				}
-				
+
 			}
 		});
 
@@ -946,17 +947,18 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	}
 }]);
 
-var orfilter = app.filter("orTypeFilter",function(){
-	return function(items, arg){
-	  var filtered = [];
-	  angular.forEach(items, function(value, key) {
+var orfilter = app.filter("orTypeFilter", function () {
+	return function (items, arg) {
+		var filtered = [];
+		angular.forEach(items, function (value, key) {
 
-		if(arg.includes(value.type)){
-		  this.push(value);
-		}
-	  }, filtered);
-	  return filtered;
-	}});
+			if (arg.includes(value.type)) {
+				this.push(value);
+			}
+		}, filtered);
+		return filtered;
+	}
+});
 
 ready(function () {
 	var scope = angular.element(document.querySelector('#MCU')).scope();
@@ -987,7 +989,7 @@ function generate_user_config(options, defguard, close = true) {
 			gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
 			switch (node.type) {
 				case 'select-one':
-					if (getScope(node)) {
+					if (getScope(node) != null) {
 						gentext += "#define " + options[i] + " " + getScope(node) + "\n";
 					}
 					break;
