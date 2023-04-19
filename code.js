@@ -400,7 +400,19 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		'master',
+		'v1.6.1',
 		'v1.6.0',
+	]
+
+	$scope.BAUDRATES = [
+		9600,
+		19200,
+		38400,
+		57600,
+		115200,
+		230400,
+		250000,
+		576000
 	]
 
 	$scope.MCUS = [
@@ -862,6 +874,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.KINEMATIC = "KINEMATIC_CARTESIAN";
 	$scope.AXIS_COUNT = 3;
 	$scope.TOOL_COUNT = 1;
+	$scope.BAUDRATE = 115200;
 	$scope.ENABLE_COOLANT = false;
 	$scope.DEFINED_PINS = [];
 

@@ -107,6 +107,15 @@
 						</select>
 					</div>
 
+					
+					<div class="mb-3">
+						<label for="" class="form-label">What is your COM port baudrate</label>
+						<select class="form-select form-select-md" name="BAUDRATE" id="BAUDRATE"
+							ng-model="BAUDRATE" ng-options="x as x for x in BAUDRATES" var-type="int"
+							config-file="boardmap">
+						</select>
+					</div>
+
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_COOLANT" ng-model="ENABLE_COOLANT"
 							config-file="hal">
@@ -117,6 +126,18 @@
 
 				<fieldset>
 					<legend>Advanced settings</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_WIFI"
+							ng-model="DYNAMIC['ENABLE_WIFI']"
+							model-scope-name="DYNAMIC.ENABLE_WIFI" config-file="hal">
+						<label class="form-check-label" for="ENABLE_WIFI">Enable Wifi (board must support it)</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_BLUETOOTH"
+							ng-model="DYNAMIC['ENABLE_BLUETOOTH']"
+							model-scope-name="DYNAMIC.ENABLE_BLUETOOTH" config-file="hal">
+						<label class="form-check-label" for="ENABLE_BLUETOOTH">Enable Bluetooth  (board must support it)</label>
+					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_SKEW_COMPENSATION"
 							ng-model="DYNAMIC['ENABLE_SKEW_COMPENSATION']"
