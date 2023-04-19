@@ -560,7 +560,7 @@
 							config-file="hal">
 						<label class="form-check-label" for="ENABLE_LASER_PPI">Enable Laser PPI</label>
 					</div>
-					<div class="mb-3" ng-show="DYNAMIC['ENABLE_LASER_PPI']">
+					<div class="mb-3" ng-if="DYNAMIC['ENABLE_LASER_PPI']">
 						<label for="" class="form-label">Laser PPI output µCNC pin</label>
 						<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI"
 							ng-model="DYNAMIC['LASER_PPI']" model-scope-name="DYNAMIC.LASER_PPI"
