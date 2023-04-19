@@ -167,7 +167,7 @@ function updateFields(settings = [], loadedevent = null) {
 }
 
 function resetBoardPins() {
-	const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT'];
+	const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT', 'BAUDRATE'];
 
 	document.querySelectorAll('[config-file="boardmap"]').forEach((e, i, p) => {
 		if (!excludeids.includes(e.id)) {
