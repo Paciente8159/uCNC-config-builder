@@ -998,6 +998,10 @@ function generate_user_config(options, defguard, close = true) {
 					if (node.checked) {
 						gentext += "#define " + options[i] + "\n";
 					}
+					else if(node.getAttribute("var-type")==="bool")
+					{
+						gentext += "#define " + options[i] + " false\n";
+					}
 					break;
 				default:
 					gentext += "#define " + options[i] + " " + getScope(node) + "\n";

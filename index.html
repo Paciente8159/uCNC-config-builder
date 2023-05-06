@@ -751,12 +751,12 @@
 										</div>
 									</div>
 								</div>
-								<label for="STEPPER{{x}}_CURRENT_MAX" class="form-label">Stepper{{x}} max current: <span
-										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MAX']"></span> mA</label>
+								<label for="STEPPER{{x}}_CURRENT_MA" class="form-label">Stepper{{x}} max current: <span
+										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"></span> mA</label>
 								<input type="range" class="form-range" min="0" max="1500"
-									name="STEPPER{{x}}_CURRENT_MAX" id="STEPPER{{x}}_CURRENT_MAX"
-									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MAX']"
-									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_CURRENT_MAX" config-file="hal">
+									name="STEPPER{{x}}_CURRENT_MA" id="STEPPER{{x}}_CURRENT_MA"
+									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"
+									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_CURRENT_MA" config-file="hal">
 								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping</label>
 								<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP"
 									id="STEPPER{{x}}_MICROSTEP" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_MICROSTEP']"
@@ -767,6 +767,7 @@
 										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_RSENSE']"></span> ohms</label>
 								<input type="range" class="form-range" step="0.01" min="0" max="2"
 									name="STEPPER{{x}}_RSENSE" id="STEPPER{{x}}_RSENSE"
+									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_RSENSE']"
 									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_RSENSE" var-type="float"
 									config-file="hal">
 								<label for="STEPPER{{x}}_HOLD_MULT" class="form-label">Stepper{{x}} Hold multiplier:
