@@ -107,12 +107,11 @@
 						</select>
 					</div>
 
-					
+
 					<div class="mb-3">
 						<label for="" class="form-label">What is your COM port baudrate</label>
-						<select class="form-select form-select-md" name="BAUDRATE" id="BAUDRATE"
-							ng-model="BAUDRATE" ng-options="x as x for x in BAUDRATES" var-type="int"
-							config-file="boardmap">
+						<select class="form-select form-select-md" name="BAUDRATE" id="BAUDRATE" ng-model="BAUDRATE"
+							ng-options="x as x for x in BAUDRATES" var-type="int" config-file="boardmap">
 						</select>
 					</div>
 
@@ -128,15 +127,15 @@
 					<legend>Advanced settings</legend>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_WIFI"
-							ng-model="DYNAMIC['ENABLE_WIFI']"
-							model-scope-name="DYNAMIC.ENABLE_WIFI" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_WIFI']" model-scope-name="DYNAMIC.ENABLE_WIFI" config-file="hal">
 						<label class="form-check-label" for="ENABLE_WIFI">Enable Wifi (board must support it)</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_BLUETOOTH"
-							ng-model="DYNAMIC['ENABLE_BLUETOOTH']"
-							model-scope-name="DYNAMIC.ENABLE_BLUETOOTH" config-file="hal">
-						<label class="form-check-label" for="ENABLE_BLUETOOTH">Enable Bluetooth  (board must support it)</label>
+							ng-model="DYNAMIC['ENABLE_BLUETOOTH']" model-scope-name="DYNAMIC.ENABLE_BLUETOOTH"
+							config-file="hal">
+						<label class="form-check-label" for="ENABLE_BLUETOOTH">Enable Bluetooth (board must support
+							it)</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_SKEW_COMPENSATION"
@@ -753,9 +752,8 @@
 								</div>
 								<label for="STEPPER{{x}}_CURRENT_MA" class="form-label">Stepper{{x}} max current: <span
 										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"></span> mA</label>
-								<input type="range" class="form-range" min="0" max="1500"
-									name="STEPPER{{x}}_CURRENT_MA" id="STEPPER{{x}}_CURRENT_MA"
-									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"
+								<input type="range" class="form-range" min="0" max="1500" name="STEPPER{{x}}_CURRENT_MA"
+									id="STEPPER{{x}}_CURRENT_MA" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"
 									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_CURRENT_MA" config-file="hal">
 								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping</label>
 								<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP"
@@ -895,8 +893,16 @@
 								target="_blank">Download and unzip µCNC ({{VERSION}})</a></li>
 						<li class="list-group-item"><a class="btn btn-secondary"
 								href="https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip"
-								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted">If you are using modules you need to download them place each used module directory inside
-									uCNC/src/modules/ directory</small></li>
+								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted"
+								ng-if="!VERSION.includes('1.6.')">If you are using modules you need to download them
+								place each used module directory inside
+								uCNC/src/modules/ directory</small></li>
+						<li class="list-group-item"><a class="btn btn-secondary"
+								href="https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip"
+								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted"
+								ng-if="VERSION.includes('1.6.')">If you are using modules you need to download them
+								place each used module directory inside
+								uCNC/src/modules/ directory</small></li>
 						<li class="list-group-item"><a name="boardmap_overrides" id="boardmap_overrides"
 								class="btn btn-primary" href="#" role="button">Download boardmap_overrides.h</a>
 							<small id="helpId" class="form-text text-muted">And replace the existing file inside
