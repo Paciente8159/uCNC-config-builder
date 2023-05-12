@@ -835,7 +835,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
 		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display' },
 		{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI' },
-		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS' },
+		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS (beta)' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
 	];
 
