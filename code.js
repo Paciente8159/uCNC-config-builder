@@ -401,6 +401,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		'master',
+		'v1.7.0',
 		'v1.7.0-beta',
 		'v1.6.2',
 		'v1.6.1',
@@ -832,7 +833,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'parser_m80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
 		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
+		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display' },
 		{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI' },
+		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
 	];
 
