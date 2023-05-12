@@ -1,0 +1,82 @@
+<div>
+	<label for="GRAPHIC_DISPLAY_SPI_CLOCK" class="form-label">Define GRAPHIC_DISPLAY_SPI_CLOCK</label>
+	<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_SPI_CLOCK" id="GRAPHIC_DISPLAY_SPI_CLOCK"
+		ng-model="GRAPHIC_DISPLAY_SPI_CLOCK"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="GRAPHIC_DISPLAY_SPI_CLOCK='DOUT4'">
+	</select>
+	<div class="alert alert-warning" role="alert"
+		ng-show="!$parent.$parent.DEFINED_PINS.includes(GRAPHIC_DISPLAY_SPI_CLOCK)">
+		{{GRAPHIC_DISPLAY_SPI_CLOCK}} pin is not defined for
+		your board!
+	</div>
+	<label for="GRAPHIC_DISPLAY_SPI_DATA" class="form-label">Define GRAPHIC_DISPLAY_SPI_DATA</label>
+	<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_SPI_DATA" id="GRAPHIC_DISPLAY_SPI_DATA"
+		ng-model="GRAPHIC_DISPLAY_SPI_DATA"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="GRAPHIC_DISPLAY_SPI_DATA='DOUT5'">
+	</select>
+	<div class="alert alert-warning" role="alert"
+		ng-show="!$parent.$parent.DEFINED_PINS.includes(GRAPHIC_DISPLAY_SPI_DATA)">
+		{{GRAPHIC_DISPLAY_SPI_DATA}} pin is not defined for
+		your board!
+	</div>
+	<label for="GRAPHIC_DISPLAY_SPI_CS" class="form-label">Define GRAPHIC_DISPLAY_SPI_CS</label>
+	<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_SPI_CS" id="GRAPHIC_DISPLAY_SPI_CS"
+		ng-model="GRAPHIC_DISPLAY_SPI_CS"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="GRAPHIC_DISPLAY_SPI_CS='DOUT5'">
+	</select>
+	<div class="alert alert-warning" role="alert"
+		ng-show="!$parent.$parent.DEFINED_PINS.includes(GRAPHIC_DISPLAY_SPI_CS)">
+		{{GRAPHIC_DISPLAY_SPI_CS}} pin is not defined for
+		your board!
+	</div>
+
+	<label for="GRAPHIC_DISPLAY_ENCODER_BTN" class="form-label">Define GRAPHIC_DISPLAY_ENCODER_BTN</label>
+	<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_ENCODER_BTN" id="GRAPHIC_DISPLAY_ENCODER_BTN"
+		ng-model="GRAPHIC_DISPLAY_ENCODER_BTN"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+		config-file="hal" ng-init="GRAPHIC_DISPLAY_ENCODER_BTN='DIN16'">
+	</select>
+	<div class="alert alert-warning" role="alert"
+		ng-show="!$parent.$parent.DEFINED_PINS.includes(GRAPHIC_DISPLAY_ENCODER_BTN)">
+		{{GRAPHIC_DISPLAY_ENCODER_BTN}} pin is not defined for
+		your board!
+	</div>
+
+	<label for="GRAPHIC_DISPLAY_ENCODER_ENC1" class="form-label">Define GRAPHIC_DISPLAY_ENCODER_ENC1</label>
+	<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_ENCODER_ENC1" id="GRAPHIC_DISPLAY_ENCODER_ENC1"
+		ng-model="GRAPHIC_DISPLAY_ENCODER_ENC1"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+		config-file="hal" ng-init="GRAPHIC_DISPLAY_ENCODER_ENC1='DIN17'">
+	</select>
+	<div class="alert alert-warning" role="alert"
+		ng-show="!$parent.$parent.DEFINED_PINS.includes(GRAPHIC_DISPLAY_ENCODER_ENC1)">
+		{{GRAPHIC_DISPLAY_ENCODER_ENC1}} pin is not defined for
+		your board!
+	</div>
+
+	<label for="GRAPHIC_DISPLAY_ENCODER_ENC2" class="form-label">Define GRAPHIC_DISPLAY_ENCODER_ENC2</label>
+	<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_ENCODER_ENC2" id="GRAPHIC_DISPLAY_ENCODER_ENC2"
+		ng-model="GRAPHIC_DISPLAY_ENCODER_ENC2"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+		config-file="hal" ng-init="GRAPHIC_DISPLAY_ENCODER_ENC2='DIN18'">
+	</select>
+	<div class="alert alert-warning" role="alert"
+		ng-show="!$parent.$parent.DEFINED_PINS.includes(GRAPHIC_DISPLAY_ENCODER_ENC2)">
+		{{GRAPHIC_DISPLAY_ENCODER_ENC2}} pin is not defined for
+		your board!
+	</div>
+
+	<div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" id="GRAPHIC_DISPLAY_INVERT_ENCODER_DIR" ng-model="GRAPHIC_DISPLAY_INVERT_ENCODER_DIR" config-file="hal">
+		<label class="form-check-label" for="GRAPHIC_DISPLAY_INVERT_ENCODER_DIR" ng-init="GRAPHIC_DISPLAY_INVERT_ENCODER_DIR=false">Invert encoder direction</label>
+	</div>
+
+	<label for="GRAPHIC_DISPLAY_MAX_LINES" class="form-label">Display max lines: <span
+			ng-bind="GRAPHIC_DISPLAY_MAX_LINES"></span>
+		points</label>
+	<input type="range" class="form-range" min="1" max="8" step="1" id="GRAPHIC_DISPLAY_MAX_LINES"
+		ng-model="GRAPHIC_DISPLAY_MAX_LINES" config-file="hal" var-type="int" ng-init="GRAPHIC_DISPLAY_MAX_LINES=5">
+</div>
