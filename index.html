@@ -298,6 +298,7 @@
 								<th scope="col">CHANNEL</th>
 								<th scope="col">TIMER</th>
 								<th scope="col">MUX</th>
+								<th scope="col">IO OFFSET(74HC595)</th>
 							</tr>
 						</thead>
 						<tr ng-repeat="x in UCNCPINS">
@@ -307,12 +308,14 @@
 									model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
 									ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int"
 									config-file="boardmap" ng-change="definedPins()">
+									<option value=""></option>
 								</select></td>
 							<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
 									ng-model="DYNAMIC['PINS'][x.pin]['PORT']"
 									model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
 									ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}"
 									config-file="boardmap" ng-change="definedPins()">
+									<option value=""></option>
 								</select></td>
 							<td>
 								<div class="form-check form-switch" ng-if='x.type.includes("generic_input")'>
@@ -333,6 +336,7 @@
 											ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
 											var-type="int" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
 											config-file="boardmap">
+											<option value=""></option>
 										</select>
 										<small id="helpId" class="form-text text-muted"><a
 												href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
@@ -347,12 +351,14 @@
 										ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
 										var-type="int" ng-if='MCU!="MCU_AVR"'
 										model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+										<option value=""></option>
 									</select>
 									<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
 										id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
 										ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
 										ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
 										config-file="boardmap">
+										<option value=""></option>
 									</select>
 								</div>
 							</td>
@@ -363,6 +369,7 @@
 										model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
 										ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
 										var-type="int" config-file="boardmap">
+										<option value=""></option>
 									</select></div>
 							</td>
 							<td>
@@ -371,6 +378,16 @@
 										model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
 										ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}"
 										config-file="boardmap">
+										<option value=""></option>
+									</select></div>
+							</td>
+							<td>
+								<div ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'><select class='form-select form-select-sm'
+										name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+										model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
+										ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
+										config-file="boardmap" ng-change="definedPins()">
+										<option value=""></option>
 									</select></div>
 							</td>
 						</tr>
@@ -809,6 +826,10 @@
 						</div>
 					</div>
 				</fieldset>
+				<fieldset>
+					<legend>74HC595 IC IO extender</legend>
+					<div>under development</div>
+				</fieldset>
 			</div>
 			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab">
 				<!-- <div ng-include="'extensions.html'"></div> -->
@@ -893,13 +914,14 @@
 								target="_blank">Download and unzip µCNC ({{VERSION}})</a></li>
 						<li class="list-group-item" ng-if="!VERSION.includes('1.6.')"><a class="btn btn-secondary"
 								href="https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip"
-								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted">If you are using modules you need to download them
+								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted">If
+								you are using modules you need to download them
 								place each used module directory inside
 								uCNC/src/modules/ directory</small></li>
-						<li class="list-group-item" 
-						ng-if="VERSION.includes('1.6.')"><a class="btn btn-secondary"
+						<li class="list-group-item" ng-if="VERSION.includes('1.6.')"><a class="btn btn-secondary"
 								href="https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip"
-								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted">If you are using modules you need to download them
+								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted">If
+								you are using modules you need to download them
 								place each used module directory inside
 								uCNC/src/modules/ directory</small></li>
 						<li class="list-group-item"><a name="boardmap_overrides" id="boardmap_overrides"
