@@ -693,10 +693,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.CHANNELS = [
-		{ channel: 0, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 0, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ channel: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ channel: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ channel: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
 		{ channel: 4, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
 		{ channel: 5, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
 		{ channel: 6, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
@@ -716,10 +716,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.TIMERS = [
-		{ timer: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
-		{ timer: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
-		{ timer: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
-		{ timer: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040' },
+		{ timer: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
+		{ timer: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
+		{ timer: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
+		{ timer: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
 		{ timer: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
 		{ timer: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
 		{ timer: 6, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
@@ -978,8 +978,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		var pins = $scope.UCNCPINS.map(x => x.pin);
 		$scope.DEFINED_PINS = [];
 		pins.forEach(pin => {
-			if ($scope.DYNAMIC['PINS'] && $scope.DYNAMIC['PINS'][pin] && $scope.DYNAMIC['PINS'][pin]['BIT']) {
-				switch ($scope.MCU == '') {
+			if ($scope.DYNAMIC['PINS'] && $scope.DYNAMIC['PINS'][pin] && ($scope.DYNAMIC['PINS'][pin]['BIT'] || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET'])) {
+				switch ($scope.MCU) {
 					case 'MCU_ESP8266':
 					case 'MCU_ESP32':
 					case 'MCU_RP2040':

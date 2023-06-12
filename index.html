@@ -384,8 +384,8 @@
 							<td>
 								<div ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'><select class='form-select form-select-sm'
 										name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET"
-										ng-options="y.mux as y.mux for y in IO_OFFSETS | filter: {'mcu': MCU}"
+										model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
+										ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
 										config-file="boardmap">
 										<option value=""></option>
 									</select></div>
