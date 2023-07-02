@@ -401,6 +401,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		'master',
+		'v1.7.2',
 		'v1.7.1',
 		'v1.7.0',
 		'v1.7.0-beta',
