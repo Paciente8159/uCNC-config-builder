@@ -72,7 +72,7 @@
 				<div class="mb-3">
 					<label for="" class="form-label">What version will you be using?</label>
 					<select class="form-select form-select-md" name="VERSION" id="VERSION" ng-model="VERSION"
-						ng-options="x as x for x in VERSIONS" config-file="none" ng-init="VERSION='master'">
+						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=99999" ng-change="mcuChanged()">
 					</select>
 				</div>
 
@@ -179,12 +179,19 @@
 						<label class="form-check-label" for="ENABLE_BACKLASH_COMPENSATION">Enable backlash
 							compensation</label>
 					</div>
-					<div class="form-check form-switch">
+					<div class="form-check form-switch" ng-if="VERSION<10780">
 						<input class="form-check-input" type="checkbox" id="ENABLE_S_CURVE_ACCELERATION"
 							ng-model="DYNAMIC['ENABLE_S_CURVE_ACCELERATION']"
 							model-scope-name="DYNAMIC.ENABLE_S_CURVE_ACCELERATION" config-file="hal">
 						<label class="form-check-label" for="ENABLE_S_CURVE_ACCELERATION">Enable S-Curve
 							acceleration</label>
+					</div>
+					<div class="form-check form-switch" ng-if="VERSION>10779">
+							<label for="S_CURVE_ACCELERATION_LEVEL" class="form-label">Curve
+								acceleration type</label>
+							<select class="form-select form-select-md" name="S_CURVE_ACCELERATION_LEVEL" id="S_CURVE_ACCELERATION_LEVEL" ng-model="S_CURVE_ACCELERATION_LEVEL"
+							ng-options="x.id as x.name for x in ACCELERATIONS" var-type="int" config-file="boardmap" ng-init="S_CURVE_ACCELERATION_LEVEL=0"></select>
+						</select>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="BRESENHAM_16BIT"
@@ -320,7 +327,7 @@
 									<option value=""></option>
 								</select></td>
 							<td>
-								<div class="form-check form-switch" ng-if='x.type.includes("generic_input")'>
+								<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
 									<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
 										id='{{x.pin}}_PULLUP' ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']"
 										model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
@@ -773,7 +780,7 @@
 										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"></span> mA</label>
 								<input type="range" class="form-range" min="0" max="1500" name="STEPPER{{x}}_CURRENT_MA"
 									id="STEPPER{{x}}_CURRENT_MA" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"
-									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_CURRENT_MA" config-file="hal">
+									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_CURRENT_MA" config-file="hal" var-type="int">
 								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping</label>
 								<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP"
 									id="STEPPER{{x}}_MICROSTEP" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_MICROSTEP']"

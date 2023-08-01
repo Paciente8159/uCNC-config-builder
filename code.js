@@ -167,7 +167,7 @@ function updateFields(settings = [], loadedevent = null) {
 }
 
 function resetBoardPins() {
-	const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT', 'BAUDRATE'];
+	const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT', 'BAUDRATE', 'S_CURVE_ACCELERATION_LEVEL'];
 
 	document.querySelectorAll('[config-file="boardmap"]').forEach((e, i, p) => {
 		if (!excludeids.includes(e.id)) {
@@ -180,7 +180,9 @@ function updateHAL(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching HAL...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
+	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj=>{return obj.tag===getScope(document.getElementById('VERSION'));})[0].id;
+
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
 	parsePreprocessor(hal, settings, function (newsettings) {
@@ -196,7 +198,9 @@ function updateTool(scope = null, tool = null) {
 	document.getElementById('loadingtext').innerText = "Fetching tools...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
+	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj=>{return obj.tag===getScope(document.getElementById('VERSION'));})[0].id;
+
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
 
 	if (!tool) {
@@ -215,7 +219,9 @@ function updateBoardmap(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching processor...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + getScope(document.getElementById('VERSION'));
+	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj=>{return obj.tag===getScope(document.getElementById('VERSION'));})[0].id;
+
+	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 
 	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
 
@@ -400,14 +406,16 @@ var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	$scope.VERSIONS = [
-		'master',
-		'v1.7.2',
-		'v1.7.1',
-		'v1.7.0',
-		'v1.7.0-beta',
-		'v1.6.2',
-		'v1.6.1',
-		'v1.6.0',
+		{ id: 'master', tag: 99999},
+		{ id: 'v1.8.0-beta', tag: 10780},
+		{ id: 'v1.7.3', tag: 10703},
+		{ id: 'v1.7.2', tag: 10702},
+		{ id: 'v1.7.1', tag: 10701},
+		{ id: 'v1.7.0', tag: 10700},
+		{ id: 'v1.7.0-beta', tag: 10680},
+		{ id: 'v1.6.2', tag: 10602},
+		{ id: 'v1.6.1', tag: 10601},
+		{ id: 'v1.6.0', tag: 10600},
 	]
 
 	$scope.BAUDRATES = [
@@ -436,6 +444,18 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'KINEMATIC_COREXY', name: 'Core XY' },
 		{ id: 'KINEMATIC_DELTA', name: 'Linear delta' }
 	];
+
+	$scope.ACCELERATIONS = [
+		{ id: -1, name: 'Selectable' },
+		{ id: 0, name: 'Disabled (linear)' },
+		{ id: 1, name: 'Soft' },
+		{ id: 2, name: 'Mild' },
+		{ id: 3, name: 'Hard' },
+		{ id: 4, name: 'Aggressive' },
+		{ id: 5, name: 'Aggressive2' }
+	];
+
+	$scope.S_CURVE_ACCELERATION_LEVEL = 0;
 
 	$scope.BOARDS = [
 		{ id: 'BOARD_UNO', name: 'Arduino UNO', mcu: 'MCU_AVR' },
@@ -542,20 +562,20 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ pin: 'DOUT29', type: 'generic_output' },
 		{ pin: 'DOUT30', type: 'generic_output' },
 		{ pin: 'DOUT31', type: 'generic_output' },
-		{ pin: 'LIMIT_X', type: 'interruptable_input' },
-		{ pin: 'LIMIT_Y', type: 'interruptable_input' },
-		{ pin: 'LIMIT_Z', type: 'interruptable_input' },
-		{ pin: 'LIMIT_X2', type: 'interruptable_input' },
-		{ pin: 'LIMIT_Y2', type: 'interruptable_input' },
-		{ pin: 'LIMIT_Z2', type: 'interruptable_input' },
-		{ pin: 'LIMIT_A', type: 'interruptable_input' },
-		{ pin: 'LIMIT_B', type: 'interruptable_input' },
-		{ pin: 'LIMIT_C', type: 'interruptable_input' },
-		{ pin: 'PROBE', type: 'interruptable_input' },
-		{ pin: 'ESTOP', type: 'interruptable_input' },
-		{ pin: 'SAFETY_DOOR', type: 'interruptable_input' },
-		{ pin: 'FHOLD', type: 'interruptable_input' },
-		{ pin: 'CS_RES', type: 'interruptable_input' },
+		{ pin: 'LIMIT_X', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_Y', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_Z', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_X2', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_Y2', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_Z2', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_A', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_B', type: 'interruptable_input,pullup' },
+		{ pin: 'LIMIT_C', type: 'interruptable_input,pullup' },
+		{ pin: 'PROBE', type: 'interruptable_input,pullup' },
+		{ pin: 'ESTOP', type: 'interruptable_input,pullup' },
+		{ pin: 'SAFETY_DOOR', type: 'interruptable_input,pullup' },
+		{ pin: 'FHOLD', type: 'interruptable_input,pullup' },
+		{ pin: 'CS_RES', type: 'interruptable_input,pullup' },
 		{ pin: 'ANALOG0', type: 'analog' },
 		{ pin: 'ANALOG1', type: 'analog' },
 		{ pin: 'ANALOG2', type: 'analog' },
@@ -572,38 +592,38 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ pin: 'ANALOG13', type: 'analog' },
 		{ pin: 'ANALOG14', type: 'analog' },
 		{ pin: 'ANALOG15', type: 'analog' },
-		{ pin: 'DIN0', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN1', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN2', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN3', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN4', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN5', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN6', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN7', type: 'interruptable_input,generic_input' },
-		{ pin: 'DIN8', type: 'generic_input' },
-		{ pin: 'DIN9', type: 'generic_input' },
-		{ pin: 'DIN10', type: 'generic_input' },
-		{ pin: 'DIN11', type: 'generic_input' },
-		{ pin: 'DIN12', type: 'generic_input' },
-		{ pin: 'DIN13', type: 'generic_input' },
-		{ pin: 'DIN14', type: 'generic_input' },
-		{ pin: 'DIN15', type: 'generic_input' },
-		{ pin: 'DIN16', type: 'generic_input' },
-		{ pin: 'DIN17', type: 'generic_input' },
-		{ pin: 'DIN18', type: 'generic_input' },
-		{ pin: 'DIN19', type: 'generic_input' },
-		{ pin: 'DIN20', type: 'generic_input' },
-		{ pin: 'DIN21', type: 'generic_input' },
-		{ pin: 'DIN22', type: 'generic_input' },
-		{ pin: 'DIN23', type: 'generic_input' },
-		{ pin: 'DIN24', type: 'generic_input' },
-		{ pin: 'DIN25', type: 'generic_input' },
-		{ pin: 'DIN26', type: 'generic_input' },
-		{ pin: 'DIN27', type: 'generic_input' },
-		{ pin: 'DIN28', type: 'generic_input' },
-		{ pin: 'DIN29', type: 'generic_input' },
-		{ pin: 'DIN30', type: 'generic_input' },
-		{ pin: 'DIN31', type: 'generic_input' },
+		{ pin: 'DIN0', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN1', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN2', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN3', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN4', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN5', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN6', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN7', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN8', type: 'generic_input,pullup' },
+		{ pin: 'DIN9', type: 'generic_input,pullup' },
+		{ pin: 'DIN10', type: 'generic_input,pullup' },
+		{ pin: 'DIN11', type: 'generic_input,pullup' },
+		{ pin: 'DIN12', type: 'generic_input,pullup' },
+		{ pin: 'DIN13', type: 'generic_input,pullup' },
+		{ pin: 'DIN14', type: 'generic_input,pullup' },
+		{ pin: 'DIN15', type: 'generic_input,pullup' },
+		{ pin: 'DIN16', type: 'generic_input,pullup' },
+		{ pin: 'DIN17', type: 'generic_input,pullup' },
+		{ pin: 'DIN18', type: 'generic_input,pullup' },
+		{ pin: 'DIN19', type: 'generic_input,pullup' },
+		{ pin: 'DIN20', type: 'generic_input,pullup' },
+		{ pin: 'DIN21', type: 'generic_input,pullup' },
+		{ pin: 'DIN22', type: 'generic_input,pullup' },
+		{ pin: 'DIN23', type: 'generic_input,pullup' },
+		{ pin: 'DIN24', type: 'generic_input,pullup' },
+		{ pin: 'DIN25', type: 'generic_input,pullup' },
+		{ pin: 'DIN26', type: 'generic_input,pullup' },
+		{ pin: 'DIN27', type: 'generic_input,pullup' },
+		{ pin: 'DIN28', type: 'generic_input,pullup' },
+		{ pin: 'DIN29', type: 'generic_input,pullup' },
+		{ pin: 'DIN30', type: 'generic_input,pullup' },
+		{ pin: 'DIN31', type: 'generic_input,pullup' },
 		{ pin: 'TX', type: 'special_output' },
 		{ pin: 'RX', type: 'special input' },
 		{ pin: 'USB_DM', type: 'special_output' },
