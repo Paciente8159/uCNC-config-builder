@@ -181,7 +181,6 @@ function updateHAL(scope = null) {
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
 	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj=>{return obj.tag===getScope(document.getElementById('VERSION'));})[0].id;
-
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
@@ -204,6 +203,7 @@ function updateTool(scope = null, tool = null) {
 	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
 
 	if (!tool) {
+		document.getElementById('reloading').style.display = "none";
 		return;
 	}
 
@@ -226,10 +226,12 @@ function updateBoardmap(scope = null) {
 	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
 
 	if (!scope) {
+		document.getElementById('reloading').style.display = "none";
 		return;
 	}
 
 	if (scope.MCU === scope.PREV_MCU && scope.BOARD === scope.PREV_BOARD) {
+		document.getElementById('reloading').style.display = "none";
 		return;
 	}
 
@@ -406,16 +408,16 @@ var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	$scope.VERSIONS = [
-		{ id: 'master', tag: 99999},
-		{ id: 'v1.8.0-beta', tag: 10780},
-		{ id: 'v1.7.3', tag: 10703},
-		{ id: 'v1.7.2', tag: 10702},
-		{ id: 'v1.7.1', tag: 10701},
-		{ id: 'v1.7.0', tag: 10700},
-		{ id: 'v1.7.0-beta', tag: 10680},
-		{ id: 'v1.6.2', tag: 10602},
-		{ id: 'v1.6.1', tag: 10601},
-		{ id: 'v1.6.0', tag: 10600},
+		{ id: 'master', tag: 99999, src:'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip'},
+		{ id: 'v1.8.0-beta', tag: 10780, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0-beta.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip'},
+		{ id: 'v1.7.3', tag: 10703, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.3.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
+		{ id: 'v1.7.2', tag: 10702, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.2.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
+		{ id: 'v1.7.1', tag: 10701, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.1.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
+		{ id: 'v1.7.0', tag: 10700, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
+		{ id: 'v1.7.0-beta', tag: 10680, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0-beta.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
+		{ id: 'v1.6.2', tag: 10602, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.2.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip'},
+		{ id: 'v1.6.1', tag: 10601, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.1.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip'},
+		{ id: 'v1.6.0', tag: 10600, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.0.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip'},
 	]
 
 	$scope.BAUDRATES = [
@@ -446,7 +448,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.ACCELERATIONS = [
-		{ id: -1, name: 'Selectable' },
+		{ id: -1, name: 'Selectable via $14' },
 		{ id: 0, name: 'Disabled (linear)' },
 		{ id: 1, name: 'Soft' },
 		{ id: 2, name: 'Mild' },
@@ -972,6 +974,18 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.BAUDRATE = 115200;
 	$scope.ENABLE_COOLANT = false;
 	$scope.DEFINED_PINS = [];
+
+	$scope.getVersion = function(ver){
+		return $scope['VERSIONS'].filter(obj=>{return obj.tag===ver;})[0].id;
+	}
+
+	$scope.getSrc = function(ver){
+		return $scope['VERSIONS'].filter(obj=>{return obj.tag===ver;})[0].src;
+	}
+
+	$scope.getModules = function(ver){
+		return $scope['VERSIONS'].filter(obj=>{return obj.tag===ver;})[0].mods;
+	}
 
 	$scope.numSmallerOrEq = function (arr, ref) {
 		var refval = $scope[ref];
