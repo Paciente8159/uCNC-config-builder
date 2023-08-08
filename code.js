@@ -138,7 +138,6 @@ function updateFields(settings = [], loadedevent = null) {
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
-			// if(s=="STEPPER0_RSENSE"){debugger;}
 			if (node) {
 				switch (node.type) {
 					case 'range':
@@ -914,14 +913,14 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.MODULES_OPTIONS = [
-		{ id: 'parser_g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
-		{ id: 'parser_g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
-		{ id: 'parser_g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
-		{ id: 'parser_m17_m18', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
-		{ id: 'parser_m42', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
-		{ id: 'parser_m62_m65', name: 'LinuxCNC M62-M65 and allows to turn on and off any generic digital pin (synched or immediately)' },
-		{ id: 'parser_m67_m68', name: 'LinuxCNC M67-M68 and allows to turn on and off any analog pin (synched or immediately)' },
-		{ id: 'parser_m80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
+		{ id: 'g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
+		{ id: 'g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
+		{ id: 'g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
+		{ id: 'm17_m18', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
+		{ id: 'm42', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
+		{ id: 'm62_m65', name: 'LinuxCNC M62-M65 and allows to turn on and off any generic digital pin (synched or immediately)' },
+		{ id: 'm67_m68', name: 'LinuxCNC M67-M68 and allows to turn on and off any analog pin (synched or immediately)' },
+		{ id: 'm80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
 		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
 		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display' },
