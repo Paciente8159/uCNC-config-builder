@@ -80,15 +80,15 @@ function updateScope(node = null, val = null) {
 
 	switch (node.getAttribute('var-type')) {
 		case 'int':
-			v = (val) ? parseInt(val) : null;
+			v = (val !== null) ? parseInt(val) : null;
 			break;
 		case 'float':
-			v = (val) ? parseFloat(val) : null;
+			v = (val !== null) ? parseFloat(val) : null;
 			break;
 		case 'bool':
-			v = (val) ? (val === 'true') : false;
+			v = (val !== null) ? (val === 'true') : false;
 		default:
-			v = (val) ? val : null;
+			v = (val !== null) ? val : null;
 			break;
 	}
 
@@ -409,6 +409,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 10704, src:'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip'},
 		{ id: 'v1.8.0-beta', tag: 10780, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0-beta.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip'},
+		{ id: 'v1.7.4', tag: 10704, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.4.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
 		{ id: 'v1.7.3', tag: 10703, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.3.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
 		{ id: 'v1.7.2', tag: 10702, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.2.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
 		{ id: 'v1.7.1', tag: 10701, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.1.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
@@ -761,6 +762,32 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ timer: 'RTC', mcu: 'MCU_AVR,MCU_RP2040' },
 		{ timer: 'SERVO', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
 		{ timer: 'ONESHOT', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' }
+	];
+
+	$scope.UCNCUARTS = [
+		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040,ESP8266' },
+		{ port: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ port: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ port: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ port: 4, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 5, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' }
+	];
+
+	$scope.UCNCSPI = [
+		{ port: 0, mcu: 'MCU_AVR,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040,ESP8266' },
+		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ port: 2, mcu: 'MCU_STM32F1X,MCU_STM32F4X,ESP32' },
+		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' }
+	];
+
+
+	$scope.UCNCI2C = [
+		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ port: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32' },
+		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 4, mcu: 'MCU_SAMD21' },
+		{ port: 5, mcu: 'MCU_SAMD21' }
 	];
 
 	$scope.IO_OFFSETS = [
@@ -1163,6 +1190,9 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 		var contents = e.target.result;
 		var build = JSON.parse(contents);
 		for (const [k, v] of Object.entries(build)) {
+			if(k=="STEP3_EN_BIT"){
+				debugger;
+			}
 			updateScope(document.getElementById(k), v);
 		}
 	};
