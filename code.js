@@ -364,7 +364,7 @@ function updateBoardmap(scope = null) {
 				boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
 				break;
 			case 'BOARD_WEMOS_D1':
-				boardurl = boardurl + "boardmap_wemos_d1.h";
+				boardurl = boardurl + "esp8266/boardmap_wemos_d1.h";
 				break;
 			case 'BOARD_WEMOS_D1_R32':
 				boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
@@ -1190,11 +1190,9 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 		var contents = e.target.result;
 		var build = JSON.parse(contents);
 		for (const [k, v] of Object.entries(build)) {
-			if(k=="STEP3_EN_BIT"){
-				debugger;
-			}
 			updateScope(document.getElementById(k), v);
 		}
+		angular.element(document.getElementById("uCNCapp")).scope().definedPins();
 	};
 	reader.readAsText(file);
 }, false);
