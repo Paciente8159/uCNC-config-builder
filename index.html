@@ -428,7 +428,8 @@
 										ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
 										config-file="boardmap" ng-change="definedPins()">
 										<option value=""></option>
-									</select></div>
+									</select>
+								</div>
 							</td>
 						</tr>
 						<tbody>
@@ -507,7 +508,7 @@
 					</div>
 				</fieldset>
 
-				<fieldset>
+				<fieldset ng-if="VERSION<10790">
 					<legend>Multi drive axis</legend>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_DUAL_DRIVE_AXIS"
@@ -590,6 +591,210 @@
 								auto-squaring</label>
 						</div>
 
+					</div>
+				</fieldset>
+
+				<fieldset ng-if="VERSION>10789">
+					<legend>Multi motor axis</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_MULTI_STEPPER_AXIS"
+							ng-model="DYNAMIC['ENABLE_MULTI_STEPPER_AXIS']"
+							model-scope-name="DYNAMIC.ENABLE_MULTI_STEPPER_AXIS" config-file="hal">
+						<label class="form-check-label" for="ENABLE_MULTI_STEPPER_AXIS">Enable multi-drive AXIS</label>
+					</div>
+					<div ng-show="DYNAMIC['ENABLE_MULTI_STEPPER_AXIS']">
+						<div class="mb-3" ng-if="AXIS_COUNT>0">
+							<label for="" class="form-label">Linear actuator 0 (X) IO MASK</label>
+							<input type="number" class="form-control form-select-md" name="LINACT0_IO_MASK"
+								id="LINACT0_IO_MASK" ng-model="DYNAMIC['LINACT0_IO_MASK']"
+								model-scope-name="DYNAMIC.LINACT0_IO_MASK" config-file="hal" var-type="int"
+								ng-init="DYNAMIC['LINACT0_IO_MASK']=1">
+							</input>
+						</div>
+						<div class="mb-3" ng-if="AXIS_COUNT>1">
+							<label for="" class="form-label">Linear actuator 1 (Y) IO MASK</label>
+							<input type="number" class="form-control form-select-md" name="LINACT1_IO_MASK"
+								id="LINACT1_IO_MASK" ng-model="DYNAMIC['LINACT1_IO_MASK']"
+								model-scope-name="DYNAMIC.LINACT1_IO_MASK" config-file="hal" var-type="int"
+								ng-init="DYNAMIC['LINACT1_IO_MASK']=2">
+							</input>
+						</div>
+						<div class="mb-3" ng-if="AXIS_COUNT>2">
+							<label for="" class="form-label">Linear actuator 2 (Z) IO MASK</label>
+							<input type="number" class="form-control form-select-md" name="LINACT2_IO_MASK"
+								id="LINACT2_IO_MASK" ng-model="DYNAMIC['LINACT2_IO_MASK']"
+								model-scope-name="DYNAMIC.LINACT2_IO_MASK" config-file="hal" var-type="int"
+								ng-init="DYNAMIC['LINACT2_IO_MASK']=4">
+							</input>
+						</div>
+						<div class="mb-3" ng-if="AXIS_COUNT>3">
+							<label for="" class="form-label">Linear actuator 3 (A) IO MASK</label>
+							<input type="number" class="form-control form-select-md" name="LINACT3_IO_MASK"
+								id="LINACT3_IO_MASK" ng-model="DYNAMIC['LINACT3_IO_MASK']"
+								model-scope-name="DYNAMIC.LINACT3_IO_MASK" config-file="hal" var-type="int"
+								ng-init="DYNAMIC['LINACT3_IO_MASK']=8">
+							</input>
+						</div>
+						<div class="mb-4" ng-if="AXIS_COUNT>4">
+							<label for="" class="form-label">Linear actuator 4 (B) IO MASK</label>
+							<input type="number" class="form-control form-select-md" name="LINACT4_IO_MASK"
+								id="LINACT4_IO_MASK" ng-model="DYNAMIC['LINACT4_IO_MASK']"
+								model-scope-name="DYNAMIC.LINACT4_IO_MASK" config-file="hal" var-type="int"
+								ng-init="DYNAMIC['LINACT4_IO_MASK']=16">
+							</input>
+						</div>
+						<div class="mb-5" ng-if="AXIS_COUNT>5">
+							<label for="" class="form-label">Linear actuator 5 (C) IO MASK</label>
+							<input type="number" class="form-control form-select-md" name="LINACT5_IO_MASK"
+								id="LINACT5_IO_MASK" ng-model="DYNAMIC['LINACT5_IO_MASK']"
+								model-scope-name="DYNAMIC.LINACT5_IO_MASK" config-file="hal" var-type="int"
+								ng-init="DYNAMIC['LINACT5_IO_MASK']=32">
+							</input>
+						</div>
+
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="ENABLE_AXIS_AUTOLEVEL"
+								ng-model="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']"
+								model-scope-name="DYNAMIC.ENABLE_AXIS_AUTOLEVEL" config-file="hal">
+							<label class="form-check-label" for="ENABLE_AXIS_AUTOLEVEL">Enable AXIS Autolevel</label>
+						</div>
+						<div class="mb-3" ng-show="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']">
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_X')">
+								<label for="" class="form-label">LIMIT X IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_X_IO_MASK" id="LIMIT_X_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_X_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_X_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_X_IO_MASK']='1'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Y')">
+								<label for="" class="form-label">LIMIT Y IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_Y_IO_MASK" id="LIMIT_Y_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_Y_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Y_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_Y_IO_MASK']='2'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Z')">
+								<label for="" class="form-label">LIMIT Z IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_Z_IO_MASK" id="LIMIT_Z_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_Z_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Z_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_Z_IO_MASK']='4'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_A')">
+								<label for="" class="form-label">LIMIT A IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_A_IO_MASK" id="LIMIT_A_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_A_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_A_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_A_IO_MASK']='8'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_B')">
+								<label for="" class="form-label">LIMIT B IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_B_IO_MASK" id="LIMIT_B_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_B_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_B_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_B_IO_MASK']='16'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_C')">
+								<label for="" class="form-label">LIMIT C IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_C_IO_MASK" id="LIMIT_C_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_C_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_C_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_C_IO_MASK']='32'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_X2')">
+								<label for="" class="form-label">LIMIT X2 IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_X2_IO_MASK" id="LIMIT_X2_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_X2_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_X2_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_X2_IO_MASK']='1'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Y2')">
+								<label for="" class="form-label">LIMIT Y2 IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_Y2_IO_MASK" id="LIMIT_Y2_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_Y2_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Y2_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_Y2_IO_MASK']='2'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Z2')">
+								<label for="" class="form-label">LIMIT Z2 IO MASK</label>
+								<select class="form-select form-select-md" name="LIMIT_Z2_IO_MASK" id="LIMIT_Z2_IO_MASK"
+									ng-model="DYNAMIC['LIMIT_Z2_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Z2_IO_MASK"
+									config-file="hal" ng-init="DYNAMIC['LIMIT_Z2_IO_MASK']='4'">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="4">4</option>
+									<option value="8">8</option>
+									<option value="16">16</option>
+									<option value="32">32</option>
+									<option value="64">64</option>
+									<option value="128" selected>128</option>
+								</select>
+							</div>
+						</div>
 					</div>
 				</fieldset>
 
