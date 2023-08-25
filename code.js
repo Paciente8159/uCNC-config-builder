@@ -179,7 +179,7 @@ function updateHAL(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching HAL...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj=>{return obj.tag===getScope(document.getElementById('VERSION'));})[0].id;
+	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
@@ -196,7 +196,7 @@ function updateTool(scope = null, tool = null) {
 	document.getElementById('loadingtext').innerText = "Fetching tools...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj=>{return obj.tag===getScope(document.getElementById('VERSION'));})[0].id;
+	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
 
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
@@ -218,7 +218,7 @@ function updateBoardmap(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching processor...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
-	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj=>{return obj.tag===getScope(document.getElementById('VERSION'));})[0].id;
+	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
 
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 
@@ -389,7 +389,12 @@ function updateBoardmap(scope = null) {
 					});
 				});
 				return;
+			case 'BOARD_CUSTOM':
 			default:
+				updateFields(newsettings, boardloaded);
+				if (scope) {
+					scope.$apply();
+				}
 				document.getElementById('reloading').style.display = "none";
 				return;
 		}
@@ -407,18 +412,18 @@ var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	$scope.VERSIONS = [
-		{ id: 'master', tag: 10704, src:'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip'},
-		{ id: 'v1.8.x', tag: 10790, src:'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip'},
-		{ id: 'v1.8.0-beta', tag: 10780, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0-beta.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip'},
-		{ id: 'v1.7.4', tag: 10704, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.4.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
-		{ id: 'v1.7.3', tag: 10703, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.3.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
-		{ id: 'v1.7.2', tag: 10702, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.2.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
-		{ id: 'v1.7.1', tag: 10701, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.1.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
-		{ id: 'v1.7.0', tag: 10700, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
-		{ id: 'v1.7.0-beta', tag: 10680, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0-beta.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip'},
-		{ id: 'v1.6.2', tag: 10602, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.2.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip'},
-		{ id: 'v1.6.1', tag: 10601, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.1.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip'},
-		{ id: 'v1.6.0', tag: 10600, src:'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.0.zip', mods:'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip'},
+		{ id: 'master', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.x', tag: 10790, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.0-beta', tag: 10780, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0-beta.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.7.4', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.4.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
+		{ id: 'v1.7.3', tag: 10703, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.3.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
+		{ id: 'v1.7.2', tag: 10702, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.2.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
+		{ id: 'v1.7.1', tag: 10701, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
+		{ id: 'v1.7.0', tag: 10700, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
+		{ id: 'v1.7.0-beta', tag: 10680, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0-beta.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
+		{ id: 'v1.6.2', tag: 10602, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.2.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip' },
+		{ id: 'v1.6.1', tag: 10601, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip' },
+		{ id: 'v1.6.0', tag: 10600, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip' },
 	]
 
 	$scope.BAUDRATES = [
@@ -766,7 +771,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.UCNCUARTS = [
-		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040,ESP8266' },
+		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_LPC176X,ESP32,MCU_RP2040,ESP8266' },
 		{ port: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
 		{ port: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
 		{ port: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
@@ -775,7 +780,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.UCNCSPI = [
-		{ port: 0, mcu: 'MCU_AVR,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040,ESP8266' },
+		{ port: 0, mcu: 'MCU_AVR,MCU_LPC176X,ESP32,MCU_RP2040,ESP8266' },
 		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
 		{ port: 2, mcu: 'MCU_STM32F1X,MCU_STM32F4X,ESP32' },
 		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' }
@@ -783,7 +788,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 
 	$scope.UCNCI2C = [
-		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_LPC176X,ESP32,MCU_RP2040' },
 		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
 		{ port: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32' },
 		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
@@ -1002,16 +1007,16 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.ENABLE_COOLANT = false;
 	$scope.DEFINED_PINS = [];
 
-	$scope.getVersion = function(ver){
-		return $scope['VERSIONS'].filter(obj=>{return obj.tag===ver;})[0].id;
+	$scope.getVersion = function (ver) {
+		return $scope['VERSIONS'].filter(obj => { return obj.tag === ver; })[0].id;
 	}
 
-	$scope.getSrc = function(ver){
-		return $scope['VERSIONS'].filter(obj=>{return obj.tag===ver;})[0].src;
+	$scope.getSrc = function (ver) {
+		return $scope['VERSIONS'].filter(obj => { return obj.tag === ver; })[0].src;
 	}
 
-	$scope.getModules = function(ver){
-		return $scope['VERSIONS'].filter(obj=>{return obj.tag===ver;})[0].mods;
+	$scope.getModules = function (ver) {
+		return $scope['VERSIONS'].filter(obj => { return obj.tag === ver; })[0].mods;
 	}
 
 	$scope.numSmallerOrEq = function (arr, ref) {
@@ -1132,8 +1137,7 @@ function generate_user_config(options, defguard, close = true) {
 					if (node.checked) {
 						gentext += "#define " + options[i] + "\n";
 					}
-					else if(node.getAttribute("var-type")==="bool")
-					{
+					else if (node.getAttribute("var-type") === "bool") {
 						gentext += "#define " + options[i] + " false\n";
 					}
 					break;
@@ -1195,6 +1199,9 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 		var build = JSON.parse(contents);
 		for (const [k, v] of Object.entries(build)) {
 			updateScope(document.getElementById(k), v);
+			if (k === "MCU") {
+				scope.mcuChanged();
+			}
 		}
 		scope.definedPins();
 	};
