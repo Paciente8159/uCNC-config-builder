@@ -287,7 +287,7 @@
 							ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap">
 						</select>
 					</div>
-					<div class="mb-3" >
+					<div class="mb-3">
 						<label for="UART_PORT" class="form-label">Which hardware port will be UART_PORT?</label>
 						<select class='form-select form-select-sm' name='UART_PORT' id='UART_PORT'
 							ng-model="DYNAMIC['PORTS']['UART_PORT']" model-scope-name="DYNAMIC.PORTS.UART_PORT"
@@ -428,7 +428,8 @@
 										ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
 										config-file="boardmap" ng-change="definedPins()">
 										<option value=""></option>
-									</select></div>
+									</select>
+								</div>
 							</td>
 						</tr>
 						<tbody>
@@ -731,15 +732,15 @@
 											board!
 										</div>
 										<div ng-if="VERSION>10703">
-										<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
-											address: <span
-												ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
-										<input type="range" class="form-range" min="0" max="3"
-											name="STEPPER{{x}}_UART_ADDRESS" id="STEPPER{{x}}_UART_ADDRESS"
-											ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
-											model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS"
-											config-file="hal" var-type="int"
-											ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']=0">
+											<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
+												address: <span
+													ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
+											<input type="range" class="form-range" min="0" max="3"
+												name="STEPPER{{x}}_UART_ADDRESS" id="STEPPER{{x}}_UART_ADDRESS"
+												ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
+												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS"
+												config-file="hal" var-type="int"
+												ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']=0">
 										</div>
 									</div>
 								</div>
@@ -880,7 +881,61 @@
 				</fieldset>
 				<fieldset>
 					<legend>74HC595 IC IO extender</legend>
-					<div>under development</div>
+					<div>
+						<label for="IC74HC595_COUNT" class="form-label">Number of chained IC74HC595's: <span
+								ng-bind="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"></label>
+						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT"
+							id="IC74HC595_COUNT" ng-model="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"
+							model-scope-name="DYNAMIC.IC74HC595.IC74HC595_COUNT" var-type="int" config-file="hal"
+							ng-init="DYNAMIC['IC74HC595']['IC74HC595_COUNT']=0">
+						<div ng-if="DYNAMIC['IC74HC595']['IC74HC595_COUNT']!=0">
+							<label for="IC74HC595_DATA" class="form-label">IC74HC595's data pin</label>
+							<select class="form-select form-select-md" name="IC74HC595_DATA" id="IC74HC595_DATA"
+								ng-model="DYNAMIC['IC74HC595']['IC74HC595_DATA']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DATA"
+								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DATA']='DOUT8'">
+							</select>
+							<div class="alert alert-warning" role="alert"
+								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_DATA'])">
+								{{DYNAMIC['IC74HC595']['IC74HC595_DATA']}} pin is not defined for your board!
+							</div>
+							<label for="IC74HC595_CLK" class="form-label">IC74HC595's clock pin</label>
+							<select class="form-select form-select-md" name="IC74HC595_CLK" id="IC74HC595_CLK"
+								ng-model="DYNAMIC['IC74HC595']['IC74HC595_CLK']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CLK"
+								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_CLK']='DOUT9'">
+							</select>
+							<div class="alert alert-warning" role="alert"
+								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_CLK'])">
+								{{DYNAMIC['IC74HC595']['IC74HC595_CLK']}} pin is not defined for your board!
+							</div>
+							<label for="IC74HC595_DATA" class="form-label">IC74HC595's latch pin</label>
+							<select class="form-select form-select-md" name="IC74HC595_LATCH" id="IC74HC595_LATCH"
+								ng-model="DYNAMIC['IC74HC595']['IC74HC595_LATCH']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_LATCH"
+								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_LATCH']='DOUT10'">
+							</select>
+							<div class="alert alert-warning" role="alert"
+								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_LATCH'])">
+								{{DYNAMIC['IC74HC595']['IC74HC595_LATCH']}} pin is not defined for your board!
+							</div>
+							<label for="IC74HC595_DELAY_CYCLES" class="form-label">IC74HC595 pulse cycle delay: <span
+									ng-bind="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"></label>
+							<input type="range" class="form-range" min="0" max="100" name="IC74HC595_DELAY_CYCLES"
+								id="IC74HC595_DELAY_CYCLES" ng-model="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DELAY_CYCLES" var-type="int"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
+								<div class="form-check form-switch">
+									<input class="form-check-input" type="checkbox" id="IC74HC595_CUSTOM_SHIFT_IO"
+										ng-model="DYNAMIC['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']"
+										model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CUSTOM_SHIFT_IO" config-file="hal">
+									<label class="form-check-label" for="IC74HC595_CUSTOM_SHIFT_IO">Use board custom 74HC595 data shifter</label>
+								</div>
+						</div>
+					</div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab">
