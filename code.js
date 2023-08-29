@@ -600,14 +600,14 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ pin: 'ANALOG13', type: 'analog' },
 		{ pin: 'ANALOG14', type: 'analog' },
 		{ pin: 'ANALOG15', type: 'analog' },
-		{ pin: 'DIN0', type: 'interruptable_input,generic_input,pullup' },
-		{ pin: 'DIN1', type: 'interruptable_input,generic_input,pullup' },
-		{ pin: 'DIN2', type: 'interruptable_input,generic_input,pullup' },
-		{ pin: 'DIN3', type: 'interruptable_input,generic_input,pullup' },
-		{ pin: 'DIN4', type: 'interruptable_input,generic_input,pullup' },
-		{ pin: 'DIN5', type: 'interruptable_input,generic_input,pullup' },
-		{ pin: 'DIN6', type: 'interruptable_input,generic_input,pullup' },
-		{ pin: 'DIN7', type: 'interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN0', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN1', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN2', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN3', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN4', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN5', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN6', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
+		{ pin: 'DIN7', type: 'interruptable_generic_input,interruptable_input,generic_input,pullup' },
 		{ pin: 'DIN8', type: 'generic_input,pullup' },
 		{ pin: 'DIN9', type: 'generic_input,pullup' },
 		{ pin: 'DIN10', type: 'generic_input,pullup' },
@@ -904,23 +904,26 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		16
 	];
 
-	$scope.TOOLS = [
+	$scope.ENCODER = [
+		0,
 		1,
 		2,
 		3,
 		4,
 		5,
 		6,
-		7,
-		8,
-		9,
-		10,
-		11,
-		12,
-		13,
-		14,
-		15,
-		16
+		7
+	];
+
+	$scope.STEP_ENCODERS = [
+		'STEP0_ENCODER',
+		'STEP1_ENCODER',
+		'STEP2_ENCODER',
+		'STEP3_ENCODER',
+		'STEP4_ENCODER',
+		'STEP5_ENCODER',
+		'STEP6_ENCODER',
+		'STEP7_ENCODER'
 	];
 
 	$scope.AXIS = [
@@ -1025,6 +1028,15 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			return [];
 		}
 		const res = arr.filter(val => val <= parseInt(refval));
+		return res;
+	}
+
+	$scope.numSmaller = function (arr, ref) {
+		var refval = $scope[ref];
+		if (!refval) {
+			return [];
+		}
+		const res = arr.filter(val => val < parseInt(refval));
 		return res;
 	}
 
