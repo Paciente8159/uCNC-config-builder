@@ -957,7 +957,7 @@
 							model-scope-name="DYNAMIC.ENCODER.{{x}}.DIR" config-file="hal">
 						</select>
 					</div>
-					<div ng-if="ENCODERS>0" >
+					<div ng-if="ENCODERS>0">
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="ASSIGN_ENCODERS"
 								ng-model="ASSIGN_ENCODERS" model-scope-name="ASSIGN_ENCODERS">
@@ -966,8 +966,8 @@
 						<div class="mb-3" ng-repeat="x in STEP_ENCODERS" ng-show="ASSIGN_ENCODERS">
 							<label for="{{x}}" class="form-label">Select {{x}}</label>
 							<select class="form-select form-select-md" name="{{x}}" id="{{x}}"
-								ng-model="DYNAMIC['STEP_ENCODERS'][x]"
-								model-scope-name="DYNAMIC.STEP_ENCODERS.{{x}}" config-file="hal">
+								ng-model="DYNAMIC['STEP_ENCODERS'][x]" model-scope-name="DYNAMIC.STEP_ENCODERS.{{x}}"
+								config-file="hal">
 								<option value=""></option>
 								<option value="ENC0">ENC0</option>
 								<option value="ENC1">ENC1</option>
@@ -986,8 +986,7 @@
 							<div class="mb-3" ng-show="ENABLE_ENCODER_RPM">
 								<label for="RPM_ENCODER" class="form-label">Select RPM_ENCODER</label>
 								<select class="form-select form-select-md" name="RPM_ENCODER" id="RPM_ENCODER"
-									ng-model="RPM_ENCODER"
-									model-scope-name="RPM_ENCODER" config-file="hal">
+									ng-model="RPM_ENCODER" model-scope-name="RPM_ENCODER" config-file="hal">
 									<option value=""></option>
 									<option value="ENC0">ENC0</option>
 									<option value="ENC1">ENC1</option>
@@ -998,6 +997,22 @@
 									<option value="ENC6">ENC6</option>
 									<option value="ENC7">ENC7</option>
 								</select>
+								<label for="" class="form-label">RPM encoder PPR (pulses per revolution)</label>
+								<input type="number" class="form-control form-select-md" name="RPM_PPR" id="RPM_PPR"
+									ng-model="RPM_PPR" model-scope-name="RPM_PPR" config-file="hal" var-type="int"
+									ng-init="RPM_PPR=1">
+								</input>
+								<label for="RPM_INDEX_INPUT" class="form-label">Select RPM_INDEX_INPUT pin</label>
+								<select class="form-select form-select-md" name="RPM_INDEX_INPUT" id="RPM_INDEX_INPUT"
+									ng-model="RPM_INDEX_INPUT"
+									ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
+									model-scope-name="RPM_INDEX_INPUT" config-file="hal">
+								</select>
+								<input class="form-check-input" type="checkbox" id="RPM_SYNC_UPDATE_ON_INDEX_ONLY"
+									ng-model="RPM_SYNC_UPDATE_ON_INDEX_ONLY"
+									model-scope-name="RPM_SYNC_UPDATE_ON_INDEX_ONLY">
+								<label class="form-check-label" for="RPM_SYNC_UPDATE_ON_INDEX_ONLY">RPM sync update only
+									on index pulse</label>
 							</div>
 						</div>
 					</div>
