@@ -412,7 +412,7 @@ var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	$scope.VERSIONS = [
-		{ id: 'master', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'master', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
 		{ id: 'v1.8.x', tag: 10790, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.0-beta', tag: 10780, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0-beta.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.7.4', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.4.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.7.0.zip' },
@@ -1057,7 +1057,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		var pins = $scope.UCNCPINS.map(x => x.pin);
 		$scope.DEFINED_PINS = [];
 		pins.forEach(pin => {
-			if ($scope.DYNAMIC['PINS'] && $scope.DYNAMIC['PINS'][pin] && ($scope.DYNAMIC['PINS'][pin]['BIT'] || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET'])) {
+			if ($scope.DYNAMIC['PINS']!==null && $scope.DYNAMIC['PINS'][pin]!==null && ($scope.DYNAMIC['PINS'][pin]['BIT']!==null || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET']!==null)) {
 				switch ($scope.MCU) {
 					case 'MCU_ESP8266':
 					case 'MCU_ESP32':
@@ -1065,7 +1065,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 						$scope.DEFINED_PINS.push(pin);
 						break;
 					default:
-						if ($scope.DYNAMIC['PINS'][pin]['PORT']) {
+						if ($scope.DYNAMIC['PINS'][pin]['PORT']!==null) {
 							$scope.DEFINED_PINS.push(pin);
 						}
 						break;

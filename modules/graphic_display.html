@@ -25,7 +25,7 @@
 	<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_SPI_CS" id="GRAPHIC_DISPLAY_SPI_CS"
 		ng-model="GRAPHIC_DISPLAY_SPI_CS"
 		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
-		config-file="hal" ng-init="GRAPHIC_DISPLAY_SPI_CS='DOUT5'">
+		config-file="hal" ng-init="GRAPHIC_DISPLAY_SPI_CS='DOUT6'">
 	</select>
 	<div class="alert alert-warning" role="alert"
 		ng-show="!$parent.$parent.DEFINED_PINS.includes(GRAPHIC_DISPLAY_SPI_CS)">
