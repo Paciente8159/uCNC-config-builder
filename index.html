@@ -24,8 +24,24 @@
 			<img class="card-img-top logo-sm"
 				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
 			<h1>µCNC config generator</h1>
-			<h2 style="color:red">Web Builder currently has several issues and can generate compilation errors.</h2>
-			<h2 style="color:red">You can try it out first but you might need to manually configure µCNC</h2>
+			<div class="alert alert-danger left-align" role="alert">
+				<h2 style="color:red">NOTICE</h2>
+				<p>Web Builder might not always generate 100% correct config files.</p>
+				<p>Sometimes the generated config files, cause compilation errors and sometimes the code just compiles fine but does not work due to a bad configuration.</p>
+				<p><strong>ALWAYS THE GENERATED FILES:</strong></p>
+				<ul>
+					<li>make sure to inspect the gererated override files to see if all your settings were reflected:
+						<ul>
+							<li>all your new settings are defined after the #undef declaration</li>
+							<li>all old settings deleted have one #undef declaration</li>
+						</ul>
+					</li>
+					<li>make sure you have all your necessary pins defined</li>
+					<li>you have downloaded the correct modules version files for the version you are using</li>
+					<li>clean/undefine unecessary or unused pins to prevent unwanted issues</li>
+					<li>not all configuration might be available in the web builder. For custom boards and MCU additional configurations might be needed</li>
+				</ul>
+			</div>
 		</div>
 
 	</header>
