@@ -24,8 +24,8 @@
 			<img class="card-img-top logo-sm"
 				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
 			<h1>µCNC config generator</h1>
-			<div class="alert alert-danger left-align" role="alert">
-				<h2 style="color:red">NOTICE</h2>
+			<div class="alert alert-danger left-align alert-dismissible fade show" role="alert">
+				<h2 style="color: var(--bs-alert-color)">NOTICE</h2>
 				<p>Web Builder might not always generate 100% correct config files.</p>
 				<p>Sometimes the generated config files, cause compilation errors and sometimes the code just compiles fine but does not work due to a bad configuration.</p>
 				<p><strong>ALWAYS THE GENERATED FILES:</strong></p>
@@ -41,6 +41,12 @@
 					<li>clean/undefine unecessary or unused pins to prevent unwanted issues</li>
 					<li>not all configuration might be available in the web builder. For custom boards and MCU additional configurations might be needed</li>
 				</ul>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+			<div class="info alert alert-primary left-align alert-dismissible fade show" role="alert">
+				<h2 style="color:blue">Issues</h2>
+				<p>If you encounter any issue please consider submiting an issue in the Github project page, with an attached zip with all the override files and the json config file.</p>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		</div>
 
