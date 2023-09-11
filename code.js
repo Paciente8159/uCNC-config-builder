@@ -412,7 +412,7 @@ var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	$scope.VERSIONS = [
-		{ id: 'master', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
+		{ id: 'master', tag: 10779, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.8.x', tag: 10790, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.0-beta', tag: 10780, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0-beta.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.7.4', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.4.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
@@ -1138,22 +1138,27 @@ function generate_user_config(options, defguard, close = true) {
 	for (var i = 0; i < options.length; i++) {
 		var node = document.querySelector("#" + options[i]);
 		if (node) {
+			gentext += "//undefine " + options[i] + "\n";
 			gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
 			switch (node.type) {
 				case 'select-one':
 					if (getScope(node) != null) {
+						gentext += "//apply new definition of " + options[i] + "\n";
 						gentext += "#define " + options[i] + " " + getScope(node) + "\n";
 					}
 					break;
 				case 'checkbox':
 					if (node.checked) {
+						gentext += "//apply new definition of " + options[i] + "\n";
 						gentext += "#define " + options[i] + "\n";
 					}
 					else if (node.getAttribute("var-type") === "bool") {
+						gentext += "//apply new definition of " + options[i] + "\n";
 						gentext += "#define " + options[i] + " false\n";
 					}
 					break;
 				default:
+					gentext += "//apply new definition of " + options[i] + "\n";
 					gentext += "#define " + options[i] + " " + getScope(node) + "\n";
 					break;
 			}
