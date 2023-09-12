@@ -499,7 +499,8 @@
 							config-file="hal">
 						<label class="form-check-label" for="DISABLE_ALL_LIMITS">Disable all limit switches</label>
 					</div>
-					<div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']">
+					<!-- <div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']"> -->
+						<div ng-hide="1">
 						<div class="form-check form-check-inline"
 							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
 							<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE"
