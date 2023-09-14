@@ -76,7 +76,8 @@
 			</li>
 			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="defaultsettings-tab" data-bs-toggle="tab" data-bs-target="#defaultsettings"
-					type="button" role="tab" aria-controls="defaultsettings" aria-selected="false">Default Settings</button>
+					type="button" role="tab" aria-controls="defaultsettings" aria-selected="false">Default
+					Settings</button>
 			</li>
 			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="configfiles-tab" data-bs-toggle="tab" data-bs-target="#configfiles"
@@ -289,7 +290,9 @@
 						<div class="info alert alert-info left-align" role="alert" ng-if="(BOARD=='BOARD_CUSTOM')">
 							<h2 style="color: var(--bs-alert-color)">Advanced configurations</h2>
 							<p>Custom boards might require aditional settings that are not available in this
-								tool.<br>Also might require either a different base board selection on the ini file (PlatformIO) or a board type (Arduino IDE).<br>Please refer to the architecture documentation or submit a question on Github
+								tool.<br>Also might require either a different base board selection on the ini file
+								(PlatformIO) or a board type (Arduino IDE).<br>Please refer to the architecture
+								documentation or submit a question on Github
 								about custom boards.</p>
 						</div>
 					</div>
@@ -504,7 +507,7 @@
 						<label class="form-check-label" for="DISABLE_ALL_LIMITS">Disable all limit switches</label>
 					</div>
 					<!-- <div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']"> -->
-						<div ng-hide="1">
+					<div ng-hide="1">
 						<div class="form-check form-check-inline"
 							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
 							<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE"
@@ -1120,12 +1123,23 @@
 				<!-- <div ng-include="'extensions.html'"></div> -->
 				<fieldset>
 					<legend>Default settings</legend>
-					<div ng-if="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" config-file="hal">
-						<label for="DEFAULT_STEP_INV_MASK" class="form-label">$2 (Step port invert logic mask): <span ng-bind="DYNAMIC['H_MAPING_GRID_FACTOR']"></span></label>
-						<input type="number" class="form-control form-select-md" name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK"
-									ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal" var-type="int"
-									ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0">
-					</div>
+					<div><label for="DEFAULT_STEP_INV_MASK"  class="form-label">$2 (Step port invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0"></div>
+<div><label for="DEFAULT_STEP_INV_MASK"  class="form-label">$3 (Direction port invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0"></div>
+<div><label for="DEFAULT_STEP_ENA_INV"  class="form-label">$4 (Step enable invert, boolean):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_STEP_ENA_INV" id="DEFAULT_STEP_ENA_INV" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_ENA_INV']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_ENA_INV" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_ENA_INV']=0"></div>
+<div><label for="DEFAULT_LIMIT_INV_MASK"  class="form-label">$5 (Limit pins invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_LIMIT_INV_MASK" id="DEFAULT_LIMIT_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_LIMIT_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_LIMIT_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_LIMIT_INV_MASK']=0"></div>
+<div><label for="DEFAULT_PROBE_INV_MASK"  class="form-label">$6 (Probe pin invert, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_PROBE_INV_MASK" id="DEFAULT_PROBE_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_PROBE_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_PROBE_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_PROBE_INV_MASK']=0"></div>
+<div><label for="DEFAULT_CONTROL_INV_MASK"  class="form-label">$7 (Control pins invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_CONTROL_INV_MASK" id="DEFAULT_CONTROL_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_CONTROL_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_CONTROL_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_CONTROL_INV_MASK']=0"></div>
+<div><label for="DEFAULT_SOFT_LIMITS_ENABLED"  class="form-label">$20 (Soft limits, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_SOFT_LIMITS_ENABLED" id="DEFAULT_SOFT_LIMITS_ENABLED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SOFT_LIMITS_ENABLED']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SOFT_LIMITS_ENABLED" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SOFT_LIMITS_ENABLED']=0"></div>
+<div><label for="DEFAULT_HARD_LIMITS_ENABLED"  class="form-label">$21 (Hard limits, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_HARD_LIMITS_ENABLED" id="DEFAULT_HARD_LIMITS_ENABLED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HARD_LIMITS_ENABLED']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HARD_LIMITS_ENABLED" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HARD_LIMITS_ENABLED']=0"></div>
+<div><label for="DEFAULT_HOMING_ENABLED"  class="form-label">$22 (Homing cycle, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_HOMING_ENABLED" id="DEFAULT_HOMING_ENABLED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_ENABLED']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_ENABLED" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_ENABLED']=0"></div>
+<div><label for="DEFAULT_HOMING_DIR_INV_MASK"  class="form-label">$23 (Homing dir invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_HOMING_DIR_INV_MASK" id="DEFAULT_HOMING_DIR_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_DIR_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_DIR_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_DIR_INV_MASK']=0"></div>
+<div><label for="DEFAULT_HOMING_SLOW"  class="form-label">$24 (Homing feed, mm/min):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_HOMING_SLOW" id="DEFAULT_HOMING_SLOW" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_SLOW']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_SLOW" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_SLOW']=25"></div>
+<div><label for="DEFAULT_HOMING_FAST"  class="form-label">$25 (Homing seek, mm/min):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_HOMING_FAST" id="DEFAULT_HOMING_FAST" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_FAST']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_FAST" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_FAST']=500"></div>
+<div><label for="DEFAULT_DEBOUNCE_MS"  class="form-label">$26 (Homing debounce, milliseconds):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_DEBOUNCE_MS" id="DEFAULT_DEBOUNCE_MS" ng-model="DYNAMIC['SETTINGS']['DEFAULT_DEBOUNCE_MS']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_DEBOUNCE_MS" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_DEBOUNCE_MS']=250"></div>
+<div><label for="DEFAULT_HOMING_OFFSET"  class="form-label">$27 (Homing pull-off, mm):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_HOMING_OFFSET" id="DEFAULT_HOMING_OFFSET" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_OFFSET']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_OFFSET" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_OFFSET']=1"></div>
+<div><label for="DEFAULT_SPINDLE_MAX_RPM"  class="form-label">$30 (Max spindle speed, RPM):</label><input type="number" min="1" max="99999999" class="form-control form-select-md" name="DEFAULT_SPINDLE_MAX_RPM" id="DEFAULT_SPINDLE_MAX_RPM" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MAX_RPM']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SPINDLE_MAX_RPM" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MAX_RPM']=1000"></div>
+<div><label for="DEFAULT_SPINDLE_MIN_RPM"  class="form-label">$31 (Min spindle speed, RPM):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_SPINDLE_MIN_RPM" id="DEFAULT_SPINDLE_MIN_RPM" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MIN_RPM']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SPINDLE_MIN_RPM" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MIN_RPM']=0"></div>
+<div><label for="DEFAULT_STARTUP_TOOL"  class="form-label">$80 (Default tool at startup):</label><input type="number" min="0" max="16" class="form-control form-select-md" name="DEFAULT_STARTUP_TOOL" id="DEFAULT_STARTUP_TOOL" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STARTUP_TOOL']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STARTUP_TOOL" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STARTUP_TOOL']=1"></div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configfiles" role="tabpanel" aria-labelledby="configfiles-tab">
