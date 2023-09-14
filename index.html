@@ -75,6 +75,10 @@
 					Modules</button>
 			</li>
 			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="defaultsettings-tab" data-bs-toggle="tab" data-bs-target="#defaultsettings"
+					type="button" role="tab" aria-controls="defaultsettings" aria-selected="false">Default Settings</button>
+			</li>
+			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="configfiles-tab" data-bs-toggle="tab" data-bs-target="#configfiles"
 					type="button" role="tab" aria-controls="configfiles" aria-selected="false">Config files</button>
 			</li>
@@ -1109,6 +1113,18 @@
 							config-file="module">
 						<label class="form-check-label" for="{{x.id}}">{{x.name}}</label>
 						<div ng-if="DYNAMIC['MODULES'][x.id]" ng-include="'./modules/'+x.id+'.html'"></div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="tab-pane" id="defaultsettings" role="tabpanel" aria-labelledby="defaultsettings-tab">
+				<!-- <div ng-include="'extensions.html'"></div> -->
+				<fieldset>
+					<legend>Default settings</legend>
+					<div ng-if="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" config-file="hal">
+						<label for="DEFAULT_STEP_INV_MASK" class="form-label">$2 (Step port invert logic mask): <span ng-bind="DYNAMIC['H_MAPING_GRID_FACTOR']"></span></label>
+						<input type="number" class="form-control form-select-md" name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK"
+									ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal" var-type="int"
+									ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0">
 					</div>
 				</fieldset>
 			</div>
