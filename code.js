@@ -87,6 +87,7 @@ function updateScope(node = null, val = null) {
 			break;
 		case 'bool':
 			v = (val !== null) ? (val === 'true') : false;
+		case 'raw':
 		default:
 			v = (val !== null) ? val : null;
 			break;
@@ -1178,7 +1179,7 @@ document.getElementById('boardmap_overrides').addEventListener('click', function
 
 document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
 	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_OVERRIDES_H', false);
-	var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
+	var modules = [...document.querySelectorAll('[config-file="module"]:checked')].map(x => x.id);
 
 	if (modules.length) {
 		overrides += "\n#define LOAD_MODULES_OVERRIDE() ({"

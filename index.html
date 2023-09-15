@@ -1123,23 +1123,186 @@
 				<!-- <div ng-include="'extensions.html'"></div> -->
 				<fieldset>
 					<legend>Default settings</legend>
-					<div><label for="DEFAULT_STEP_INV_MASK"  class="form-label">$2 (Step port invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0"></div>
-<div><label for="DEFAULT_STEP_INV_MASK"  class="form-label">$3 (Direction port invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0"></div>
-<div><label for="DEFAULT_STEP_ENA_INV"  class="form-label">$4 (Step enable invert, boolean):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_STEP_ENA_INV" id="DEFAULT_STEP_ENA_INV" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_ENA_INV']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_ENA_INV" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_ENA_INV']=0"></div>
-<div><label for="DEFAULT_LIMIT_INV_MASK"  class="form-label">$5 (Limit pins invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_LIMIT_INV_MASK" id="DEFAULT_LIMIT_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_LIMIT_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_LIMIT_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_LIMIT_INV_MASK']=0"></div>
-<div><label for="DEFAULT_PROBE_INV_MASK"  class="form-label">$6 (Probe pin invert, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_PROBE_INV_MASK" id="DEFAULT_PROBE_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_PROBE_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_PROBE_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_PROBE_INV_MASK']=0"></div>
-<div><label for="DEFAULT_CONTROL_INV_MASK"  class="form-label">$7 (Control pins invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_CONTROL_INV_MASK" id="DEFAULT_CONTROL_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_CONTROL_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_CONTROL_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_CONTROL_INV_MASK']=0"></div>
-<div><label for="DEFAULT_SOFT_LIMITS_ENABLED"  class="form-label">$20 (Soft limits, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_SOFT_LIMITS_ENABLED" id="DEFAULT_SOFT_LIMITS_ENABLED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SOFT_LIMITS_ENABLED']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SOFT_LIMITS_ENABLED" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SOFT_LIMITS_ENABLED']=0"></div>
-<div><label for="DEFAULT_HARD_LIMITS_ENABLED"  class="form-label">$21 (Hard limits, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_HARD_LIMITS_ENABLED" id="DEFAULT_HARD_LIMITS_ENABLED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HARD_LIMITS_ENABLED']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HARD_LIMITS_ENABLED" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HARD_LIMITS_ENABLED']=0"></div>
-<div><label for="DEFAULT_HOMING_ENABLED"  class="form-label">$22 (Homing cycle, boolean):</label><input type="number" min="0" max="1" class="form-control form-select-md" name="DEFAULT_HOMING_ENABLED" id="DEFAULT_HOMING_ENABLED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_ENABLED']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_ENABLED" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_ENABLED']=0"></div>
-<div><label for="DEFAULT_HOMING_DIR_INV_MASK"  class="form-label">$23 (Homing dir invert, mask):</label><input type="number" min="0" max="255" class="form-control form-select-md" name="DEFAULT_HOMING_DIR_INV_MASK" id="DEFAULT_HOMING_DIR_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_DIR_INV_MASK']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_DIR_INV_MASK" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_DIR_INV_MASK']=0"></div>
-<div><label for="DEFAULT_HOMING_SLOW"  class="form-label">$24 (Homing feed, mm/min):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_HOMING_SLOW" id="DEFAULT_HOMING_SLOW" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_SLOW']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_SLOW" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_SLOW']=25"></div>
-<div><label for="DEFAULT_HOMING_FAST"  class="form-label">$25 (Homing seek, mm/min):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_HOMING_FAST" id="DEFAULT_HOMING_FAST" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_FAST']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_FAST" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_FAST']=500"></div>
-<div><label for="DEFAULT_DEBOUNCE_MS"  class="form-label">$26 (Homing debounce, milliseconds):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_DEBOUNCE_MS" id="DEFAULT_DEBOUNCE_MS" ng-model="DYNAMIC['SETTINGS']['DEFAULT_DEBOUNCE_MS']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_DEBOUNCE_MS" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_DEBOUNCE_MS']=250"></div>
-<div><label for="DEFAULT_HOMING_OFFSET"  class="form-label">$27 (Homing pull-off, mm):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_HOMING_OFFSET" id="DEFAULT_HOMING_OFFSET" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_OFFSET']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_OFFSET" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_OFFSET']=1"></div>
-<div><label for="DEFAULT_SPINDLE_MAX_RPM"  class="form-label">$30 (Max spindle speed, RPM):</label><input type="number" min="1" max="99999999" class="form-control form-select-md" name="DEFAULT_SPINDLE_MAX_RPM" id="DEFAULT_SPINDLE_MAX_RPM" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MAX_RPM']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SPINDLE_MAX_RPM" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MAX_RPM']=1000"></div>
-<div><label for="DEFAULT_SPINDLE_MIN_RPM"  class="form-label">$31 (Min spindle speed, RPM):</label><input type="number" min="0" max="99999999" class="form-control form-select-md" name="DEFAULT_SPINDLE_MIN_RPM" id="DEFAULT_SPINDLE_MIN_RPM" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MIN_RPM']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SPINDLE_MIN_RPM" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MIN_RPM']=0"></div>
-<div><label for="DEFAULT_STARTUP_TOOL"  class="form-label">$80 (Default tool at startup):</label><input type="number" min="0" max="16" class="form-control form-select-md" name="DEFAULT_STARTUP_TOOL" id="DEFAULT_STARTUP_TOOL" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STARTUP_TOOL']" model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STARTUP_TOOL" config-file="hal" var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STARTUP_TOOL']=1"></div>
+
+					<fieldset>
+						<legend>Pins settings</legend>
+						<div><label for="DEFAULT_STEP_INV_MASK" class="form-label">$2 (Step port invert,
+								mask):</label><input type="number" min="0" max="255" class="form-control form-select-md"
+								name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0" var-type="int"></div>
+						<div><label for="DEFAULT_STEP_INV_MASK" class="form-label">$3 (Direction port invert,
+								mask):</label><input type="number" min="0" max="255" class="form-control form-select-md"
+								name="DEFAULT_STEP_INV_MASK" id="DEFAULT_STEP_INV_MASK"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_INV_MASK" config-file="hal"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_INV_MASK']=0" var-type="int"></div>
+						<div><label for="DEFAULT_STEP_ENA_INV" class="form-label">$4 (Step enable invert,
+								boolean):</label><input type="number" min="0" max="255"
+								class="form-control form-select-md" name="DEFAULT_STEP_ENA_INV"
+								id="DEFAULT_STEP_ENA_INV" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_ENA_INV']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_ENA_INV" config-file="hal"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_ENA_INV']=0" var-type="int"></div>
+						<div><label for="DEFAULT_LIMIT_INV_MASK" class="form-label">$5 (Limit pins invert,
+								mask):</label><input type="number" min="0" max="255" class="form-control form-select-md"
+								name="DEFAULT_LIMIT_INV_MASK" id="DEFAULT_LIMIT_INV_MASK"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_LIMIT_INV_MASK']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_LIMIT_INV_MASK" config-file="hal"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_LIMIT_INV_MASK']=0" var-type="int"></div>
+						<div><label for="DEFAULT_PROBE_INV_MASK" class="form-label">$6 (Probe pin invert,
+								boolean):</label><input type="number" min="0" max="1"
+								class="form-control form-select-md" name="DEFAULT_PROBE_INV_MASK"
+								id="DEFAULT_PROBE_INV_MASK" ng-model="DYNAMIC['SETTINGS']['DEFAULT_PROBE_INV_MASK']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_PROBE_INV_MASK" config-file="hal"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_PROBE_INV_MASK']=0" var-type="int"></div>
+						<div><label for="DEFAULT_CONTROL_INV_MASK" class="form-label">$7 (Control pins invert,
+								mask):</label><input type="number" min="0" max="255" class="form-control form-select-md"
+								name="DEFAULT_CONTROL_INV_MASK" id="DEFAULT_CONTROL_INV_MASK"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_CONTROL_INV_MASK']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_CONTROL_INV_MASK" config-file="hal"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_CONTROL_INV_MASK']=0" var-type="int"></div>
+					</fieldset>
+					<fieldset>
+						<legend>Homing settings</legend>
+						<div><label for="DEFAULT_HOMING_ENABLED" class="form-label">$22 (Homing cycle,
+								boolean):</label><input type="number" min="0" max="1"
+								class="form-control form-select-md" name="DEFAULT_HOMING_ENABLED"
+								id="DEFAULT_HOMING_ENABLED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_ENABLED']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_ENABLED" config-file="hal"
+								var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_ENABLED']=0"></div>
+						<div><label for="DEFAULT_HOMING_DIR_INV_MASK" class="form-label">$23 (Homing dir invert,
+								mask):</label><input type="number" min="0" max="255" class="form-control form-select-md"
+								name="DEFAULT_HOMING_DIR_INV_MASK" id="DEFAULT_HOMING_DIR_INV_MASK"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_DIR_INV_MASK']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_DIR_INV_MASK" config-file="hal"
+								var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_DIR_INV_MASK']=0"></div>
+						<div><label for="DEFAULT_HOMING_SLOW" class="form-label">$24 (Homing feed,
+								mm/min):</label><input type="number" min="0" max="99999999"
+								class="form-control form-select-md" name="DEFAULT_HOMING_SLOW" id="DEFAULT_HOMING_SLOW"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_SLOW']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_SLOW" config-file="hal"
+								var-type="float" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_SLOW']=25"></div>
+						<div><label for="DEFAULT_HOMING_FAST" class="form-label">$25 (Homing seek,
+								mm/min):</label><input type="number" min="0" max="99999999"
+								class="form-control form-select-md" name="DEFAULT_HOMING_FAST" id="DEFAULT_HOMING_FAST"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_FAST']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_FAST" config-file="hal"
+								var-type="float" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_FAST']=500"></div>
+						<div><label for="DEFAULT_DEBOUNCE_MS" class="form-label">$26 (Homing debounce,
+								milliseconds):</label><input type="number" min="0" max="99999999"
+								class="form-control form-select-md" name="DEFAULT_DEBOUNCE_MS" id="DEFAULT_DEBOUNCE_MS"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_DEBOUNCE_MS']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_DEBOUNCE_MS" config-file="hal"
+								var-type="float" ng-init="DYNAMIC['SETTINGS']['DEFAULT_DEBOUNCE_MS']=250"></div>
+						<div><label for="DEFAULT_HOMING_OFFSET" class="form-label">$27 (Homing pull-off,
+								mm):</label><input type="number" min="0" max="99999999"
+								class="form-control form-select-md" name="DEFAULT_HOMING_OFFSET"
+								id="DEFAULT_HOMING_OFFSET" ng-model="DYNAMIC['SETTINGS']['DEFAULT_HOMING_OFFSET']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_HOMING_OFFSET" config-file="hal"
+								var-type="float" ng-init="DYNAMIC['SETTINGS']['DEFAULT_HOMING_OFFSET']=1"></div>
+					</fieldset>
+					<fieldset>
+						<legend>Tools settings</legend>
+						<div><label for="DEFAULT_SPINDLE_MAX_RPM" class="form-label">$30 (Max spindle speed,
+								RPM):</label><input type="number" min="1" max="65535"
+								class="form-control form-select-md" name="DEFAULT_SPINDLE_MAX_RPM"
+								id="DEFAULT_SPINDLE_MAX_RPM" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MAX_RPM']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SPINDLE_MAX_RPM" config-file="hal"
+								var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MAX_RPM']=1000"></div>
+						<div><label for="DEFAULT_SPINDLE_MIN_RPM" class="form-label">$31 (Min spindle speed,
+								RPM):</label><input type="number" min="0" max="65535"
+								class="form-control form-select-md" name="DEFAULT_SPINDLE_MIN_RPM"
+								id="DEFAULT_SPINDLE_MIN_RPM" ng-model="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MIN_RPM']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_SPINDLE_MIN_RPM" config-file="hal"
+								var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_SPINDLE_MIN_RPM']=0"></div>
+						<div><label for="DEFAULT_STARTUP_TOOL" class="form-label">$80 (Default tool at
+								startup):</label><input type="number" min="0" max="16"
+								class="form-control form-select-md" name="DEFAULT_STARTUP_TOOL"
+								id="DEFAULT_STARTUP_TOOL" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STARTUP_TOOL']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STARTUP_TOOL" config-file="hal"
+								var-type="int" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STARTUP_TOOL']=1"></div>
+					</fieldset>
+					<fieldset>
+						<legend>Steppers settings</legend>
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="CUSTOM_STEPS_MM"
+								ng-model="CUSTOM_STEPS_MM" config-file="">
+							<label class="form-check-label" for="CUSTOM_STEPS_MM">Custom steps/mm for each axis</label>
+						</div>
+						<div ng-if="!CUSTOM_STEPS_MM"><label for="DEFAULT_STEP_PER_MM" ng-if="!CUSTOM_STEPS_MM"
+								class="form-label">$100-105 (Axis steps/mm):</label><input type="number" min="1"
+								max="99999999" class="form-control form-select-md" name="DEFAULT_STEP_PER_MM"
+								id="DEFAULT_STEP_PER_MM" ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_PER_MM']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_PER_MM" config-file="hal"
+								var-type="float" ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_PER_MM']=200"></div>
+						<div ng-if="CUSTOM_STEPS_MM"><label for="DEFAULT_STEP_PER_MM_PER_AXIS" ng-if="CUSTOM_STEPS_MM"
+								class="form-label">$100-105 (Axis steps/mm (per axis)):</label><input type="text"
+								class="form-control form-select-md" name="DEFAULT_STEP_PER_MM_PER_AXIS"
+								id="DEFAULT_STEP_PER_MM_PER_AXIS"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_PER_MM_PER_AXIS']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_PER_MM_PER_AXIS" config-file="hal"
+								var-type="raw"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_PER_MM_PER_AXIS']='{200,200,200}'"></div>
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="CUSTOM_MAX_RATE"
+								ng-model="CUSTOM_MAX_RATE" config-file="">
+							<label class="form-check-label" for="CUSTOM_MAX_RATE">Custom max rate for each axis</label>
+						</div>
+						<div ng-if="!CUSTOM_MAX_RATE"><label for="DEFAULT_MAX_FEED" ng-if="!CUSTOM_MAX_RATE"
+								class="form-label">$110-115 (Max rate, mm/min):</label><input type="number" min="1"
+								max="99999999" class="form-control form-select-md" name="DEFAULT_MAX_FEED"
+								id="DEFAULT_MAX_FEED" ng-model="DYNAMIC['SETTINGS']['DEFAULT_MAX_FEED']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_MAX_FEED" config-file="hal" var-type="float"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_FEED']=500"></div>
+						<div ng-if="CUSTOM_MAX_RATE"><label for="DEFAULT_MAX_FEED_PER_AXIS" ng-if="CUSTOM_MAX_RATE"
+								class="form-label">$110-115 (Max rate, mm/min (per axis)):</label><input type="text"
+								class="form-control form-select-md" name="DEFAULT_MAX_FEED_PER_AXIS"
+								id="DEFAULT_MAX_FEED_PER_AXIS"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_MAX_FEED_PER_AXIS']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_MAX_FEED_PER_AXIS" config-file="hal"
+								var-type="raw"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_FEED_PER_AXIS']='{500,500,500}'"></div>
+
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="CUSTOM_ACCEL" ng-model="CUSTOM_ACCEL" config-file="">
+							<label class="form-check-label" for="CUSTOM_ACCEL">Custom accel rate for each axis</label>
+						</div>
+						<div ng-if="!CUSTOM_ACCEL"><label for="DEFAULT_ACCEL" ng-if="!CUSTOM_ACCEL"
+								class="form-label">$120-125 (Acceleration, mm/sec^2):</label><input type="number"
+								min="1" max="99999999" class="form-control form-select-md" name="DEFAULT_ACCEL"
+								id="DEFAULT_ACCEL" ng-model="DYNAMIC['SETTINGS']['DEFAULT_ACCEL']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_ACCEL" config-file="hal" var-type="float"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_ACCEL']=10"></div>
+						<div ng-if="CUSTOM_ACCEL"><label for="DEFAULT_ACCEL_PER_AXIS" ng-if="CUSTOM_ACCEL"
+								class="form-label">$120-125 (Acceleration, mm/sec^2 (per axis)):</label><input
+								type="text" class="form-control form-select-md" name="DEFAULT_ACCEL_PER_AXIS"
+								id="DEFAULT_ACCEL_PER_AXIS" ng-model="DYNAMIC['SETTINGS']['DEFAULT_ACCEL_PER_AXIS']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_ACCEL_PER_AXIS" config-file="hal"
+								var-type="raw" ng-init="DYNAMIC['SETTINGS']['DEFAULT_ACCEL_PER_AXIS']='{10,10,10}'">
+						</div>
+
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="CUSTOM_MAX_TRAVEL"
+								ng-model="CUSTOM_MAX_TRAVEL" config-file="">
+							<label class="form-check-label" for="CUSTOM_MAX_TRAVEL">Custom max travel distance for each
+								axis</label>
+						</div>
+						<div ng-if="!CUSTOM_MAX_TRAVEL"><label for="DEFAULT_MAX_DIST" ng-if="!CUSTOM_MAX_TRAVEL"
+								class="form-label">$130-135 (Max travel, mm):</label><input type="number" min="1"
+								max="99999999" class="form-control form-select-md" name="DEFAULT_MAX_DIST"
+								id="DEFAULT_MAX_DIST" ng-model="DYNAMIC['SETTINGS']['DEFAULT_MAX_DIST']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_MAX_DIST" config-file="hal" var-type="int"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_DIST']=200"></div>
+						<div ng-if="CUSTOM_MAX_TRAVEL"><label for="DEFAULT_MAX_DIST_PER_AXIS" ng-if="CUSTOM_MAX_TRAVEL"
+								class="form-label">$130-135 (Max travel, mm (per axis)):</label><input type="text"
+								class="form-control form-select-md" name="DEFAULT_MAX_DIST_PER_AXIS"
+								id="DEFAULT_MAX_DIST_PER_AXIS"
+								ng-model="DYNAMIC['SETTINGS']['DEFAULT_MAX_DIST_PER_AXIS']"
+								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_MAX_DIST_PER_AXIS" config-file="hal"
+								var-type="int"
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_DIST_PER_AXIS']='{200,200,200}'"></div>
+					</fieldset>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configfiles" role="tabpanel" aria-labelledby="configfiles-tab">
