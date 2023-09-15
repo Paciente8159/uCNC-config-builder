@@ -1243,7 +1243,9 @@
 								ng-model="DYNAMIC['SETTINGS']['DEFAULT_STEP_PER_MM_PER_AXIS']"
 								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_STEP_PER_MM_PER_AXIS" config-file="hal"
 								var-type="raw"
-								ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_PER_MM_PER_AXIS']='{200,200,200}'"></div>
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_STEP_PER_MM_PER_AXIS']='{200,200,200}'">
+								<small id="helpId" class="form-text text-muted">Format must be {X,Y,Z,A,B,C} and must match the number of axis. For example for 3 axis should be {X,Y,Z} where X, Y and Z are the respective values.</small>
+							</div>
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="CUSTOM_MAX_RATE"
 								ng-model="CUSTOM_MAX_RATE" config-file="">
@@ -1262,7 +1264,9 @@
 								ng-model="DYNAMIC['SETTINGS']['DEFAULT_MAX_FEED_PER_AXIS']"
 								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_MAX_FEED_PER_AXIS" config-file="hal"
 								var-type="raw"
-								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_FEED_PER_AXIS']='{500,500,500}'"></div>
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_FEED_PER_AXIS']='{500,500,500}'">
+								<small id="helpId" class="form-text text-muted">Format must be {X,Y,Z,A,B,C} and must match the number of axis. For example for 3 axis should be {X,Y,Z} where X, Y and Z are the respective values.</small>
+							</div>
 
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="CUSTOM_ACCEL" ng-model="CUSTOM_ACCEL" config-file="">
@@ -1280,6 +1284,7 @@
 								id="DEFAULT_ACCEL_PER_AXIS" ng-model="DYNAMIC['SETTINGS']['DEFAULT_ACCEL_PER_AXIS']"
 								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_ACCEL_PER_AXIS" config-file="hal"
 								var-type="raw" ng-init="DYNAMIC['SETTINGS']['DEFAULT_ACCEL_PER_AXIS']='{10,10,10}'">
+								<small id="helpId" class="form-text text-muted">Format must be {X,Y,Z,A,B,C} and must match the number of axis. For example for 3 axis should be {X,Y,Z} where X, Y and Z are the respective values.</small>
 						</div>
 
 						<div class="form-check form-switch">
@@ -1301,7 +1306,9 @@
 								ng-model="DYNAMIC['SETTINGS']['DEFAULT_MAX_DIST_PER_AXIS']"
 								model-scope-name="DYNAMIC.SETTINGS.DEFAULT_MAX_DIST_PER_AXIS" config-file="hal"
 								var-type="int"
-								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_DIST_PER_AXIS']='{200,200,200}'"></div>
+								ng-init="DYNAMIC['SETTINGS']['DEFAULT_MAX_DIST_PER_AXIS']='{200,200,200}'">
+								<small id="helpId" class="form-text text-muted">Format must be {X,Y,Z,A,B,C} and must match the number of axis. For example for 3 axis should be {X,Y,Z} where X, Y and Z are the respective values.</small>
+							</div>
 					</fieldset>
 				</fieldset>
 			</div>
