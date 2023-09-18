@@ -1,4 +1,10 @@
 <div>
+	<div class="alert alert-warning left-align alert-dismissible fade show" role="alert">
+		<h2 style="color: var(--bs-alert-color)">WARNING</h2>
+		<p>SD Card module is being descontinued and will no longer be mantained.</p>
+		<p>Please opt to use SD Card PF version.</p>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
 	<label for="SD_CARD_DETECT_PIN" class="form-label">Define SD_CARD_DETECT_PIN</label>
 	<select class="form-select form-select-md" name="SD_CARD_DETECT_PIN" id="SD_CARD_DETECT_PIN" ng-model="SD_CARD_DETECT_PIN"
 		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
