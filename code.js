@@ -704,7 +704,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ port: 'N', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
 		{ port: '0', mcu: 'MCU_LPC176X' },
 		{ port: '1', mcu: 'MCU_LPC176X' },
-		{ port: '2', mcu: 'MCU_LPC176X' }
+		{ port: '2', mcu: 'MCU_LPC176X' },
+		{ port: '3', mcu: 'MCU_LPC176X' },
+		{ port: '4', mcu: 'MCU_LPC176X' }
 	];
 
 	$scope.ISRS = [
