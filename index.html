@@ -24,8 +24,33 @@
 			<img class="card-img-top logo-sm"
 				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
 			<h1>µCNC config generator</h1>
-			<h2 style="color:red">Web Builder currently has several issues and can generate compilation errors.</h2>
-			<h2 style="color:red">You can try it out first but you might need to manually configure µCNC</h2>
+			<div class="alert alert-danger left-align alert-dismissible fade show" role="alert">
+				<h2 style="color: var(--bs-alert-color)">NOTICE</h2>
+				<p>Web Builder might not always generate 100% correct config files.</p>
+				<p>Sometimes the generated config files, cause compilation errors and sometimes the code just compiles
+					fine but does not work due to a bad configuration.</p>
+				<p><strong>ALWAYS CHECK THE GENERATED FILES:</strong></p>
+				<ul>
+					<li>make sure to inspect the gererated override files to see if all your settings were reflected:
+						<ul>
+							<li>all your new settings are defined after the #undef declaration</li>
+							<li>all old settings deleted have one #undef declaration</li>
+						</ul>
+					</li>
+					<li>make sure you have all your necessary pins defined</li>
+					<li>you have downloaded the correct modules version files for the version you are using</li>
+					<li>clean/undefine unecessary or unused pins to prevent unwanted issues</li>
+					<li>not all configuration might be available in the web builder. For custom boards and MCU
+						additional configurations might be needed</li>
+				</ul>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+			<div class="info alert alert-primary left-align alert-dismissible fade show" role="alert">
+				<h2 style="color:blue">Issues</h2>
+				<p>If you encounter any issue please consider submiting an issue in the Github project page, with an
+					attached zip with all the override files and the json config file.</p>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
 		</div>
 
 	</header>
@@ -72,7 +97,7 @@
 				<div class="mb-3">
 					<label for="" class="form-label">What version will you be using?</label>
 					<select class="form-select form-select-md" name="VERSION" id="VERSION" ng-model="VERSION"
-						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=10704"
+						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=10705"
 						ng-change="mcuChanged()">
 					</select>
 				</div>
@@ -257,6 +282,12 @@
 							config-file="boardmap"></select>
 						<!-- <option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option> -->
 						</select>
+						<div class="info alert alert-info left-align" role="alert" ng-if="(BOARD=='BOARD_CUSTOM')">
+							<h2 style="color: var(--bs-alert-color)">Advanced configurations</h2>
+							<p>Custom boards might require aditional settings that are not available in this
+								tool.<br>Also might require either a different base board selection on the ini file (PlatformIO) or a board type (Arduino IDE).<br>Please refer to the architecture documentation or submit a question on Github
+								about custom boards.</p>
+						</div>
 					</div>
 				</fieldset>
 				<fieldset>
@@ -270,7 +301,7 @@
 						<small id="helpId" class="form-text text-muted">Name must be between quotation marks
 							(string)</small>
 					</div>
-					<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
+					<div class="mb-3" ng-if='MCU=="MCU_AVR" && BOARD=="BOARD_CUSTOM"'>
 						<label for="" class="form-label">In which port are PCINT pins 0 to 7?</label>
 						<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT'
 							ng-model="DYNAMIC['PCINT0_PORT']" model-scope-name="DYNAMIC.PCINT0_PORT"
@@ -287,7 +318,7 @@
 							ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap">
 						</select>
 					</div>
-					<div class="mb-3" >
+					<div class="mb-3">
 						<label for="UART_PORT" class="form-label">Which hardware port will be UART_PORT?</label>
 						<select class='form-select form-select-sm' name='UART_PORT' id='UART_PORT'
 							ng-model="DYNAMIC['PORTS']['UART_PORT']" model-scope-name="DYNAMIC.PORTS.UART_PORT"
@@ -468,7 +499,8 @@
 							config-file="hal">
 						<label class="form-check-label" for="DISABLE_ALL_LIMITS">Disable all limit switches</label>
 					</div>
-					<div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']">
+					<!-- <div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']"> -->
+						<div ng-hide="1">
 						<div class="form-check form-check-inline"
 							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
 							<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE"
@@ -936,15 +968,15 @@
 											board!
 										</div>
 										<div ng-if="VERSION>10703">
-										<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
-											address: <span
-												ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
-										<input type="range" class="form-range" min="0" max="3"
-											name="STEPPER{{x}}_UART_ADDRESS" id="STEPPER{{x}}_UART_ADDRESS"
-											ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
-											model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS"
-											config-file="hal" var-type="int"
-											ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']=0">
+											<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
+												address: <span
+													ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
+											<input type="range" class="form-range" min="0" max="3"
+												name="STEPPER{{x}}_UART_ADDRESS" id="STEPPER{{x}}_UART_ADDRESS"
+												ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
+												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS"
+												config-file="hal" var-type="int"
+												ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']=0">
 										</div>
 									</div>
 								</div>
@@ -1085,7 +1117,141 @@
 				</fieldset>
 				<fieldset>
 					<legend>74HC595 IC IO extender</legend>
-					<div>under development</div>
+					<div>
+						<label for="IC74HC595_COUNT" class="form-label">Number of chained IC74HC595's: <span
+								ng-bind="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"></label>
+						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT"
+							id="IC74HC595_COUNT" ng-model="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"
+							model-scope-name="DYNAMIC.IC74HC595.IC74HC595_COUNT" var-type="int" config-file="hal"
+							ng-init="DYNAMIC['IC74HC595']['IC74HC595_COUNT']=0">
+						<div ng-if="DYNAMIC['IC74HC595']['IC74HC595_COUNT']!=0">
+							<label for="IC74HC595_DATA" class="form-label">IC74HC595's data pin</label>
+							<select class="form-select form-select-md" name="IC74HC595_DATA" id="IC74HC595_DATA"
+								ng-model="DYNAMIC['IC74HC595']['IC74HC595_DATA']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DATA"
+								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DATA']='DOUT8'">
+							</select>
+							<div class="alert alert-warning" role="alert"
+								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_DATA'])">
+								{{DYNAMIC['IC74HC595']['IC74HC595_DATA']}} pin is not defined for your board!
+							</div>
+							<label for="IC74HC595_CLK" class="form-label">IC74HC595's clock pin</label>
+							<select class="form-select form-select-md" name="IC74HC595_CLK" id="IC74HC595_CLK"
+								ng-model="DYNAMIC['IC74HC595']['IC74HC595_CLK']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CLK"
+								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_CLK']='DOUT9'">
+							</select>
+							<div class="alert alert-warning" role="alert"
+								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_CLK'])">
+								{{DYNAMIC['IC74HC595']['IC74HC595_CLK']}} pin is not defined for your board!
+							</div>
+							<label for="IC74HC595_DATA" class="form-label">IC74HC595's latch pin</label>
+							<select class="form-select form-select-md" name="IC74HC595_LATCH" id="IC74HC595_LATCH"
+								ng-model="DYNAMIC['IC74HC595']['IC74HC595_LATCH']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_LATCH"
+								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_LATCH']='DOUT10'">
+							</select>
+							<div class="alert alert-warning" role="alert"
+								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_LATCH'])">
+								{{DYNAMIC['IC74HC595']['IC74HC595_LATCH']}} pin is not defined for your board!
+							</div>
+							<label for="IC74HC595_DELAY_CYCLES" class="form-label">IC74HC595 pulse cycle delay: <span
+									ng-bind="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"></label>
+							<input type="range" class="form-range" min="0" max="100" name="IC74HC595_DELAY_CYCLES"
+								id="IC74HC595_DELAY_CYCLES" ng-model="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"
+								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DELAY_CYCLES" var-type="int"
+								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" id="IC74HC595_CUSTOM_SHIFT_IO"
+									ng-model="DYNAMIC['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']"
+									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CUSTOM_SHIFT_IO" config-file="hal">
+								<label class="form-check-label" for="IC74HC595_CUSTOM_SHIFT_IO">Use board custom 74HC595
+									data shifter</label>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Encoders</legend>
+					<label for="ENCODERS" class="form-label">Number of ENCODERS: <span ng-bind="ENCODERS"></label>
+					<input type="range" class="form-range" min="0" max="8" name="ENCODERS" id="ENCODERS"
+						ng-model="ENCODERS" model-scope-name="ENCODERS" var-type="int" config-file="hal">
+					<div class="mb-3" ng-repeat="x in numSmaller(ENCODER, 'ENCODERS')">
+						<label for="ENC{{x}}_PULSE" class="form-label">Select ENC{{x}}_PULSE pin</label>
+						<select class="form-select form-select-md" name="ENC{{x}}_PULSE" id="ENC{{x}}_PULSE"
+							ng-model="DYNAMIC['ENCODER'][x]['PULSE']"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'interruptable_generic_input'}"
+							model-scope-name="DYNAMIC.ENCODER.{{x}}.PULSE" config-file="hal">
+						</select>
+						<label for="ENC{{x}}_DIR" class="form-label">Select ENC{{x}}_DIR pin</label>
+						<select class="form-select form-select-md" name="ENC{{x}}_DIR" id="ENC{{x}}_DIR"
+							ng-model="DYNAMIC['ENCODER'][x]['DIR']"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
+							model-scope-name="DYNAMIC.ENCODER.{{x}}.DIR" config-file="hal">
+						</select>
+					</div>
+					<div ng-if="ENCODERS>0">
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="ASSIGN_ENCODERS"
+								ng-model="ASSIGN_ENCODERS" model-scope-name="ASSIGN_ENCODERS">
+							<label class="form-check-label" for="ASSIGN_ENCODERS">Assign step encoders</label>
+						</div>
+						<div class="mb-3" ng-repeat="x in STEP_ENCODERS" ng-show="ASSIGN_ENCODERS">
+							<label for="{{x}}" class="form-label">Select {{x}}</label>
+							<select class="form-select form-select-md" name="{{x}}" id="{{x}}"
+								ng-model="DYNAMIC['STEP_ENCODERS'][x]" model-scope-name="DYNAMIC.STEP_ENCODERS.{{x}}"
+								config-file="hal">
+								<option value=""></option>
+								<option value="ENC0">ENC0</option>
+								<option value="ENC1">ENC1</option>
+								<option value="ENC2">ENC2</option>
+								<option value="ENC3">ENC3</option>
+								<option value="ENC4">ENC4</option>
+								<option value="ENC5">ENC5</option>
+								<option value="ENC6">ENC6</option>
+								<option value="ENC7">ENC7</option>
+							</select>
+						</div>
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" id="ENABLE_ENCODER_RPM"
+								ng-model="ENABLE_ENCODER_RPM" model-scope-name="ENABLE_ENCODER_RPM">
+							<label class="form-check-label" for="ENABLE_ENCODER_RPM">Assign RPM encoder</label>
+							<div class="mb-3" ng-show="ENABLE_ENCODER_RPM">
+								<label for="RPM_ENCODER" class="form-label">Select RPM_ENCODER</label>
+								<select class="form-select form-select-md" name="RPM_ENCODER" id="RPM_ENCODER"
+									ng-model="RPM_ENCODER" model-scope-name="RPM_ENCODER" config-file="hal">
+									<option value=""></option>
+									<option value="ENC0">ENC0</option>
+									<option value="ENC1">ENC1</option>
+									<option value="ENC2">ENC2</option>
+									<option value="ENC3">ENC3</option>
+									<option value="ENC4">ENC4</option>
+									<option value="ENC5">ENC5</option>
+									<option value="ENC6">ENC6</option>
+									<option value="ENC7">ENC7</option>
+								</select>
+								<label for="" class="form-label">RPM encoder PPR (pulses per revolution)</label>
+								<input type="number" class="form-control form-select-md" name="RPM_PPR" id="RPM_PPR"
+									ng-model="RPM_PPR" model-scope-name="RPM_PPR" config-file="hal" var-type="int"
+									ng-init="RPM_PPR=1">
+								</input>
+								<label for="RPM_INDEX_INPUT" class="form-label">Select RPM_INDEX_INPUT pin</label>
+								<select class="form-select form-select-md" name="RPM_INDEX_INPUT" id="RPM_INDEX_INPUT"
+									ng-model="RPM_INDEX_INPUT"
+									ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
+									model-scope-name="RPM_INDEX_INPUT" config-file="hal">
+								</select>
+								<input class="form-check-input" type="checkbox" id="RPM_SYNC_UPDATE_ON_INDEX_ONLY"
+									ng-model="RPM_SYNC_UPDATE_ON_INDEX_ONLY"
+									model-scope-name="RPM_SYNC_UPDATE_ON_INDEX_ONLY" config-file="hal">
+								<label class="form-check-label" for="RPM_SYNC_UPDATE_ON_INDEX_ONLY">RPM sync update only
+									on index pulse</label>
+							</div>
+						</div>
+					</div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="configmodules" role="tabpanel" aria-labelledby="configmodules-tab">

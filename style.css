@@ -53,6 +53,10 @@ fieldset>legend {
 	width: fit-content;
 }
 
+.left-align{
+	text-align:initial;
+}
+
 div.tab-content {
 	padding: 20px;
 }
