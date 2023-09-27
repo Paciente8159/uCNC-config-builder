@@ -993,6 +993,26 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'TMC_SPI', name: 'SPI' },
 	];
 
+	$scope.LINACTS = [
+		{ value: 1, name: 'LINACT0_IO_MASK', label: 'Linear actuator 0 (AXIS X)', axisnum: 0 },
+		{ value: 2, name: 'LINACT1_IO_MASK', label: 'Linear actuator 1 (AXIS Y)', axisnum: 1 },
+		{ value: 3, name: 'LINACT2_IO_MASK', label: 'Linear actuator 2 (AXIS Z)', axisnum: 2 },
+		{ value: 4, name: 'LINACT3_IO_MASK', label: 'Linear actuator 3 (AXIS A)', axisnum: 3 },
+		{ value: 5, name: 'LINACT4_IO_MASK', label: 'Linear actuator 4 (AXIS B)', axisnum: 4 },
+		{ value: 6, name: 'LINACT5_IO_MASK', label: 'Linear actuator 5 (AXIS C)', axisnum: 5 }
+	];
+
+	$scope.STEP_IOS = [
+		{ value: 1, name: 'STEP0', selected: false },
+		{ value: 2, name: 'STEP1', selected: false },
+		{ value: 4, name: 'STEP2', selected: false },
+		{ value: 8, name: 'STEP3', selected: false },
+		{ value: 16, name: 'STEP4', selected: false },
+		{ value: 32, name: 'STEP5', selected: false },
+		{ value: 64, name: 'STEP6', selected: false },
+		{ value: 128, name: 'STEP7', selected: false }
+	];
+
 	$scope.MICROSTEPS = [
 		1,
 		2,
@@ -1043,6 +1063,12 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		return res;
 	}
 
+	$scope.smallerThenFilter = function (prop, val) {
+		return function (item) {
+			return item[prop] < val;
+		}
+	}
+
 	$scope.mcuChanged = function () {
 		updateScope(document.getElementById('BOARD'), null);
 		updateBoardmap($scope);
@@ -1060,7 +1086,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		var pins = $scope.UCNCPINS.map(x => x.pin);
 		$scope.DEFINED_PINS = [];
 		pins.forEach(pin => {
-			if ($scope.DYNAMIC['PINS']!==null && $scope.DYNAMIC['PINS'][pin]!==null && ($scope.DYNAMIC['PINS'][pin]['BIT']!==null || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET']!==null)) {
+			if ($scope.DYNAMIC['PINS'] !== null && $scope.DYNAMIC['PINS'][pin] !== null && ($scope.DYNAMIC['PINS'][pin]['BIT'] !== null || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET'] !== null)) {
 				switch ($scope.MCU) {
 					case 'MCU_ESP8266':
 					case 'MCU_ESP32':
@@ -1068,7 +1094,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 						$scope.DEFINED_PINS.push(pin);
 						break;
 					default:
-						if ($scope.DYNAMIC['PINS'][pin]['PORT']!==null) {
+						if ($scope.DYNAMIC['PINS'][pin]['PORT'] !== null) {
 							$scope.DEFINED_PINS.push(pin);
 						}
 						break;
@@ -1100,6 +1126,36 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 		return exp;
 	}
+
+	$scope.checkGroupClick = function (elem) {
+		var input = document.getElementById(elem);
+		var model = angular.element(input);
+		var mask = 0;
+
+		document.querySelectorAll('[checkgroup="' + elem + '"]').forEach((e, i, p) => {
+			if (e.checked) {
+				mask = mask + parseInt(e.getAttribute('ng-true-value'));
+			}
+		});
+
+		model.val(mask);
+
+	};
+
+	$scope.checkGroupInit = function (elem, val) {
+		debugger;
+		var input = document.getElementById(elem);
+		var model = angular.element(input);
+		
+		model.val(val);
+		var mask = val;
+
+		document.querySelectorAll('[checkgroup="' + elem + '"]').forEach((e, i, p) => {
+			if (mask & parseInt(e.getAttribute('ng-true-value'))) {
+				e.checked=true;
+			}
+		});
+	};
 }]);
 
 var orfilter = app.filter("orTypeFilter", function () {
@@ -1121,6 +1177,10 @@ ready(function () {
 		updateHAL(scope);
 	});
 	scope.boardChanged();
+
+	document.querySelectorAll('[checkgroup-display]').forEach((e, i, p) => {
+		scope.checkGroupInit(e.id);
+	});
 });
 
 function download(filename, text) {
