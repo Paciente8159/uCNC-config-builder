@@ -358,116 +358,119 @@
 				</fieldset>
 				<fieldset>
 					<legend>Board pin mapping</legend>
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col">µCNC pin</th>
-								<th scope="col">Pin number</th>
-								<th scope="col">Pin port</th>
-								<th scope="col">Pullup</th>
-								<th scope="col">ISR</th>
-								<th scope="col">CHANNEL</th>
-								<th scope="col">TIMER</th>
-								<th scope="col">MUX</th>
-								<th scope="col">IO OFFSET(74HC595)</th>
-							</tr>
-						</thead>
-						<tr ng-repeat="x in UCNCPINS">
-							<th scope='row'>{{x.pin}}</th>
-							<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
-									ng-model="DYNAMIC['PINS'][x.pin]['BIT']"
-									model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
-									ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int"
-									config-file="boardmap" ng-change="definedPins()">
-									<option value=""></option>
-								</select></td>
-							<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
-									ng-model="DYNAMIC['PINS'][x.pin]['PORT']"
-									model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
-									ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}"
-									config-file="boardmap" ng-change="definedPins()">
-									<option value=""></option>
-								</select></td>
-							<td>
-								<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
-									<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
-										id='{{x.pin}}_PULLUP' ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
-								</div>
-							</td>
-							<td>
-								<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
-									<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR'
-										id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']"
-										ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1"
-										config-file="boardmap">
-									<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
-										<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
-											id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
-											ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
-											var-type="int" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">µCNC pin</th>
+									<th scope="col">Pin number</th>
+									<th scope="col">Pin port</th>
+									<th scope="col">Pullup</th>
+									<th scope="col">ISR</th>
+									<th scope="col">CHANNEL</th>
+									<th scope="col">TIMER</th>
+									<th scope="col">MUX</th>
+									<th scope="col">IO OFFSET(74HC595)</th>
+								</tr>
+							</thead>
+							<tr ng-repeat="x in UCNCPINS">
+								<th scope='row'>{{x.pin}}</th>
+								<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+										ng-model="DYNAMIC['PINS'][x.pin]['BIT']"
+										model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+										ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int"
+										config-file="boardmap" ng-change="definedPins()">
+										<option value=""></option>
+									</select></td>
+								<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+										ng-model="DYNAMIC['PINS'][x.pin]['PORT']"
+										model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+										ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}"
+										config-file="boardmap" ng-change="definedPins()">
+										<option value=""></option>
+									</select></td>
+								<td>
+									<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
+										<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
+											id='{{x.pin}}_PULLUP' ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
+									</div>
+								</td>
+								<td>
+									<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
+										<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR'
+											id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']"
+											ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1"
+											config-file="boardmap">
+										<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
+												id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
+												ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
+												var-type="int" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
+												config-file="boardmap">
+												<option value=""></option>
+											</select>
+											<small id="helpId" class="form-text text-muted"><a
+													href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
+													target="_blank">wiki</a></small>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div ng-if='x.type=="pwm" || x.type=="analog"'>
+										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
+											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+											var-type="int" ng-if='MCU!="MCU_AVR"'
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+											<option value=""></option>
+										</select>
+										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
+											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+											ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
 											config-file="boardmap">
 											<option value=""></option>
 										</select>
-										<small id="helpId" class="form-text text-muted"><a
-												href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
-												target="_blank">wiki</a></small>
 									</div>
-								</div>
-							</td>
-							<td>
-								<div ng-if='x.type=="pwm" || x.type=="analog"'>
-									<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-										id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-										ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-										var-type="int" ng-if='MCU!="MCU_AVR"'
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
-										<option value=""></option>
-									</select>
-									<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-										id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-										ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-										ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
-										config-file="boardmap">
-										<option value=""></option>
-									</select>
-								</div>
-							</td>
-							<td>
-								<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
-										name='{{x.pin}}_TIMER' id='{{x.pin}}_TIMER'
-										ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
-										ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
-										var-type="int" config-file="boardmap">
-										<option value=""></option>
-									</select></div>
-							</td>
-							<td>
-								<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
-										name='{{x.pin}}_MUX' id='{{x.pin}}_MUX' ng-model="DYNAMIC['PINS'][x.pin]['MUX']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
-										ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}"
-										config-file="boardmap">
-										<option value=""></option>
-									</select></div>
-							</td>
-							<td>
-								<div
-									ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
-									<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
-										id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
-										ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
-										config-file="boardmap" ng-change="definedPins()">
-										<option value=""></option>
-									</select>
-								</div>
-							</td>
-						</tr>
-						<tbody>
-						</tbody>
-					</table>
+								</td>
+								<td>
+									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
+											name='{{x.pin}}_TIMER' id='{{x.pin}}_TIMER'
+											ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
+											ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
+											var-type="int" config-file="boardmap">
+											<option value=""></option>
+										</select></div>
+								</td>
+								<td>
+									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
+											name='{{x.pin}}_MUX' id='{{x.pin}}_MUX'
+											ng-model="DYNAMIC['PINS'][x.pin]['MUX']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
+											ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}"
+											config-file="boardmap">
+											<option value=""></option>
+										</select></div>
+								</td>
+								<td>
+									<div
+										ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+										<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
+											id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
+											ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select>
+									</div>
+								</td>
+							</tr>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="confighal" role="tabpanel" aria-labelledby="confighal-tab">
@@ -671,22 +674,19 @@
 						</div>
 						<!-- AUTOLEVEL -->
 						<div class="mb-3" ng-if="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']">
-							<div class="mb-3"
-								ng-repeat="limit in LINACTS_LIMITS" ng-init="DYNAMIC[limit.name]=limit.value" ng-if="DEFINED_PINS.includes(limit.pin)">
+							<div class="mb-3" ng-repeat="limit in LINACTS_LIMITS"
+								ng-init="DYNAMIC[limit.name]=limit.value" ng-if="DEFINED_PINS.includes(limit.pin)">
 								<label for="" class="form-label">{{limit.label}}</label>
 								<div class="mb-8"></div>
 								<div class="form-check form-check-inline" ng-repeat="step_io in STEP_IOS">
-									<input class="form-check-input" type="radio"
-										ng-model="DYNAMIC[limit.name]"
-										model-scope-name="DYNAMIC.{{limit.name}}"
-										value="{{step_io.value}}">
+									<input class="form-check-input" type="radio" ng-model="DYNAMIC[limit.name]"
+										model-scope-name="DYNAMIC.{{limit.name}}" value="{{step_io.value}}">
 									<label class="form-check-label"
 										for="{{linact.name}}_{{step_io.name}}">{{step_io.name}}</label>
 								</div>
 								<input type="text" class="form-select-md" name="{{limit.name}}" id="{{limit.name}}"
-									ng-model="DYNAMIC[limit.name]"
-									model-scope-name="DYNAMIC.{{limit.name}}" config-file="hal" var-type="int"
-									disabled>
+									ng-model="DYNAMIC[limit.name]" model-scope-name="DYNAMIC.{{limit.name}}"
+									config-file="hal" var-type="int" disabled>
 								</input>
 							</div>
 
