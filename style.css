@@ -109,3 +109,9 @@ div.tab-content {
   .form-check.form-switch {
 	margin-top: 20px;
   }
+
+  .table-container{
+	overflow-x: scroll;
+	overflow-y: auto;
+	max-height: 50vh;
+  }

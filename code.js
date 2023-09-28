@@ -127,7 +127,7 @@ function updateScope(node = null, val = null) {
 		scope[node.id] = v;
 	}
 
-	if (val) {
+	if (val!==null) {
 		scope.$apply();
 	}
 }
@@ -993,6 +993,39 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'TMC_SPI', name: 'SPI' },
 	];
 
+	$scope.LINACTS = [
+		{ value: 1, name: 'LINACT0_IO_MASK', label: 'Linear actuator 0 (AXIS X) STEP IO outputs', axisnum: 0 },
+		{ value: 2, name: 'LINACT1_IO_MASK', label: 'Linear actuator 1 (AXIS Y) STEP IO outputs', axisnum: 1 },
+		{ value: 4, name: 'LINACT2_IO_MASK', label: 'Linear actuator 2 (AXIS Z) STEP IO outputs', axisnum: 2 },
+		{ value: 8, name: 'LINACT3_IO_MASK', label: 'Linear actuator 3 (AXIS A) STEP IO outputs', axisnum: 3 },
+		{ value: 16, name: 'LINACT4_IO_MASK', label: 'Linear actuator 4 (AXIS B) STEP IO outputs', axisnum: 4 },
+		{ value: 32, name: 'LINACT5_IO_MASK', label: 'Linear actuator 5 (AXIS C) step IO outputs', axisnum: 5 }
+	];
+
+	
+	$scope.LINACTS_LIMITS = [
+		{ value: '1', name: 'LIMIT_X_IO_MASK', label: 'Limit X will stop which STEP IO output?', axisnum: 0, pin: 'LIMIT_X'},
+		{ value: '2', name: 'LIMIT_Y_IO_MASK', label: 'Limit Y will stop which STEP IO output?', axisnum: 1, pin: 'LIMIT_Y' },
+		{ value: '4', name: 'LIMIT_Z_IO_MASK', label: 'Limit Z will stop which STEP IO output?', axisnum: 2, pin: 'LIMIT_Z' },
+		{ value: '8', name: 'LIMIT_A_IO_MASK', label: 'Limit A will stop which STEP IO output?', axisnum: 3, pin: 'LIMIT_A' },
+		{ value: '16', name: 'LIMIT_B_IO_MASK', label: 'Limit B will stop which STEP IO output?', axisnum: 4, pin: 'LIMIT_B' },
+		{ value: '32', name: 'LIMIT_C_IO_MASK', label: 'Limit C will stop which STEP IO output?', axisnum: 5, pin: 'LIMIT_C' },
+		{ value: '1', name: 'LIMIT_X2_IO_MASK', label: 'Limit X2 will stop which STEP IO output?', axisnum: 3, pin: 'LIMIT_X2' },
+		{ value: '2', name: 'LIMIT_Y2_IO_MASK', label: 'Limit Y2 will stop which STEP IO output?', axisnum: 4, pin: 'LIMIT_Y2' },
+		{ value: '4', name: 'LIMIT_Z2_IO_MASK', label: 'Limit Z3 will stop which STEP IO output?', axisnum: 5, pin: 'LIMIT_Z2' }
+	];
+
+	$scope.STEP_IOS = [
+		{ value: 1, name: 'STEP0', selected: false },
+		{ value: 2, name: 'STEP1', selected: false },
+		{ value: 4, name: 'STEP2', selected: false },
+		{ value: 8, name: 'STEP3', selected: false },
+		{ value: 16, name: 'STEP4', selected: false },
+		{ value: 32, name: 'STEP5', selected: false },
+		{ value: 64, name: 'STEP6', selected: false },
+		{ value: 128, name: 'STEP7', selected: false }
+	];
+
 	$scope.MICROSTEPS = [
 		1,
 		2,
@@ -1043,6 +1076,12 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		return res;
 	}
 
+	$scope.smallerThenFilter = function (prop, val) {
+		return function (item) {
+			return item[prop] < val;
+		}
+	}
+
 	$scope.mcuChanged = function () {
 		updateScope(document.getElementById('BOARD'), null);
 		updateBoardmap($scope);
@@ -1060,7 +1099,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		var pins = $scope.UCNCPINS.map(x => x.pin);
 		$scope.DEFINED_PINS = [];
 		pins.forEach(pin => {
-			if ($scope.DYNAMIC['PINS']!==null && $scope.DYNAMIC['PINS'][pin]!==null && ($scope.DYNAMIC['PINS'][pin]['BIT']!==null || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET']!==null)) {
+			if ($scope.DYNAMIC['PINS'] !== null && $scope.DYNAMIC['PINS'][pin] !== null && ($scope.DYNAMIC['PINS'][pin]['BIT'] !== null || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET'] !== null)) {
 				switch ($scope.MCU) {
 					case 'MCU_ESP8266':
 					case 'MCU_ESP32':
@@ -1068,7 +1107,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 						$scope.DEFINED_PINS.push(pin);
 						break;
 					default:
-						if ($scope.DYNAMIC['PINS'][pin]['PORT']!==null) {
+						if ($scope.DYNAMIC['PINS'][pin]['PORT'] !== null) {
 							$scope.DEFINED_PINS.push(pin);
 						}
 						break;
@@ -1100,6 +1139,78 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 		return exp;
 	}
+
+	$scope.checkGroupClick = function (elem) {
+		debugger;
+		var input = document.getElementById(elem);
+		var model = angular.element(input);
+		var mask = 0;
+
+		document.querySelectorAll('[checkgroup="' + elem + '"]').forEach((e, i, p) => {
+			if (e.checked) {
+				mask = mask + parseInt(e.getAttribute('ng-true-value'));
+			}
+		});
+
+		
+		updateScope(input,mask);
+	};
+
+	$scope.checkGroupInit = function (node, mask, val) {
+		if(!node){
+			return;
+		}
+		
+		var v = (mask & val)/* ? 1 : 0*/;
+		var arr = node.split('.');
+
+		if (arr.length > 0 && !$scope[arr[0]]) {
+			$scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+		else if (arr.length == 1) {
+			$scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+
+		if (arr.length > 1 && !$scope[arr[0]][arr[1]]) {
+			$scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+		else if (arr.length == 2) {
+			$scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+
+		if (arr.length > 2 && !$scope[arr[0]][arr[1]][arr[2]]) {
+			$scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+		else if (arr.length == 3) {
+			$scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+
+		if (arr.length > 3 && !$scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+			$scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+		else if (arr.length == 4) {
+			$scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+	}
+
+	$scope.checkGroupInit2 = function () {
+		document.querySelectorAll('[checkgroup-display]').forEach((e, i, p) => {
+			var input = document.getElementById(e.id);
+			var model = angular.element(input);
+
+			var val = model.val();
+			var mask = parseInt(val);
+			if (input && mask) {
+				setTimeout(function () {
+					document.querySelectorAll('[checkgroup="' + e.id + '"]').forEach((e, i, p) => {
+						if (mask & parseInt(e.getAttribute('ng-true-value'))) {
+							e.checked = true;
+						}
+					});
+				}.bind(e), 500);
+			}
+		});
+	};
 }]);
 
 var orfilter = app.filter("orTypeFilter", function () {
@@ -1121,6 +1232,8 @@ ready(function () {
 		updateHAL(scope);
 	});
 	scope.boardChanged();
+
+	scope.checkGroupInit();
 });
 
 function download(filename, text) {

@@ -97,7 +97,7 @@
 				<div class="mb-3">
 					<label for="" class="form-label">What version will you be using?</label>
 					<select class="form-select form-select-md" name="VERSION" id="VERSION" ng-model="VERSION"
-						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=10705"
+						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=10779"
 						ng-change="mcuChanged()">
 					</select>
 				</div>
@@ -285,7 +285,9 @@
 						<div class="info alert alert-info left-align" role="alert" ng-if="(BOARD=='BOARD_CUSTOM')">
 							<h2 style="color: var(--bs-alert-color)">Advanced configurations</h2>
 							<p>Custom boards might require aditional settings that are not available in this
-								tool.<br>Also might require either a different base board selection on the ini file (PlatformIO) or a board type (Arduino IDE).<br>Please refer to the architecture documentation or submit a question on Github
+								tool.<br>Also might require either a different base board selection on the ini file
+								(PlatformIO) or a board type (Arduino IDE).<br>Please refer to the architecture
+								documentation or submit a question on Github
 								about custom boards.</p>
 						</div>
 					</div>
@@ -356,116 +358,119 @@
 				</fieldset>
 				<fieldset>
 					<legend>Board pin mapping</legend>
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col">µCNC pin</th>
-								<th scope="col">Pin number</th>
-								<th scope="col">Pin port</th>
-								<th scope="col">Pullup</th>
-								<th scope="col">ISR</th>
-								<th scope="col">CHANNEL</th>
-								<th scope="col">TIMER</th>
-								<th scope="col">MUX</th>
-								<th scope="col">IO OFFSET(74HC595)</th>
-							</tr>
-						</thead>
-						<tr ng-repeat="x in UCNCPINS">
-							<th scope='row'>{{x.pin}}</th>
-							<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
-									ng-model="DYNAMIC['PINS'][x.pin]['BIT']"
-									model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
-									ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int"
-									config-file="boardmap" ng-change="definedPins()">
-									<option value=""></option>
-								</select></td>
-							<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
-									ng-model="DYNAMIC['PINS'][x.pin]['PORT']"
-									model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
-									ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}"
-									config-file="boardmap" ng-change="definedPins()">
-									<option value=""></option>
-								</select></td>
-							<td>
-								<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
-									<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
-										id='{{x.pin}}_PULLUP' ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
-								</div>
-							</td>
-							<td>
-								<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
-									<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR'
-										id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']"
-										ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1"
-										config-file="boardmap">
-									<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
-										<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
-											id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
-											ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
-											var-type="int" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
+					<div class="table-container">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">µCNC pin</th>
+									<th scope="col">Pin number</th>
+									<th scope="col">Pin port</th>
+									<th scope="col">Pullup</th>
+									<th scope="col">ISR</th>
+									<th scope="col">CHANNEL</th>
+									<th scope="col">TIMER</th>
+									<th scope="col">MUX</th>
+									<th scope="col">IO OFFSET(74HC595)</th>
+								</tr>
+							</thead>
+							<tr ng-repeat="x in UCNCPINS">
+								<th scope='row'>{{x.pin}}</th>
+								<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+										ng-model="DYNAMIC['PINS'][x.pin]['BIT']"
+										model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+										ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int"
+										config-file="boardmap" ng-change="definedPins()">
+										<option value=""></option>
+									</select></td>
+								<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+										ng-model="DYNAMIC['PINS'][x.pin]['PORT']"
+										model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+										ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}"
+										config-file="boardmap" ng-change="definedPins()">
+										<option value=""></option>
+									</select></td>
+								<td>
+									<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
+										<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
+											id='{{x.pin}}_PULLUP' ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
+									</div>
+								</td>
+								<td>
+									<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
+										<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR'
+											id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']"
+											ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1"
+											config-file="boardmap">
+										<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
+												id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
+												ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
+												var-type="int" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
+												config-file="boardmap">
+												<option value=""></option>
+											</select>
+											<small id="helpId" class="form-text text-muted"><a
+													href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
+													target="_blank">wiki</a></small>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div ng-if='x.type=="pwm" || x.type=="analog"'>
+										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
+											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+											var-type="int" ng-if='MCU!="MCU_AVR"'
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+											<option value=""></option>
+										</select>
+										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
+											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+											ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
 											config-file="boardmap">
 											<option value=""></option>
 										</select>
-										<small id="helpId" class="form-text text-muted"><a
-												href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
-												target="_blank">wiki</a></small>
 									</div>
-								</div>
-							</td>
-							<td>
-								<div ng-if='x.type=="pwm" || x.type=="analog"'>
-									<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-										id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-										ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-										var-type="int" ng-if='MCU!="MCU_AVR"'
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
-										<option value=""></option>
-									</select>
-									<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-										id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-										ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-										ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
-										config-file="boardmap">
-										<option value=""></option>
-									</select>
-								</div>
-							</td>
-							<td>
-								<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
-										name='{{x.pin}}_TIMER' id='{{x.pin}}_TIMER'
-										ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
-										ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
-										var-type="int" config-file="boardmap">
-										<option value=""></option>
-									</select></div>
-							</td>
-							<td>
-								<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
-										name='{{x.pin}}_MUX' id='{{x.pin}}_MUX' ng-model="DYNAMIC['PINS'][x.pin]['MUX']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
-										ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}"
-										config-file="boardmap">
-										<option value=""></option>
-									</select></div>
-							</td>
-							<td>
-								<div
-									ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
-									<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
-										id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
-										ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
-										config-file="boardmap" ng-change="definedPins()">
-										<option value=""></option>
-									</select>
-								</div>
-							</td>
-						</tr>
-						<tbody>
-						</tbody>
-					</table>
+								</td>
+								<td>
+									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
+											name='{{x.pin}}_TIMER' id='{{x.pin}}_TIMER'
+											ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
+											ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
+											var-type="int" config-file="boardmap">
+											<option value=""></option>
+										</select></div>
+								</td>
+								<td>
+									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
+											name='{{x.pin}}_MUX' id='{{x.pin}}_MUX'
+											ng-model="DYNAMIC['PINS'][x.pin]['MUX']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
+											ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}"
+											config-file="boardmap">
+											<option value=""></option>
+										</select></div>
+								</td>
+								<td>
+									<div
+										ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+										<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
+											id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
+											ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select>
+									</div>
+								</td>
+							</tr>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
 				</fieldset>
 			</div>
 			<div class="tab-pane" id="confighal" role="tabpanel" aria-labelledby="confighal-tab">
@@ -500,7 +505,7 @@
 						<label class="form-check-label" for="DISABLE_ALL_LIMITS">Disable all limit switches</label>
 					</div>
 					<!-- <div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']"> -->
-						<div ng-hide="1">
+					<div ng-hide="1">
 						<div class="form-check form-check-inline"
 							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
 							<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE"
@@ -634,201 +639,57 @@
 							model-scope-name="DYNAMIC.ENABLE_MULTI_STEPPER_AXIS" config-file="hal">
 						<label class="form-check-label" for="ENABLE_MULTI_STEPPER_AXIS">Enable multi-drive AXIS</label>
 					</div>
-					<div class="mb-3 alert alert-warning">
+					<!-- <div class="mb-3 alert alert-warning">
 						New v1.8 multi axis is still under development!
-					</div>
-					<div ng-show="DYNAMIC['ENABLE_MULTI_STEPPER_AXIS']">
-						<div class="mb-3" ng-if="AXIS_COUNT>0">
-							<label for="" class="form-label">Linear actuator 0 (X) IO MASK</label>
-							<input type="number" class="form-control form-select-md" name="LINACT0_IO_MASK"
-								id="LINACT0_IO_MASK" ng-model="DYNAMIC['LINACT0_IO_MASK']"
-								model-scope-name="DYNAMIC.LINACT0_IO_MASK" config-file="hal" var-type="int"
-								ng-init="DYNAMIC['LINACT0_IO_MASK']=1">
+					</div> -->
+					<div ng-if="DYNAMIC['ENABLE_MULTI_STEPPER_AXIS']">
+						<!-- <div> -->
+						<div class="mb-3"
+							ng-repeat="linact in LINACTS | filter : smallerThenFilter('axisnum', AXIS_COUNT)">
+							<label for="" class="form-label">{{linact.label}} IO MASK</label>
+							<div class="mb-8"></div>
+							<div class="form-check form-check-inline" ng-repeat="step_io in STEP_IOS">
+								<input class="form-check-input" type="checkbox" id="{{linact.name}}_{{step_io.name}}"
+									ng-true-value="{{step_io.value}}" ng-false-value="0"
+									ng-model="DYNAMIC[linact.name][step_io.name]"
+									model-scope-name="DYNAMIC.{{linact.name}}.{{step_io.name}}"
+									ng-click="checkGroupClick(linact.name)" checkgroup="{{linact.name}}"
+									ng-init="checkGroupInit('DYNAMIC.'+linact.name+'.'+step_io.name, linact.value, step_io.value)">
+								<label class="form-check-label"
+									for="{{linact.name}}_{{step_io.name}}">{{step_io.name}}</label>
+							</div>
+							<input type="number" class="form-select-md" name="{{linact.name}}" id="{{linact.name}}"
+								ng-model="DYNAMIC[linact.name]['MASK']" model-scope-name="DYNAMIC.{{linact.name}}.MASK"
+								config-file="hal" var-type="int"
+								ng-init="DYNAMIC[linact.name]={}; DYNAMIC[linact.name]['MASK']=linact.value"
+								checkgroup-display disabled>
 							</input>
 						</div>
-						<div class="mb-3" ng-if="AXIS_COUNT>1">
-							<label for="" class="form-label">Linear actuator 1 (Y) IO MASK</label>
-							<input type="number" class="form-control form-select-md" name="LINACT1_IO_MASK"
-								id="LINACT1_IO_MASK" ng-model="DYNAMIC['LINACT1_IO_MASK']"
-								model-scope-name="DYNAMIC.LINACT1_IO_MASK" config-file="hal" var-type="int"
-								ng-init="DYNAMIC['LINACT1_IO_MASK']=2">
-							</input>
-						</div>
-						<div class="mb-3" ng-if="AXIS_COUNT>2">
-							<label for="" class="form-label">Linear actuator 2 (Z) IO MASK</label>
-							<input type="number" class="form-control form-select-md" name="LINACT2_IO_MASK"
-								id="LINACT2_IO_MASK" ng-model="DYNAMIC['LINACT2_IO_MASK']"
-								model-scope-name="DYNAMIC.LINACT2_IO_MASK" config-file="hal" var-type="int"
-								ng-init="DYNAMIC['LINACT2_IO_MASK']=4">
-							</input>
-						</div>
-						<div class="mb-3" ng-if="AXIS_COUNT>3">
-							<label for="" class="form-label">Linear actuator 3 (A) IO MASK</label>
-							<input type="number" class="form-control form-select-md" name="LINACT3_IO_MASK"
-								id="LINACT3_IO_MASK" ng-model="DYNAMIC['LINACT3_IO_MASK']"
-								model-scope-name="DYNAMIC.LINACT3_IO_MASK" config-file="hal" var-type="int"
-								ng-init="DYNAMIC['LINACT3_IO_MASK']=8">
-							</input>
-						</div>
-						<div class="mb-4" ng-if="AXIS_COUNT>4">
-							<label for="" class="form-label">Linear actuator 4 (B) IO MASK</label>
-							<input type="number" class="form-control form-select-md" name="LINACT4_IO_MASK"
-								id="LINACT4_IO_MASK" ng-model="DYNAMIC['LINACT4_IO_MASK']"
-								model-scope-name="DYNAMIC.LINACT4_IO_MASK" config-file="hal" var-type="int"
-								ng-init="DYNAMIC['LINACT4_IO_MASK']=16">
-							</input>
-						</div>
-						<div class="mb-5" ng-if="AXIS_COUNT>5">
-							<label for="" class="form-label">Linear actuator 5 (C) IO MASK</label>
-							<input type="number" class="form-control form-select-md" name="LINACT5_IO_MASK"
-								id="LINACT5_IO_MASK" ng-model="DYNAMIC['LINACT5_IO_MASK']"
-								model-scope-name="DYNAMIC.LINACT5_IO_MASK" config-file="hal" var-type="int"
-								ng-init="DYNAMIC['LINACT5_IO_MASK']=32">
-							</input>
-						</div>
-
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="ENABLE_AXIS_AUTOLEVEL"
 								ng-model="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']"
 								model-scope-name="DYNAMIC.ENABLE_AXIS_AUTOLEVEL" config-file="hal">
+
 							<label class="form-check-label" for="ENABLE_AXIS_AUTOLEVEL">Enable AXIS Autolevel</label>
 						</div>
-						<div class="mb-3" ng-show="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']">
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_X')">
-								<label for="" class="form-label">LIMIT X IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_X_IO_MASK" id="LIMIT_X_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_X_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_X_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_X_IO_MASK']='1'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
+						<!-- AUTOLEVEL -->
+						<div class="mb-3" ng-if="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']">
+							<div class="mb-3" ng-repeat="limit in LINACTS_LIMITS"
+								ng-init="DYNAMIC[limit.name]=limit.value" ng-if="DEFINED_PINS.includes(limit.pin)">
+								<label for="" class="form-label">{{limit.label}}</label>
+								<div class="mb-8"></div>
+								<div class="form-check form-check-inline" ng-repeat="step_io in STEP_IOS">
+									<input class="form-check-input" type="radio" ng-model="DYNAMIC[limit.name]"
+										model-scope-name="DYNAMIC.{{limit.name}}" value="{{step_io.value}}">
+									<label class="form-check-label"
+										for="{{linact.name}}_{{step_io.name}}">{{step_io.name}}</label>
+								</div>
+								<input type="text" class="form-select-md" name="{{limit.name}}" id="{{limit.name}}"
+									ng-model="DYNAMIC[limit.name]" model-scope-name="DYNAMIC.{{limit.name}}"
+									config-file="hal" var-type="int" disabled>
+								</input>
 							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Y')">
-								<label for="" class="form-label">LIMIT Y IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_Y_IO_MASK" id="LIMIT_Y_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_Y_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Y_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_Y_IO_MASK']='2'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Z')">
-								<label for="" class="form-label">LIMIT Z IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_Z_IO_MASK" id="LIMIT_Z_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_Z_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Z_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_Z_IO_MASK']='4'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_A')">
-								<label for="" class="form-label">LIMIT A IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_A_IO_MASK" id="LIMIT_A_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_A_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_A_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_A_IO_MASK']='8'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_B')">
-								<label for="" class="form-label">LIMIT B IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_B_IO_MASK" id="LIMIT_B_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_B_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_B_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_B_IO_MASK']='16'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_C')">
-								<label for="" class="form-label">LIMIT C IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_C_IO_MASK" id="LIMIT_C_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_C_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_C_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_C_IO_MASK']='32'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_X2')">
-								<label for="" class="form-label">LIMIT X2 IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_X2_IO_MASK" id="LIMIT_X2_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_X2_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_X2_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_X2_IO_MASK']='1'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Y2')">
-								<label for="" class="form-label">LIMIT Y2 IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_Y2_IO_MASK" id="LIMIT_Y2_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_Y2_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Y2_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_Y2_IO_MASK']='2'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
-							<div class="mb-3" ng-if="DEFINED_PINS.includes('LIMIT_Z2')">
-								<label for="" class="form-label">LIMIT Z2 IO MASK</label>
-								<select class="form-select form-select-md" name="LIMIT_Z2_IO_MASK" id="LIMIT_Z2_IO_MASK"
-									ng-model="DYNAMIC['LIMIT_Z2_IO_MASK']" model-scope-name="DYNAMIC.LIMIT_Z2_IO_MASK"
-									config-file="hal" ng-init="DYNAMIC['LIMIT_Z2_IO_MASK']='4'">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="4">4</option>
-									<option value="8">8</option>
-									<option value="16">16</option>
-									<option value="32">32</option>
-									<option value="64">64</option>
-									<option value="128">128</option>
-								</select>
-							</div>
+
 						</div>
 					</div>
 				</fieldset>
