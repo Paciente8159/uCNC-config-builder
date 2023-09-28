@@ -110,8 +110,20 @@ div.tab-content {
 	margin-top: 20px;
   }
 
-  .table-container{
-	overflow-x: scroll;
-	overflow-y: auto;
-	max-height: 50vh;
+  /* .table-container{
+	overflow: auto;
+	position: relative;
+  } */
+
+  table {
+	position: relative;
+	border-collapse: collapse;
+	/* max-height: 50vh; */
+  }
+
+  thead {
+	top: 0;
+	background-color: #ccc;
+	position: -webkit-sticky;
+	position: sticky;
   }
