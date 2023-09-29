@@ -127,3 +127,14 @@ div.tab-content {
 	position: -webkit-sticky;
 	position: sticky;
   }
+
+  .load-config{
+	background-color: #b6d8c8;
+	padding: 5px;
+	border-radius: 5px;
+  }
+
+  .load-config p{
+	color:#146c43;
+	font-weight: 800;
+  }
