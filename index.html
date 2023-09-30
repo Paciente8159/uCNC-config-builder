@@ -1152,19 +1152,27 @@
 							extension
 							callbacks</label>
 					</div>
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="ENABLE_SETTINGS_MODULES"
-							ng-model="DYNAMIC['ENABLE_SETTINGS_MODULES']"
-							model-scope-name="DYNAMIC.ENABLE_SETTINGS_MODULES" config-file="hal">
-						<label class="form-check-label" for="ENABLE_SETTINGS_MODULES">Enable settings storage extension
-							callbacks</label>
-					</div>
+					
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_RT_SYNC_MOTIONS"
 							ng-model="DYNAMIC['ENABLE_RT_SYNC_MOTIONS']"
 							model-scope-name="DYNAMIC.ENABLE_RT_SYNC_MOTIONS" config-file="hal">
 						<label class="form-check-label" for="ENABLE_RT_SYNC_MOTIONS">Enable interpolation realtime
 							extension
+							callbacks</label>
+					</div>
+					<div class="form-check form-switch" ng-if="VERSION<10790">
+						<input class="form-check-input" type="checkbox" id="ENABLE_SETTINGS_MODULES"
+							ng-model="DYNAMIC['ENABLE_SETTINGS_MODULES']"
+							model-scope-name="DYNAMIC.ENABLE_SETTINGS_MODULES" config-file="hal">
+						<label class="form-check-label" for="ENABLE_SETTINGS_MODULES">Enable settings storage extension
+							callbacks</label>
+					</div>
+					<div class="form-check form-switch" ng-if="VERSION>10789">
+						<input class="form-check-input" type="checkbox" id="DISABLE_SETTINGS_MODULES"
+							ng-model="DYNAMIC['DISABLE_SETTINGS_MODULES']"
+							model-scope-name="DYNAMIC.DISABLE_SETTINGS_MODULES" config-file="hal">
+						<label class="form-check-label" for="DISABLE_SETTINGS_MODULES"><b>Disable</b> settings storage extension
 							callbacks</label>
 					</div>
 				</fieldset>
