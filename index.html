@@ -91,7 +91,7 @@
 
 				<div class="mb-3 load-config">
 					<p>If you have a previous stored build configuration file (json) you can load it.</p>
-					<input class="form-control form-control" id="load_settings" type="file">
+					<input class="form-control form-control" id="load_settings" type="file" accept=".json,.txt">
 				</div>
 
 				<div class="mb-3">
@@ -1042,7 +1042,7 @@
 					<legend>Encoders</legend>
 					<label for="ENCODERS" class="form-label">Number of ENCODERS: <span ng-bind="ENCODERS"></label>
 					<input type="range" class="form-range" min="0" max="8" name="ENCODERS" id="ENCODERS"
-						ng-model="ENCODERS" model-scope-name="ENCODERS" var-type="int" config-file="hal">
+						ng-model="ENCODERS" model-scope-name="ENCODERS" var-type="int" ng-init="ENCODERS=0" config-file="hal">
 					<div class="mb-3" ng-repeat="x in numSmaller(ENCODER, 'ENCODERS')">
 						<label for="ENC{{x}}_PULSE" class="form-label">Select ENC{{x}}_PULSE pin</label>
 						<select class="form-select form-select-md" name="ENC{{x}}_PULSE" id="ENC{{x}}_PULSE"
