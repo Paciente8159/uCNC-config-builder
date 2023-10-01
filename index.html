@@ -1060,7 +1060,7 @@
 					<div ng-if="ENCODERS>0">
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="ASSIGN_ENCODERS"
-								ng-model="ASSIGN_ENCODERS" model-scope-name="ASSIGN_ENCODERS">
+								ng-model="ASSIGN_ENCODERS" model-scope-name="ASSIGN_ENCODERS" config-file="none">
 							<label class="form-check-label" for="ASSIGN_ENCODERS">Assign step encoders</label>
 						</div>
 						<div class="mb-3" ng-repeat="x in STEP_ENCODERS" ng-show="ASSIGN_ENCODERS">
@@ -1081,7 +1081,7 @@
 						</div>
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="ENABLE_ENCODER_RPM"
-								ng-model="ENABLE_ENCODER_RPM" model-scope-name="ENABLE_ENCODER_RPM">
+								ng-model="ENABLE_ENCODER_RPM" model-scope-name="ENABLE_ENCODER_RPM" config-file="hal">
 							<label class="form-check-label" for="ENABLE_ENCODER_RPM">Assign RPM encoder</label>
 							<div class="mb-3" ng-show="ENABLE_ENCODER_RPM">
 								<label for="RPM_ENCODER" class="form-label">Select RPM_ENCODER</label>
