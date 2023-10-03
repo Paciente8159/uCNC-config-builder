@@ -127,9 +127,7 @@ function updateScope(node = null, val = null) {
 		scope[node.id] = v;
 	}
 
-	if (val!==null) {
-		scope.$apply();
-	}
+	scope.$apply();
 }
 
 function updateFields(settings = [], loadedevent = null) {
