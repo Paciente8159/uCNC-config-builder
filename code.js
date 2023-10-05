@@ -127,7 +127,14 @@ function updateScope(node = null, val = null) {
 		scope[node.id] = v;
 	}
 
-	scope.$apply();
+	// try {
+	// 	scope.$apply();
+	// }
+	// catch (error) {
+	// }
+	scope.safeApply(function(){
+		console.log('apply in progress var:' + node.id);
+	})
 }
 
 function updateFields(settings = [], loadedevent = null) {
@@ -1000,9 +1007,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ value: 32, name: 'LINACT5_IO_MASK', label: 'Linear actuator 5 (AXIS C) step IO outputs', axisnum: 5 }
 	];
 
-	
+
 	$scope.LINACTS_LIMITS = [
-		{ value: '1', name: 'LIMIT_X_IO_MASK', label: 'Limit X will stop which STEP IO output?', axisnum: 0, pin: 'LIMIT_X'},
+		{ value: '1', name: 'LIMIT_X_IO_MASK', label: 'Limit X will stop which STEP IO output?', axisnum: 0, pin: 'LIMIT_X' },
 		{ value: '2', name: 'LIMIT_Y_IO_MASK', label: 'Limit Y will stop which STEP IO output?', axisnum: 1, pin: 'LIMIT_Y' },
 		{ value: '4', name: 'LIMIT_Z_IO_MASK', label: 'Limit Z will stop which STEP IO output?', axisnum: 2, pin: 'LIMIT_Z' },
 		{ value: '8', name: 'LIMIT_A_IO_MASK', label: 'Limit A will stop which STEP IO output?', axisnum: 3, pin: 'LIMIT_A' },
@@ -1043,6 +1050,17 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.BAUDRATE = 115200;
 	$scope.ENABLE_COOLANT = false;
 	$scope.DEFINED_PINS = [];
+
+	$scope.safeApply = function(fn) {
+		var phase = this.$root.$$phase;
+		if(phase == '$apply' || phase == '$digest') {
+		  if(fn && (typeof(fn) === 'function')) {
+			fn();
+		  }
+		} else {
+		  this.$apply(fn);
+		}
+	  };
 
 	$scope.getVersion = function (ver) {
 		return $scope['VERSIONS'].filter(obj => { return obj.tag === ver; })[0].id;
@@ -1150,15 +1168,15 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			}
 		});
 
-		
-		updateScope(input,mask);
+
+		updateScope(input, mask);
 	};
 
 	$scope.checkGroupInit = function (node, mask, val) {
-		if(!node){
+		if (!node) {
 			return;
 		}
-		
+
 		var v = (mask & val)/* ? 1 : 0*/;
 		var arr = node.split('.');
 
