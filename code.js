@@ -2,6 +2,8 @@ const boardloaded = new Event('boardloaded');
 const halloaded = new Event('halloaded');
 const toolloaded = new Event('toolloaded');
 
+var loadingfile = false;
+
 function ready(fn) {
 	if (document.readyState !== 'loading') {
 		fn();
@@ -11,6 +13,9 @@ function ready(fn) {
 }
 
 function parsePreprocessor(file, settings = [], callback) {
+	if(loadingfile){
+		return;
+	}
 	document.getElementById('reloading').style.display = "block";
 	const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
 	var txtFile = new XMLHttpRequest();
@@ -1343,9 +1348,12 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 	scope.PREV_MCU = scope.MCU;
 	scope.PREV_BOARD = scope.BOARD;
 	var reader = new FileReader();
+	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+	document.getElementById('reloading').style.display = "block";
 	reader.onload = function (e) {
 		var contents = e.target.result;
 		var build = JSON.parse(contents);
+		loadingfile = true;
 		for (const [k, v] of Object.entries(build)) {
 			updateScope(document.getElementById(k), v);
 			if (k === "MCU") {
@@ -1353,6 +1361,9 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 			}
 		}
 		scope.definedPins();
+		loadingfile = false;
+		document.getElementById('reloading').style.display = "none";
 	};
 	reader.readAsText(file);
+
 }, false);
