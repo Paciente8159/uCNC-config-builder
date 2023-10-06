@@ -1356,9 +1356,6 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 		loadingfile = true;
 		for (const [k, v] of Object.entries(build)) {
 			updateScope(document.getElementById(k), v);
-			// if (k === "MCU") {
-			// 	scope.mcuChanged();
-			// }
 		}
 		scope.definedPins();
 		loadingfile = false;
