@@ -973,8 +973,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
 		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display' },
-		{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI (DEPRECATED)' },
-		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS (sd_card_pf)' },
+		/*{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI (DEPRECATED)' },*/
+		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
 	];
 
