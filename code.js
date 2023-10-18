@@ -1102,13 +1102,13 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.smallerThenFilter = function (prop, val) {
 		return function (item) {
-			return item[prop] < val;
+			return (item[prop] < val);
 		}
 	}
 
 	$scope.biggerThenFilter = function (prop, val) {
 		return function (item) {
-			return item[prop] > val;
+			return (item[prop] > val);
 		}
 	}
 

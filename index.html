@@ -115,7 +115,7 @@
 					<div class="mb-3">
 						<label for="" class="form-label">What type of kinematic does your machine have?</label>
 						<select class="form-select form-select-md" name="KINEMATIC" id="KINEMATIC" ng-model="KINEMATIC"
-							ng-options="y.id as y.name for y in KINEMATICS" config-file="boardmap"></select>
+							ng-options="y.id as y.name for y in KINEMATICS | filter: smallerThenFilter('version', VERSION)" config-file="boardmap"></select>
 						</select>
 					</div>
 
