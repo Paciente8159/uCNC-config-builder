@@ -460,9 +460,11 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'MCU_RP2040', name: 'RPi RP2040' }
 	];
 	$scope.KINEMATICS = [
-		{ id: 'KINEMATIC_CARTESIAN', name: 'Cartesian' },
-		{ id: 'KINEMATIC_COREXY', name: 'Core XY' },
-		{ id: 'KINEMATIC_DELTA', name: 'Linear delta' }
+		{ id: 'KINEMATIC_CARTESIAN', name: 'Cartesian', version: 0 },
+		{ id: 'KINEMATIC_COREXY', name: 'Core XY', version: 0 },
+		{ id: 'KINEMATIC_LINEAR_DELTA', name: 'Linear delta', version: 0 },
+		{ id: 'KINEMATIC_DELTA', name: 'Delta robot', version: 0 },
+		{ id: 'KINEMATIC_SCARA', name: 'Scara', version: 10799 }
 	];
 
 	$scope.ACCELERATIONS = [
@@ -1101,6 +1103,12 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.smallerThenFilter = function (prop, val) {
 		return function (item) {
 			return item[prop] < val;
+		}
+	}
+
+	$scope.biggerThenFilter = function (prop, val) {
+		return function (item) {
+			return item[prop] > val;
 		}
 	}
 
