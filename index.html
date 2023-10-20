@@ -466,7 +466,7 @@
 										<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
 											id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
 											model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
-											ng-options="y.offset as y.offset for y in IO_OFFSETS | filter: {'mcu': MCU}"
+											ng-options="y.offset as y.offset for y in IO_OFFSETS"
 											config-file="boardmap" ng-change="definedPins()">
 											<option value=""></option>
 										</select>
