@@ -656,7 +656,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ pin: 'SPI_SDO', type: 'special_output' },
 		{ pin: 'SPI_CS', type: 'special_output' },
 		{ pin: 'I2C_CLK', type: 'special input' },
-		{ pin: 'I2C_DATA', type: 'special input' }
+		{ pin: 'I2C_DATA', type: 'special input' },
+		{ pin: 'TX2', type: 'special input' },
+		{ pin: 'RX2', type: 'special input' }
 	];
 
 	$scope.PINS = [
