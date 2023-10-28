@@ -332,24 +332,28 @@
 							ng-model="DYNAMIC['PORTS']['UART_PORT']" model-scope-name="DYNAMIC.PORTS.UART_PORT"
 							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
+							<option value=""></option>
 						</select>
 						<label for="UART2_PORT" class="form-label">Which hardware port will be UART2_PORT?</label>
 						<select class='form-select form-select-sm' name='UART2_PORT' id='UART2_PORT'
 							ng-model="DYNAMIC['PORTS']['UART2_PORT']" model-scope-name="DYNAMIC.PORTS.UART2_PORT"
 							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
+							<option value=""></option>
 						</select>
 						<label for="SPI_PORT" class="form-label">Which hardware port will be SPI_PORT?</label>
 						<select class='form-select form-select-sm' name='SPI_PORT' id='SPI_PORT'
 							ng-model="DYNAMIC['PORTS']['SPI_PORT']" model-scope-name="DYNAMIC.PORTS.SPI_PORT"
 							ng-options="y.port as y.port for y in UCNCSPI | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
+							<option value=""></option>
 						</select>
 						<label for="I2C_PORT" class="form-label">Which hardware port will be I2C_PORT?</label>
 						<select class='form-select form-select-sm' name='I2C_PORT' id='I2C_PORT'
 							ng-model="DYNAMIC['PORTS']['I2C_PORT']" model-scope-name="DYNAMIC.PORTS.I2C_PORT"
 							ng-options="y.port as y.port for y in UCNCI2C | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
+							<option value=""></option>
 						</select>
 					</div>
 					<div ng-repeat="x in UCNCTIMERS | filter: {'mcu': MCU}">
@@ -359,6 +363,7 @@
 							ng-model="DYNAMIC['TIMERS'][x.timer]" model-scope-name="DYNAMIC.TIMERS.{{x.timer}}"
 							ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
+							<option value=""></option>
 						</select>
 					</div>
 				</fieldset>
