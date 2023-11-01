@@ -423,8 +423,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.1', tag: 10801, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.0', tag: 10800, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
-		{ id: 'v1.8.0-beta', tag: 10780, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0-beta.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.7.x-bugfix', tag: 10779, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.7.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.6', tag: 10706, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.6.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.5', tag: 10705, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.5.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
@@ -968,7 +968,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.MODULES_OPTIONS = [
-		{ id: 'g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
+		{ id: 'g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points', },
 		{ id: 'g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
 		{ id: 'g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
 		{ id: 'm17_m18', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
@@ -982,6 +982,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		/*{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI (DEPRECATED)' },*/
 		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
+		{ id: 'web_pendant', name: 'Adds a web pendant for WiFi capable devices. (requires at least v1.8.1 to work)' },
 	];
 
 	$scope.STEPPERS = [
