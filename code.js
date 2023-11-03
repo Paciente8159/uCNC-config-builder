@@ -423,6 +423,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.2', tag: 10802, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.2.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.1', tag: 10801, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.0', tag: 10800, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.7.x-bugfix', tag: 10779, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.7.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
