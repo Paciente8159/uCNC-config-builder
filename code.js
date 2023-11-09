@@ -1030,7 +1030,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ value: '32', name: 'LIMIT_C_IO_MASK', label: 'Limit C will stop which STEP IO output?', axisnum: 5, pin: 'LIMIT_C' },
 		{ value: '1', name: 'LIMIT_X2_IO_MASK', label: 'Limit X2 will stop which STEP IO output?', axisnum: 3, pin: 'LIMIT_X2' },
 		{ value: '2', name: 'LIMIT_Y2_IO_MASK', label: 'Limit Y2 will stop which STEP IO output?', axisnum: 4, pin: 'LIMIT_Y2' },
-		{ value: '4', name: 'LIMIT_Z2_IO_MASK', label: 'Limit Z3 will stop which STEP IO output?', axisnum: 5, pin: 'LIMIT_Z2' }
+		{ value: '4', name: 'LIMIT_Z2_IO_MASK', label: 'Limit Z2 will stop which STEP IO output?', axisnum: 5, pin: 'LIMIT_Z2' }
 	];
 
 	$scope.STEP_IOS = [
