@@ -1176,7 +1176,6 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	}
 
 	$scope.checkGroupClick = function (elem) {
-		debugger;
 		var input = document.getElementById(elem);
 		var model = angular.element(input);
 		var mask = 0;
@@ -1372,6 +1371,9 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 			updateScope(document.getElementById(k), v);
 		}
 		scope.definedPins();
+		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+			updateScope(e,getScope(e).toString());
+		});
 		loadingfile = false;
 		document.getElementById('reloading').style.display = "none";
 	};
