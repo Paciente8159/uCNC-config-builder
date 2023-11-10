@@ -717,7 +717,7 @@
 							ng-model="DYNAMIC['TOOLS'][x]" ng-options="y.id as y.name for y in TOOL_OPTIONS"
 							model-scope-name="DYNAMIC.TOOLS.{{x}}" config-file="hal"></select>
 						</select>
-						<div ng-include="'./tools/'+DYNAMIC['TOOLS'][x]+'.html'" onload="toolChanged({x})"></div>
+						<div ng-include="'./tools/'+DYNAMIC['TOOLS'][x]+'.html'" onload="toolChanged({x}, {JSON_BUILD})"></div>
 					</div>
 				</fieldset>
 				<fieldset>

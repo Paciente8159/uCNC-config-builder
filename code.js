@@ -421,6 +421,8 @@ function updateBoardmap(scope = null) {
 var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
+	$scope.JSON_BUILD = null;
+
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.2', tag: 10802, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.2.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -1153,8 +1155,22 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	};
 
-	$scope.toolChanged = function (tool) {
-		updateTool($scope, getScope(document.querySelector('#TOOL' + tool.x)));
+	$scope.toolChanged = function (tool, contents) {
+	
+		if(contents['JSON_BUILD']!==null){
+			var build = JSON.parse(contents['JSON_BUILD']);
+			for (const [k, v] of Object.entries(build)) {
+				if(k=='VFD_PWM_DIR'){debugger;}
+				updateScope(document.getElementById(k), v);
+			}
+			$scope.definedPins();
+			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+				updateScope(e,getScope(e).toString());
+			});
+		}
+		else{
+			updateTool($scope, getScope(document.querySelector('#TOOL' + tool.x)));
+		}
 	};
 
 	$scope.buildName = function (pre = '', mid = '', post = '') {
@@ -1364,8 +1380,8 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
 	document.getElementById('reloading').style.display = "block";
 	reader.onload = function (e) {
-		var contents = e.target.result;
-		var build = JSON.parse(contents);
+		scope.JSON_BUILD = e.target.result;
+		var build = JSON.parse(scope.JSON_BUILD);
 		loadingfile = true;
 		for (const [k, v] of Object.entries(build)) {
 			updateScope(document.getElementById(k), v);
@@ -1376,6 +1392,9 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 		});
 		loadingfile = false;
 		document.getElementById('reloading').style.display = "none";
+		setTimeout(function(){
+			scope.JSON_BUILD = null;
+		}, 5000);
 	};
 	reader.readAsText(file);
 
