@@ -13,7 +13,7 @@ function ready(fn) {
 }
 
 function parsePreprocessor(file, settings = [], callback) {
-	if(loadingfile){
+	if (loadingfile) {
 		return;
 	}
 	document.getElementById('reloading').style.display = "block";
@@ -137,7 +137,7 @@ function updateScope(node = null, val = null) {
 	// }
 	// catch (error) {
 	// }
-	scope.safeApply(function(){
+	scope.safeApply(function () {
 		console.log('apply in progress var:' + node.id);
 	})
 }
@@ -1066,16 +1066,16 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.ENABLE_COOLANT = false;
 	$scope.DEFINED_PINS = [];
 
-	$scope.safeApply = function(fn) {
+	$scope.safeApply = function (fn) {
 		var phase = this.$root.$$phase;
-		if(phase == '$apply' || phase == '$digest') {
-		  if(fn && (typeof(fn) === 'function')) {
-			fn();
-		  }
+		if (phase == '$apply' || phase == '$digest') {
+			if (fn && (typeof (fn) === 'function')) {
+				fn();
+			}
 		} else {
-		  this.$apply(fn);
+			this.$apply(fn);
 		}
-	  };
+	};
 
 	$scope.getVersion = function (ver) {
 		return $scope['VERSIONS'].filter(obj => { return obj.tag === ver; })[0].id;
@@ -1156,19 +1156,19 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	};
 
 	$scope.toolChanged = function (tool, contents) {
-	
-		if(contents['JSON_BUILD']!==null){
+
+		if (contents['JSON_BUILD'] !== null) {
 			var build = JSON.parse(contents['JSON_BUILD']);
 			for (const [k, v] of Object.entries(build)) {
-				if(k=='VFD_PWM_DIR'){debugger;}
 				updateScope(document.getElementById(k), v);
 			}
 			$scope.definedPins();
 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-				updateScope(e,getScope(e).toString());
+				updateScope(e, getScope(e).toString());
 			});
+			$scope.JSON_BUILD = null;
 		}
-		else{
+		else {
 			updateTool($scope, getScope(document.querySelector('#TOOL' + tool.x)));
 		}
 	};
@@ -1388,12 +1388,19 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 		}
 		scope.definedPins();
 		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-			updateScope(e,getScope(e).toString());
+			updateScope(e, getScope(e).toString());
 		});
-		loadingfile = false;
-		document.getElementById('reloading').style.display = "none";
-		setTimeout(function(){
-			scope.JSON_BUILD = null;
+
+		setTimeout(function () {
+			for (const [k, v] of Object.entries(build)) {
+				updateScope(document.getElementById(k), v);
+			}
+			scope.definedPins();
+			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+				updateScope(e, getScope(e).toString());
+			});
+			loadingfile = false;
+			document.getElementById('reloading').style.display = "none";
 		}, 5000);
 	};
 	reader.readAsText(file);
