@@ -1303,34 +1303,43 @@ function download(filename, text) {
 	document.body.removeChild(element);
 }
 
-function generate_user_config(options, defguard, close = true) {
-	var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n';
+function generate_user_config(options, defguard, reset_file = "", close = true) {
+	var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n\n';
+	if (reset_file !== "") {
+		gentext += "#include \"" + reset_file + ".h\"\n";
+	}
+
 	for (var i = 0; i < options.length; i++) {
 		var node = document.querySelector("#" + options[i]);
 		if (node) {
-			gentext += "//undefine " + options[i] + "\n";
-			gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
-			switch (node.type) {
-				case 'select-one':
-					if (getScope(node) != null) {
-						gentext += "//apply new definition of " + options[i] + "\n";
+			if (reset_file === "") {
+				// gentext += "//undefine " + options[i] + "\n";
+				// gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
+				gentext += "#undef " + options[i] + "\n";
+			}
+			else {
+				switch (node.type) {
+					case 'select-one':
+						if (getScope(node) != null) {
+							// gentext += "//apply new definition of " + options[i] + "\n";
+							gentext += "#define " + options[i] + " " + getScope(node) + "\n";
+						}
+						break;
+					case 'checkbox':
+						if (node.checked) {
+							// gentext += "//apply new definition of " + options[i] + "\n";
+							gentext += "#define " + options[i] + "\n";
+						}
+						else if (node.getAttribute("var-type") === "bool") {
+							// gentext += "//apply new definition of " + options[i] + "\n";
+							gentext += "#define " + options[i] + " false\n";
+						}
+						break;
+					default:
+						// gentext += "//apply new definition of " + options[i] + "\n";
 						gentext += "#define " + options[i] + " " + getScope(node) + "\n";
-					}
-					break;
-				case 'checkbox':
-					if (node.checked) {
-						gentext += "//apply new definition of " + options[i] + "\n";
-						gentext += "#define " + options[i] + "\n";
-					}
-					else if (node.getAttribute("var-type") === "bool") {
-						gentext += "//apply new definition of " + options[i] + "\n";
-						gentext += "#define " + options[i] + " false\n";
-					}
-					break;
-				default:
-					gentext += "//apply new definition of " + options[i] + "\n";
-					gentext += "#define " + options[i] + " " + getScope(node) + "\n";
-					break;
+						break;
+				}
 			}
 		}
 
@@ -1343,11 +1352,21 @@ function generate_user_config(options, defguard, close = true) {
 }
 
 document.getElementById('boardmap_overrides').addEventListener('click', function () {
-	download('boardmap_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_OVERRIDES_H'));
+	var exclude = [...document.querySelectorAll('.ng-hide [config-file="boardmap"]')].map(x => x.id);
+	download('boardmap_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'BOADMAP_OVERRIDES_H', "boardmap_reset"));
+});
+
+document.getElementById('boardmap_reset').addEventListener('click', function () {
+	download('boardmap_reset.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H'));
+});
+
+document.getElementById('cnc_hal_reset').addEventListener('click', function () {
+	download('cnc_hal_reset.h', generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H'));
 });
 
 document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
-	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_OVERRIDES_H', false);
+	var exclude = [...document.querySelectorAll('.ng-hide [config-file="hal"]')].map(x => x.id);
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'CNC_HAL_OVERRIDES_H', "cnc_hal_reset", false);
 	var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
 
 	if (modules.length) {
