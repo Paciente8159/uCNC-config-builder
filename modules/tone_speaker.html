@@ -1,0 +1,29 @@
+<div>
+	<div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" id="ENABLE_TONE_SPEAKER" ng-model="DYNAMIC['ENABLE_TONE_SPEAKER']"
+			config-file="hal" model-scope-name="DYNAMIC.ENABLE_TONE_SPEAKER">
+		<label class="form-check-label" for="ENABLE_TONE_SPEAKER" ng-init="DYNAMIC['ENABLE_TONE_SPEAKER']=false">Enable tone
+			speaker</label>
+	</div>
+	<div ng-show="DYNAMIC['ENABLE_TONE_SPEAKER']">
+		<label for="SPEAKER_PWM" class="form-label">Define SPEAKER_PWM</label>
+		<select class="form-select form-select-md" name="SPEAKER_PWM" id="SPEAKER_PWM" ng-model="SPEAKER_PWM"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}" config-file="hal"
+			ng-init="SPEAKER_PWM='PWM1'">
+		</select>
+
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" id="ENABLE_BOOT_JINGLE" ng-model="DYNAMIC['ENABLE_BOOT_JINGLE']"
+				config-file="hal" model-scope-name="DYNAMIC.ENABLE_BOOT_JINGLE">
+			<label class="form-check-label" for="ENABLE_BOOT_JINGLE" ng-init="ENABLE_BOOT_JINGLE=false">Enable tone
+				speaker</label>
+		</div>
+		<div ng-show="DYNAMIC['ENABLE_BOOT_JINGLE']">
+			<label for="" class="form-label">Play a custom boot jingle? <span
+					ng-bind="DYNAMIC['BOOT_JINGLE_TUNE']"></span></label>
+			<input type="text" class="form-control" name="BOOT_JINGLE_TUNE" id="BOOT_JINGLE_TUNE" ng-model="DYNAMIC['BOOT_JINGLE_TUNE']"
+				model-scope-name="DYNAMIC.BOOT_JINGLE_TUNE" aria-describedby="helpId" placeholder="" config-file="hal" ng-init="DYNAMIC['BOOT_JINGLE_TUNE']='{ 250, 1567, 125, 1174, 125, 1318,	125, 1567 }'">
+			<small id="helpId" class="form-text text-muted">The jingle should be a sequence of notes (0 to 255) and durations in milliseconds, separated by commas must be between curly braces. For example the default jingle is: { 250, 1567, 125, 1174, 125, 1318, 125, 1567 }</small>
+		</div>
+	</div>
+</div>
