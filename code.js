@@ -990,6 +990,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
 		{ id: 'web_pendant', name: 'Adds a web pendant for WiFi capable devices. (requires at least v1.8.1 to work)' },
+		{ id: 'tone_speaker', name: 'Plays sounds and tunes using a PWM output.' },
 	];
 
 	$scope.STEPPERS = [
