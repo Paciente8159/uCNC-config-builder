@@ -992,6 +992,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
 		{ id: 'web_pendant', name: 'Adds a web pendant for WiFi capable devices. (requires at least v1.8.1 to work)' },
 		{ id: 'tmc_driver', name: 'Support for TMC drivers.  (requires at least v1.8.7 to work)' },
+		{ id: 'tone_speaker', name: 'Plays sounds and tunes using a PWM output.' },
 	];
 
 	$scope.STEPPERS = [
