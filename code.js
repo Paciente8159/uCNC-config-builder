@@ -425,6 +425,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.7', tag: 10807, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.7.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.6', tag: 10806, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.6.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.5', tag: 10805, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.5.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.4', tag: 10804, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.4.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -990,6 +991,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
 		{ id: 'web_pendant', name: 'Adds a web pendant for WiFi capable devices. (requires at least v1.8.1 to work)' },
+		{ id: 'tmc_driver', name: 'Support for TMC drivers.  (requires at least v1.8.7 to work)' },
 		{ id: 'tone_speaker', name: 'Plays sounds and tunes using a PWM output.' },
 	];
 
