@@ -26,7 +26,7 @@
 						ng-options="y.id as y.name for y in TMCS_COM" config-file="hal">
 					</select>
 				</div>
-				<div ng-hide="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE'][x]=='TMC_SPI'">
+				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_UART'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_UART_TX" class="form-label">Stepper{{x}} TMC UART TX
 							pin</label>
@@ -56,6 +56,20 @@
 							{{DYNAMIC['STEPPERS'][x]['STEPPER_UART_RX']}} pin is not defined for your
 							board!
 						</div>
+						<label for="STEPPER{{x}}_UART_CS" class="form-label">Stepper{{x}} TMC UART CS
+							pin</label>
+						<select class="form-select form-select-md" name="STEPPER{{x}}_UART_CS"
+							id="STEPPER{{x}}_UART_CS"
+							ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS']"
+							model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_CS"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+							config-file="hal">
+						</select>
+						<div class="alert alert-warning" role="alert"
+							ng-show="!DEFINED_PINS.includes(DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS'])">
+							{{DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS']}} pin is not defined for your
+							board!
+						</div>
 						<div ng-if="VERSION>10703">
 							<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
 								address: <span
@@ -69,7 +83,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE'][x]=='TMC_SPI'">
+				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_SPI'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_SPI_CS" class="form-label">Stepper{{x}} TMC SPI CS
 							pin</label>
