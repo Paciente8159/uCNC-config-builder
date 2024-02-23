@@ -1016,8 +1016,11 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.TMCS_COM = [
-		{ id: 'TMC_UART', name: 'UART' },
-		{ id: 'TMC_SPI', name: 'SPI' },
+		{ id: 'TMC_UART', name: 'Software UART' },
+		{ id: 'TMC_SPI', name: 'Software SPI' },
+		{ id: 'TMC_ONEWIRE', name: 'Software ONEWIRE' },
+		{ id: 'TMC_UART2_HW', name: 'Hardware UART2' },
+		{ id: 'TMC_SPI_HW', name: 'Hardware SPI' },
 	];
 
 	$scope.LINACTS = [
