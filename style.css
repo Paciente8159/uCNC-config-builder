@@ -139,7 +139,7 @@ div.tab-content {
 	font-weight: 800;
   }
 
-  textarea{
+  textarea.form-control{
 	width: 100%;
 	min-height: 400px !important;
   }
