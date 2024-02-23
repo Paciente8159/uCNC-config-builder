@@ -138,7 +138,7 @@ function updateScope(node = null, val = null) {
 	// catch (error) {
 	// }
 	scope.safeApply(function () {
-		console.log('apply in progress var:' + node.id);
+		// console.log('apply in progress var:' + node.id);
 	})
 }
 
@@ -1356,7 +1356,9 @@ function generate_user_config(options, defguard, reset_file = "", close = true) 
 
 document.getElementById('boardmap_overrides').addEventListener('click', function () {
 	var exclude = [...document.querySelectorAll('.ng-hide [config-file="boardmap"]')].map(x => x.id);
-	download('boardmap_overrides.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'BOADMAP_OVERRIDES_H', "boardmap_reset"));
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'BOADMAP_OVERRIDES_H', "boardmap_reset", false);
+	overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value + '\n\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	download('boardmap_overrides.h', overrides);
 });
 
 document.getElementById('boardmap_reset').addEventListener('click', function () {
@@ -1371,6 +1373,8 @@ document.getElementById('cnc_hal_overrides').addEventListener('click', function 
 	var exclude = [...document.querySelectorAll('.ng-hide [config-file="hal"]')].map(x => x.id);
 	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'CNC_HAL_OVERRIDES_H', "cnc_hal_reset", false);
 	var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
+
+	overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_HAL_CONFIGS').value + "\n";
 
 	if (modules.length) {
 		overrides += "\n#define LOAD_MODULES_OVERRIDE() ({"
