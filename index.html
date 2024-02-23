@@ -1008,7 +1008,7 @@
 								ng-bind="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"></label>
 						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT"
 							id="IC74HC595_COUNT" ng-model="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"
-							model-scope-name="DYNAMIC.IC74HC595.IC74HC595_COUNT" var-type="int" config-file="hal"
+							model-scope-name="DYNAMIC.IC74HC595.IC74HC595_COUNT" var-type="int" config-file="boardmap"
 							ng-init="DYNAMIC['IC74HC595']['IC74HC595_COUNT']=0">
 						<div ng-if="DYNAMIC['IC74HC595']['IC74HC595_COUNT']!=0">
 							<label for="IC74HC595_DATA" class="form-label">IC74HC595's data pin</label>
@@ -1016,7 +1016,7 @@
 								ng-model="DYNAMIC['IC74HC595']['IC74HC595_DATA']"
 								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DATA"
 								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DATA']='DOUT8'">
+								config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DATA']='DOUT8'">
 							</select>
 							<div class="alert alert-warning" role="alert"
 								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_DATA'])">
@@ -1027,7 +1027,7 @@
 								ng-model="DYNAMIC['IC74HC595']['IC74HC595_CLK']"
 								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CLK"
 								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_CLK']='DOUT9'">
+								config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_CLK']='DOUT9'">
 							</select>
 							<div class="alert alert-warning" role="alert"
 								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_CLK'])">
@@ -1038,7 +1038,7 @@
 								ng-model="DYNAMIC['IC74HC595']['IC74HC595_LATCH']"
 								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_LATCH"
 								ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_LATCH']='DOUT10'">
+								config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_LATCH']='DOUT10'">
 							</select>
 							<div class="alert alert-warning" role="alert"
 								ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_LATCH'])">
@@ -1049,11 +1049,11 @@
 							<input type="range" class="form-range" min="0" max="100" name="IC74HC595_DELAY_CYCLES"
 								id="IC74HC595_DELAY_CYCLES" ng-model="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"
 								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DELAY_CYCLES" var-type="int"
-								config-file="hal" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
+								config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
 							<div class="form-check form-switch">
 								<input class="form-check-input" type="checkbox" id="IC74HC595_CUSTOM_SHIFT_IO"
 									ng-model="DYNAMIC['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CUSTOM_SHIFT_IO" config-file="hal">
+									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CUSTOM_SHIFT_IO" config-file="boardmap">
 								<label class="form-check-label" for="IC74HC595_CUSTOM_SHIFT_IO">Use board custom 74HC595
 									data shifter</label>
 							</div>
