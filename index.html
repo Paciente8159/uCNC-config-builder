@@ -75,6 +75,11 @@
 					Modules</button>
 			</li>
 			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="customconfigs-tab" data-bs-toggle="tab" data-bs-target="#customconfigs"
+					type="button" role="tab" aria-controls="customconfigs" aria-selected="false">Custom
+					configurations</button>
+			</li>
+			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="configfiles-tab" data-bs-toggle="tab" data-bs-target="#configfiles"
 					type="button" role="tab" aria-controls="configfiles" aria-selected="false">Config files</button>
 			</li>
@@ -1204,6 +1209,26 @@
 							config-file="module">
 						<label class="form-check-label" for="{{x.id}}" ng-bind="x.name"></label>
 						<div ng-if="DYNAMIC['MODULES'][x.id]" ng-include="'./modules/'+x.id+'.html'"></div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="tab-pane" id="customconfigs" role="tabpanel" aria-labelledby="customconfigs-tab">
+				<fieldset>
+					<legend>Custom boardmap configs</legend>
+					<div class="mb-3">
+						<label class="form-check-label" for="CUSTOM_BOARDMAP_CONFIGS">Custom boardmap configs</label>
+						<textarea class="form-control" id="CUSTOM_BOARDMAP_CONFIGS"
+							ng-model="DYNAMIC['CUSTOM_BOARDMAP_CONFIGS']"
+							model-scope-name="DYNAMIC.CUSTOM_BOARDMAP_CONFIGS" config-file="none"></textarea>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Custom hal configs</legend>
+					<div class="mb-3">
+						<label class="form-check-label" for="CUSTOM_HAL_CONFIGS">Custom hal configs</label>
+						<textarea class="form-control"id="CUSTOM_HAL_CONFIGS"
+							ng-model="DYNAMIC['CUSTOM_HAL_CONFIGS']" model-scope-name="DYNAMIC.CUSTOM_HAL_CONFIGS"
+							config-file="none"></textarea>
 					</div>
 				</fieldset>
 			</div>

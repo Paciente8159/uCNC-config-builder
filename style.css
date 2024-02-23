@@ -138,3 +138,8 @@ div.tab-content {
 	color:#146c43;
 	font-weight: 800;
   }
+
+  textarea{
+	width: 100%;
+	min-height: 400px !important;
+  }
