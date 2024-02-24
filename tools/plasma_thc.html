@@ -1,0 +1,52 @@
+<fieldset>
+	<legend>Plasma THC settings</legend>
+
+	<div class="mb-3">
+		<label for="" class="form-label">Define PLASMA_ON_OUTPUT</label>
+		<select class="form-select form-select-md" name="PLASMA_ON_OUTPUT" id="PLASMA_ON_OUTPUT" ng-model="PLASMA_ON_OUTPUT"
+			config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(PLASMA_ON_OUTPUT)">
+			{{PLASMA_ON_OUTPUT}} pin is not defined for
+			your board!
+		</div>
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Define PLASMA_UP_INPUT</label>
+		<select class="form-select form-select-md" name="PLASMA_UP_INPUT" id="PLASMA_UP_INPUT"
+			ng-model="PLASMA_UP_INPUT" config-file="hal"
+			ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(PLASMA_UP_INPUT)">
+			{{PLASMA_UP_INPUT}} pin is not defined for
+			your board!
+		</div>
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Define PLASMA_DOWN_INPUT</label>
+		<select class="form-select form-select-md" name="PLASMA_DOWN_INPUT" id="PLASMA_DOWN_INPUT"
+			ng-model="PLASMA_DOWN_INPUT" config-file="hal"
+			ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(PLASMA_DOWN_INPUT)">
+			{{PLASMA_DOWN_INPUT}} pin is not defined for
+			your board!
+		</div>
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Define PLASMA_ARC_OK_INPUT</label>
+		<select class="form-select form-select-md" name="PLASMA_ARC_OK_INPUT" id="PLASMA_ARC_OK_INPUT"
+			ng-model="PLASMA_ARC_OK_INPUT" config-file="hal"
+			ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(PLASMA_ARC_OK_INPUT)">
+			{{PLASMA_ARC_OK_INPUT}} pin is not defined for
+			your board!
+		</div>
+	</div>
+
+</fieldset>

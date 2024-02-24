@@ -972,7 +972,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'laser_ppi', name: 'Laser PPI' },
 		{ id: 'vfd_modbus', name: 'VFD Modbus' },
 		{ id: 'vfd_pwm', name: 'VFD PWM' },
-		{ id: 'pen_servo', name: 'Pen Servo' }
+		{ id: 'pen_servo', name: 'Pen Servo' },
+		{ id: 'plasma_thc', name: 'Plasma THC' }
 	];
 
 	$scope.MODULES_OPTIONS = [
