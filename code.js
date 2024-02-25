@@ -97,49 +97,50 @@ function updateScope(node = null, val = null) {
 			break;
 	}
 
-	if (node.hasAttribute('model-scope-name')) {
-		var arr = node.getAttribute('model-scope-name').split('.');
-
-		if (arr.length > 0 && !scope[arr[0]]) {
-			scope[arr[0]] = (arr.length == 1) ? v : {};
-		}
-		else if (arr.length == 1) {
-			scope[arr[0]] = (arr.length == 1) ? v : {};
-		}
-
-		if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
-			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-		}
-		else if (arr.length == 2) {
-			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-		}
-
-		if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
-			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-		}
-		else if (arr.length == 3) {
-			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-		}
-
-		if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
-			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-		}
-		else if (arr.length == 4) {
-			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-		}
-	}
-	else {
-		scope[node.id] = v;
-	}
-
-	// try {
-	// 	scope.$apply();
-	// }
-	// catch (error) {
-	// }
 	scope.safeApply(function () {
+
+		if (node.hasAttribute('model-scope-name')) {
+			var arr = node.getAttribute('model-scope-name').split('.');
+
+			if (arr.length > 0 && !scope[arr[0]]) {
+				scope[arr[0]] = (arr.length == 1) ? v : {};
+			}
+			else if (arr.length == 1) {
+				scope[arr[0]] = (arr.length == 1) ? v : {};
+			}
+
+			if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
+				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+			}
+			else if (arr.length == 2) {
+				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+			}
+
+			if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
+				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+			}
+			else if (arr.length == 3) {
+				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+			}
+
+			if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+			}
+			else if (arr.length == 4) {
+				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+			}
+		}
+		else {
+			scope[node.id] = v;
+		}
+
+		// try {
+		// 	scope.$apply();
+		// }
+		// catch (error) {
+		// }
 		// console.log('apply in progress var:' + node.id);
-	})
+	});
 }
 
 function updateFields(settings = [], loadedevent = null) {
@@ -424,7 +425,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.JSON_BUILD = null;
 
 	$scope.VERSIONS = [
-		{ id: 'master', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.7', tag: 10807, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.7.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.6', tag: 10806, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.6.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.5', tag: 10805, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.5.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -1075,6 +1076,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.BAUDRATE = 115200;
 	$scope.ENABLE_COOLANT = false;
 	$scope.DEFINED_PINS = [];
+	$scope.PREBUILD_CONFIGS = null;
 
 	$scope.safeApply = function (fn) {
 		var phase = this.$root.$$phase;
@@ -1271,6 +1273,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			}
 		});
 	};
+
+	$scope.prebuildSelected = function(){
+		console.log($scope.PRE_BUILD_FILE);
+	};
 }]);
 
 var orfilter = app.filter("orTypeFilter", function () {
@@ -1292,8 +1298,12 @@ ready(function () {
 		updateHAL(scope);
 	});
 	scope.boardChanged();
-
 	scope.checkGroupInit();
+	fetch('https://api.github.com/repos/Paciente8159/uCNC-config-builder/contents/pre-configs/').then((resp) => {
+		resp.json().then((data) => {
+			scope.PREBUILD_CONFIGS = data;
+		});
+	});
 });
 
 function download(filename, text) {

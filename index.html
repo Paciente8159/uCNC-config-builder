@@ -97,12 +97,17 @@
 				<div class="mb-3 load-config">
 					<p>If you have a previous stored build configuration file (json) you can load it.</p>
 					<input class="form-control form-control" id="load_settings" type="file" accept=".json,.txt">
+					<p>Or you can select one of the pre-configured boards.</p>
+					<select class="form-select form-select-md" name="PRE_BUILD_FILE" id="PRE_BUILD_FILE" ng-model="PRE_BUILD_FILE"
+						ng-options="x.url as x.name for x in PREBUILD_CONFIGS" config-file="none"
+						ng-change="prebuildSelected()">
+					</select>
 				</div>
 
 				<div class="mb-3">
 					<label for="" class="form-label">What version will you be using?</label>
 					<select class="form-select form-select-md" name="VERSION" id="VERSION" ng-model="VERSION"
-						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=10879"
+						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=99999"
 						ng-change="mcuChanged()">
 					</select>
 				</div>
