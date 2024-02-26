@@ -1311,6 +1311,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			}
 		}
 		txtFile.onerror = function () {
+			document.getElementById('reloading').style.display = "none";
 		}
 		txtFile.send(null);
 	};
