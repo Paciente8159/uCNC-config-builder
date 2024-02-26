@@ -764,36 +764,44 @@
 				<fieldset>
 					<legend>SPI and I2C Expansion interfaces</legend>
 					<p>Software SPI port</p>
-					<label for="SOFT_SPI_CLK" class="form-label">SPI Clock</label>
-					<select class="form-select form-select-md" name="SOFT_SPI_CLK" id="SOFT_SPI_CLK"
-						ng-model="DYNAMIC['SOFT_SPI_CLK']" model-scope-name="DYNAMIC.SOFT_SPI_CLK"
-						ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-						config-file="hal">
-					</select>
-					<div class="alert alert-warning" role="alert"
-						ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_CLK'])">
-						{{DYNAMIC['SOFT_SPI_CLK']}} pin is not defined for your board!
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="SOFT_SPI_ENABLED"
+							ng-model="DYNAMIC['SOFT_SPI_ENABLED']" model-scope-name="DYNAMIC.SOFT_SPI_ENABLED"
+							config-file="hal">
+						<label class="form-check-label" for="SOFT_SPI_ENABLED">Enable shared software SPI port</label>
 					</div>
-					<label for="SOFT_SPI_SDO" class="form-label">SPI Serial Data Out</label>
-					<select class="form-select form-select-md" name="SOFT_SPI_SDO" id="SOFT_SPI_SDO"
-						ng-model="DYNAMIC['SOFT_SPI_SDO']" model-scope-name="DYNAMIC.SOFT_SPI_SDO"
-						ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-						config-file="hal">
-					</select>
-					<div class="alert alert-warning" role="alert"
-						ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDO'])">
-						{{DYNAMIC['SOFT_SPI_SDO']}} pin is not defined for your board!
-					</div>
-					<label for="SOFT_SPI_SDI" class="form-label">SPI Serial Data In</label>
-					<select class="form-select form-select-md" name="SOFT_SPI_SDI" id="SOFT_SPI_SDI"
-						ng-model="DYNAMIC['SOFT_SPI_SDI']" model-scope-name="DYNAMIC.SOFT_SPI_SDI"
-						ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
-						config-file="hal">
+					<div ng-if="DYNAMIC['SOFT_SPI_ENABLED']">
+						<label for="SOFT_SPI_CLK" class="form-label">SPI Clock</label>
+						<select class="form-select form-select-md" name="SOFT_SPI_CLK" id="SOFT_SPI_CLK"
+							ng-model="DYNAMIC['SOFT_SPI_CLK']" model-scope-name="DYNAMIC.SOFT_SPI_CLK"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+							config-file="hal">
+						</select>
 						<div class="alert alert-warning" role="alert"
-							ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDI'])">
-							{{DYNAMIC['SOFT_SPI_SDI']}} pin is not defined for your board!
+							ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_CLK'])">
+							{{DYNAMIC['SOFT_SPI_CLK']}} pin is not defined for your board!
 						</div>
-					</select>
+						<label for="SOFT_SPI_SDO" class="form-label">SPI Serial Data Out</label>
+						<select class="form-select form-select-md" name="SOFT_SPI_SDO" id="SOFT_SPI_SDO"
+							ng-model="DYNAMIC['SOFT_SPI_SDO']" model-scope-name="DYNAMIC.SOFT_SPI_SDO"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+							config-file="hal">
+						</select>
+						<div class="alert alert-warning" role="alert"
+							ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDO'])">
+							{{DYNAMIC['SOFT_SPI_SDO']}} pin is not defined for your board!
+						</div>
+						<label for="SOFT_SPI_SDI" class="form-label">SPI Serial Data In</label>
+						<select class="form-select form-select-md" name="SOFT_SPI_SDI" id="SOFT_SPI_SDI"
+							ng-model="DYNAMIC['SOFT_SPI_SDI']" model-scope-name="DYNAMIC.SOFT_SPI_SDI"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
+							config-file="hal">
+							<div class="alert alert-warning" role="alert"
+								ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDI'])">
+								{{DYNAMIC['SOFT_SPI_SDI']}} pin is not defined for your board!
+							</div>
+						</select>
+					</div>
 				</fieldset>
 				<fieldset>
 					<legend>TMC drivers</legend>
