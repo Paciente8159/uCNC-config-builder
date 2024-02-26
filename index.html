@@ -31,17 +31,13 @@
 					fine but does not work due to a bad configuration.</p>
 				<p><strong>ALWAYS CHECK THE GENERATED FILES:</strong></p>
 				<ul>
-					<li>make sure to inspect the gererated override files to see if all your settings were reflected:
-						<ul>
-							<li>all your new settings are defined after the #undef declaration</li>
-							<li>all old settings deleted have one #undef declaration</li>
-						</ul>
-					</li>
+					<li>a reset file is generated to undefine all default configs</li>
 					<li>make sure you have all your necessary pins defined</li>
 					<li>you have downloaded the correct modules version files for the version you are using</li>
 					<li>clean/undefine unecessary or unused pins to prevent unwanted issues</li>
 					<li>not all configuration might be available in the web builder. For custom boards and MCU
-						additional configurations might be needed</li>
+						additional configurations might be needed. You can add them in the Custom
+						configurations tab</li>
 				</ul>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
