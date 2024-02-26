@@ -96,13 +96,15 @@
 
 				<div class="mb-3 load-config">
 					<p>If you have a previous stored build configuration file (json) you can load it.</p>
-					<input class="form-control form-control" id="load_settings" type="file" accept=".json,.txt">
+					<input class="form-control form-control" id="load_settings" type="file" accept=".json,.txt">				
 				</div>
+
+				<div ng-include="'/pre-configs/configs.html'"></div>
 
 				<div class="mb-3">
 					<label for="" class="form-label">What version will you be using?</label>
 					<select class="form-select form-select-md" name="VERSION" id="VERSION" ng-model="VERSION"
-						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=10879"
+						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=99999"
 						ng-change="mcuChanged()">
 					</select>
 				</div>
@@ -223,7 +225,7 @@
 							acceleration type</label>
 						<select class="form-select form-select-md" name="S_CURVE_ACCELERATION_LEVEL"
 							id="S_CURVE_ACCELERATION_LEVEL" ng-model="S_CURVE_ACCELERATION_LEVEL"
-							ng-options="x.id as x.name for x in ACCELERATIONS" var-type="int" config-file="boardmap"
+							ng-options="x.id as x.name for x in ACCELERATIONS" var-type="int" config-file="hal"
 							ng-init="S_CURVE_ACCELERATION_LEVEL=0"></select>
 						</select>
 					</div>

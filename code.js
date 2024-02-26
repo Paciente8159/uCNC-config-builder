@@ -97,49 +97,50 @@ function updateScope(node = null, val = null) {
 			break;
 	}
 
-	if (node.hasAttribute('model-scope-name')) {
-		var arr = node.getAttribute('model-scope-name').split('.');
-
-		if (arr.length > 0 && !scope[arr[0]]) {
-			scope[arr[0]] = (arr.length == 1) ? v : {};
-		}
-		else if (arr.length == 1) {
-			scope[arr[0]] = (arr.length == 1) ? v : {};
-		}
-
-		if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
-			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-		}
-		else if (arr.length == 2) {
-			scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-		}
-
-		if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
-			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-		}
-		else if (arr.length == 3) {
-			scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-		}
-
-		if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
-			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-		}
-		else if (arr.length == 4) {
-			scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-		}
-	}
-	else {
-		scope[node.id] = v;
-	}
-
-	// try {
-	// 	scope.$apply();
-	// }
-	// catch (error) {
-	// }
 	scope.safeApply(function () {
+
+		if (node.hasAttribute('model-scope-name')) {
+			var arr = node.getAttribute('model-scope-name').split('.');
+
+			if (arr.length > 0 && !scope[arr[0]]) {
+				scope[arr[0]] = (arr.length == 1) ? v : {};
+			}
+			else if (arr.length == 1) {
+				scope[arr[0]] = (arr.length == 1) ? v : {};
+			}
+
+			if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
+				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+			}
+			else if (arr.length == 2) {
+				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+			}
+
+			if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
+				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+			}
+			else if (arr.length == 3) {
+				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+			}
+
+			if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+			}
+			else if (arr.length == 4) {
+				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+			}
+		}
+		else {
+			scope[node.id] = v;
+		}
+
+		// try {
+		// 	scope.$apply();
+		// }
+		// catch (error) {
+		// }
 		// console.log('apply in progress var:' + node.id);
-	})
+	});
 }
 
 function updateFields(settings = [], loadedevent = null) {
@@ -424,7 +425,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.JSON_BUILD = null;
 
 	$scope.VERSIONS = [
-		{ id: 'master', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.7', tag: 10807, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.7.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.6', tag: 10806, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.6.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.5', tag: 10805, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.5.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -1076,6 +1077,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.BAUDRATE = 115200;
 	$scope.ENABLE_COOLANT = false;
 	$scope.DEFINED_PINS = [];
+	$scope.PREBUILD_CONFIGS = null;
 
 	$scope.safeApply = function (fn) {
 		var phase = this.$root.$$phase;
@@ -1272,6 +1274,42 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			}
 		});
 	};
+
+	$scope.prebuildSelected = function () {
+		document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+		document.getElementById('reloading').style.display = "block";
+		var txtFile = new XMLHttpRequest();
+		txtFile.open("GET", document.getElementById('PRE_BUILD_FILE').value, true);
+		txtFile.onreadystatechange = function () {
+			if (txtFile.readyState === 4 && txtFile.status === 200) {  // Makes sure it's found the file.
+				$scope.JSON_BUILD = txtFile.responseText;
+				var build = JSON.parse($scope.JSON_BUILD);
+				loadingfile = true;
+				for (const [k, v] of Object.entries(build)) {
+					updateScope(document.getElementById(k), v);
+				}
+				$scope.definedPins();
+				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+					updateScope(e, getScope(e).toString());
+				});
+
+				setTimeout(function () {
+					for (const [k, v] of Object.entries(build)) {
+						updateScope(document.getElementById(k), v);
+					}
+					$scope.definedPins();
+					document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+						updateScope(e, getScope(e).toString());
+					});
+					loadingfile = false;
+					document.getElementById('reloading').style.display = "none";
+				}, 5000);
+			}
+		}
+		txtFile.onerror = function () {
+		}
+		txtFile.send(null);
+	};
 }]);
 
 var orfilter = app.filter("orTypeFilter", function () {
@@ -1293,8 +1331,15 @@ ready(function () {
 		updateHAL(scope);
 	});
 	scope.boardChanged();
-
 	scope.checkGroupInit();
+
+	// fetch('https://api.github.com/repos/Paciente8159/uCNC-config-builder/contents/pre-configs/').then((resp) => {
+	// 	resp.json().then((data) => {
+	// 		debugger;
+	// 		scope.PREBUILD_CONFIGS = data;
+	// 		scope.$apply();
+	// 	});
+	// });
 });
 
 function download(filename, text) {
@@ -1366,11 +1411,25 @@ document.getElementById('boardmap_overrides').addEventListener('click', function
 });
 
 document.getElementById('boardmap_reset').addEventListener('click', function () {
-	download('boardmap_reset.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H'));
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H', '', false);
+	var customs = document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value;
+	var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
+	defs.forEach((e) => {
+		overrides += "#undef " + e[1] + "\n";
+	});
+	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	download('boardmap_reset.h', overrides);
 });
 
 document.getElementById('cnc_hal_reset').addEventListener('click', function () {
-	download('cnc_hal_reset.h', generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H'));
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H', '', false);
+	var customs = document.getElementById('CUSTOM_HAL_CONFIGS').value;
+	var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
+	defs.forEach((e) => {
+		overrides += "#undef " + e[1] + "\n";
+	});
+	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	download('cnc_hal_reset.h', overrides);
 });
 
 document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
