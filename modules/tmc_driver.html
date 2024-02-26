@@ -158,6 +158,52 @@
 						</div>
 					</div>
 				</div>
+				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_UART2_HW'">
+					<div class="mb-3">
+						<label for="STEPPER{{x}}_UART_CS" class="form-label">Stepper{{x}} TMC UART CS
+							pin</label>
+						<select class="form-select form-select-md" name="STEPPER{{x}}_UART_CS"
+							id="STEPPER{{x}}_UART_CS"
+							ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS']"
+							model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_CS"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+							config-file="hal">
+						</select>
+						<div class="alert alert-warning" role="alert"
+							ng-show="!DEFINED_PINS.includes(DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS'])">
+							{{DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS']}} pin is not defined for your
+							board!
+						</div>
+						<div ng-if="VERSION>10703">
+							<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
+								address: <span
+									ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
+							<input type="range" class="form-range" min="0" max="3"
+								name="STEPPER{{x}}_UART_ADDRESS" id="STEPPER{{x}}_UART_ADDRESS"
+								ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
+								model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS"
+								config-file="hal" var-type="int"
+								ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']=0">
+						</div>
+					</div>
+				</div>
+				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_SPI_HW'">
+					<div class="mb-3">
+						<label for="STEPPER{{x}}_SPI_CS" class="form-label">Stepper{{x}} TMC SPI CS
+							pin</label>
+						<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CS"
+							id="STEPPER{{x}}_SPI_CS" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_SPI_CS']"
+							model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_SPI_CS"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+							config-file="hal">
+						</select>
+						<div class="alert alert-warning" role="alert"
+							ng-show="!DEFINED_PINS.includes(DYNAMIC['STEPPERS'][x]['STEPPER_SPI_CS'])">
+							{{DYNAMIC['STEPPERS'][x]['STEPPER_SPI_CS']}} pin is not defined for your
+							board!
+						</div>
+					</div>
+				</div>
 				<label for="STEPPER{{x}}_CURRENT_MA" class="form-label">Stepper{{x}} max current: <span
 						ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"></span> mA</label>
 				<input type="range" class="form-range" min="0" max="1500" name="STEPPER{{x}}_CURRENT_MA"
