@@ -158,6 +158,49 @@
 						</div>
 					</div>
 				</div>
+				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_ONEWIRE'">
+					<div class="mb-3">
+						<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} TMC UART RX
+							pin</label>
+						<select class="form-select form-select-md" name="STEPPER{{x}}_UART_RX"
+							id="STEPPER{{x}}_UART_RX"
+							ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_RX']"
+							model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_RX"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
+							config-file="hal">
+						</select>
+						<div class="alert alert-warning" role="alert"
+							ng-show="!DEFINED_PINS.includes(DYNAMIC['STEPPERS'][x]['STEPPER_UART_RX'])">
+							{{DYNAMIC['STEPPERS'][x]['STEPPER_UART_RX']}} pin is not defined for your
+							board!
+						</div>
+						<label for="STEPPER{{x}}_UART_CS" class="form-label">Stepper{{x}} TMC UART CS
+							pin</label>
+						<select class="form-select form-select-md" name="STEPPER{{x}}_UART_CS"
+							id="STEPPER{{x}}_UART_CS"
+							ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS']"
+							model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_CS"
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
+							config-file="hal">
+						</select>
+						<div class="alert alert-warning" role="alert"
+							ng-show="!DEFINED_PINS.includes(DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS'])">
+							{{DYNAMIC['STEPPERS'][x]['STEPPER_UART_CS']}} pin is not defined for your
+							board!
+						</div>
+						<div ng-if="VERSION>10703">
+							<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
+								address: <span
+									ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
+							<input type="range" class="form-range" min="0" max="3"
+								name="STEPPER{{x}}_UART_ADDRESS" id="STEPPER{{x}}_UART_ADDRESS"
+								ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
+								model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS"
+								config-file="hal" var-type="int"
+								ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']=0">
+						</div>
+					</div>
+				</div>
 				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_UART2_HW'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_UART_CS" class="form-label">Stepper{{x}} TMC UART CS
@@ -222,14 +265,14 @@
 					name="STEPPER{{x}}_RSENSE" id="STEPPER{{x}}_RSENSE"
 					ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_RSENSE']"
 					model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_RSENSE" var-type="float"
-					config-file="hal">
+					config-file="hal"  ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_RSENSE']=0.11">
 				<label for="STEPPER{{x}}_HOLD_MULT" class="form-label">Stepper{{x}} Hold multiplier:
 					<span ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_HOLD_MULT']"></span></label>
 				<input type="range" class="form-range" step="0.01" min="0" max="1"
 					name="STEPPER{{x}}_HOLD_MULT" id="STEPPER{{x}}_HOLD_MULT"
 					ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_HOLD_MULT']"
 					model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_HOLD_MULT" var-type="float"
-					config-file="hal">
+					config-file="hal" ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_HOLD_MULT']=0.7">
 				<label for="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" class="form-label">Stepper{{x}}
 					stealthchop threshold: <span
 						ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_STEALTHCHOP_THERSHOLD']"></span>
@@ -238,7 +281,7 @@
 					name="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" id="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
 					ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_STEALTHCHOP_THERSHOLD']"
 					model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_STEALTHCHOP_THERSHOLD"
-					var-type="int" config-file="hal">
+					var-type="int" config-file="hal" ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_STEALTHCHOP_THERSHOLD']=1000">
 				<div class="form-check form-switch">
 					<input class="form-check-input" type="checkbox"
 						id="STEPPER{{x}}_ENABLE_INTERPLATION"
