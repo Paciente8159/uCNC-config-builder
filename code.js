@@ -1274,8 +1274,40 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		});
 	};
 
-	$scope.prebuildSelected = function(){
-		console.log($scope.PRE_BUILD_FILE);
+	$scope.prebuildSelected = function () {
+		document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+		document.getElementById('reloading').style.display = "block";
+		var txtFile = new XMLHttpRequest();
+		txtFile.open("GET", document.getElementById('PRE_BUILD_FILE').value, true);
+		txtFile.onreadystatechange = function () {
+			if (txtFile.readyState === 4 && txtFile.status === 200) {  // Makes sure it's found the file.
+				$scope.JSON_BUILD = txtFile.responseText;
+				var build = JSON.parse($scope.JSON_BUILD);
+				loadingfile = true;
+				for (const [k, v] of Object.entries(build)) {
+					updateScope(document.getElementById(k), v);
+				}
+				$scope.definedPins();
+				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+					updateScope(e, getScope(e).toString());
+				});
+
+				setTimeout(function () {
+					for (const [k, v] of Object.entries(build)) {
+						updateScope(document.getElementById(k), v);
+					}
+					$scope.definedPins();
+					document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+						updateScope(e, getScope(e).toString());
+					});
+					loadingfile = false;
+					document.getElementById('reloading').style.display = "none";
+				}, 5000);
+			}
+		}
+		txtFile.onerror = function () {
+		}
+		txtFile.send(null);
 	};
 }]);
 
@@ -1299,11 +1331,14 @@ ready(function () {
 	});
 	scope.boardChanged();
 	scope.checkGroupInit();
-	fetch('https://api.github.com/repos/Paciente8159/uCNC-config-builder/contents/pre-configs/').then((resp) => {
-		resp.json().then((data) => {
-			scope.PREBUILD_CONFIGS = data;
-		});
-	});
+
+	// fetch('https://api.github.com/repos/Paciente8159/uCNC-config-builder/contents/pre-configs/').then((resp) => {
+	// 	resp.json().then((data) => {
+	// 		debugger;
+	// 		scope.PREBUILD_CONFIGS = data;
+	// 		scope.$apply();
+	// 	});
+	// });
 });
 
 function download(filename, text) {
@@ -1375,11 +1410,25 @@ document.getElementById('boardmap_overrides').addEventListener('click', function
 });
 
 document.getElementById('boardmap_reset').addEventListener('click', function () {
-	download('boardmap_reset.h', generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H'));
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H', '', false);
+	var customs = document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value;
+	var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
+	defs.forEach((e) => {
+		overrides += "#undef " + e[1] + "\n";
+	});
+	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	download('boardmap_reset.h', overrides);
 });
 
 document.getElementById('cnc_hal_reset').addEventListener('click', function () {
-	download('cnc_hal_reset.h', generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H'));
+	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H', '', false);
+	var customs = document.getElementById('CUSTOM_HAL_CONFIGS').value;
+	var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
+	defs.forEach((e) => {
+		overrides += "#undef " + e[1] + "\n";
+	});
+	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+	download('cnc_hal_reset.h', overrides);
 });
 
 document.getElementById('cnc_hal_overrides').addEventListener('click', function () {

@@ -96,13 +96,10 @@
 
 				<div class="mb-3 load-config">
 					<p>If you have a previous stored build configuration file (json) you can load it.</p>
-					<input class="form-control form-control" id="load_settings" type="file" accept=".json,.txt">
-					<p>Or you can select one of the pre-configured boards.</p>
-					<select class="form-select form-select-md" name="PRE_BUILD_FILE" id="PRE_BUILD_FILE" ng-model="PRE_BUILD_FILE"
-						ng-options="x.url as x.name for x in PREBUILD_CONFIGS" config-file="none"
-						ng-change="prebuildSelected()">
-					</select>
+					<input class="form-control form-control" id="load_settings" type="file" accept=".json,.txt">				
 				</div>
+
+				<div ng-include="'/pre-configs/configs.html'"></div>
 
 				<div class="mb-3">
 					<label for="" class="form-label">What version will you be using?</label>
@@ -228,7 +225,7 @@
 							acceleration type</label>
 						<select class="form-select form-select-md" name="S_CURVE_ACCELERATION_LEVEL"
 							id="S_CURVE_ACCELERATION_LEVEL" ng-model="S_CURVE_ACCELERATION_LEVEL"
-							ng-options="x.id as x.name for x in ACCELERATIONS" var-type="int" config-file="boardmap"
+							ng-options="x.id as x.name for x in ACCELERATIONS" var-type="int" config-file="hal"
 							ng-init="S_CURVE_ACCELERATION_LEVEL=0"></select>
 						</select>
 					</div>
