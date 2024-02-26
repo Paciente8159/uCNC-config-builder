@@ -351,6 +351,9 @@ function updateBoardmap(scope = null) {
 			case 'BOARD_SKR_PRO_V1_2':
 				boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
 				break;
+			case 'BOARD_NUCLEO_F411RE_SHIELD_V3':
+				boardurl = boardurl + "stm32/boardmap_nucleo_f411re_shield_v3.h";
+				break;
 			case 'BOARD_MZERO':
 				boardurl = boardurl + "samd21/boardmap_mzero.h";
 				break;
@@ -501,6 +504,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'BOARD_BLACKPILL', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },
 		{ id: 'BOARD_MKS_ROBIN_NANO_V1_2', name: 'MKS Robin Nano v1.2', mcu: 'MCU_STM32F1X' },
 		{ id: 'BOARD_SKR_PRO_V1_2', name: 'SKR Pro v1.2', mcu: 'MCU_STM32F4X' },
+		{ id: 'BOARD_NUCLEO_F411RE_SHIELD_V3', name: 'STM32 Nucleo F411RE', mcu: 'MCU_STM32F4X' },
 		{ id: 'BOARD_MZERO', name: 'Arduino M0', mcu: 'MCU_SAMD21' },
 		{ id: 'BOARD_ZERO', name: 'Arduino Zero', mcu: 'MCU_SAMD21' },
 		{ id: 'BOARD_RE_ARM', name: 'Panukatt RE-ARM', mcu: 'MCU_LPC176X' },
