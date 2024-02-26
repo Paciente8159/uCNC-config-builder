@@ -126,6 +126,11 @@
 							config-file="boardmap"></select>
 						</select>
 					</div>
+					<div class="form-check form-switch" ng-if="KINEMATIC=='KINEMATIC_SCARA'">
+						<input class="form-check-input" type="checkbox" id="MP_SCARA"
+							ng-model="DYNAMIC['MP_SCARA']" model-scope-name="DYNAMIC.MP_SCARA" config-file="hal">
+						<label class="form-check-label" for="MP_SCARA">Is MP Scara. In MP SCARA both shoulder and  elbow motors are fixed to the base.</label>
+					</div>
 
 					<div class="mb-3">
 						<label for="" class="form-label">How many axis does your machine have?</label>
