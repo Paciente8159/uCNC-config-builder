@@ -1280,7 +1280,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	};
 
 	$scope.prebuildSelected = function () {
-		document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+		document.getElementById('loadingtext').innerText = "Fetching configuration...";
 		document.getElementById('reloading').style.display = "block";
 		var txtFile = new XMLHttpRequest();
 		txtFile.open("GET", document.getElementById('PRE_BUILD_FILE').value, true);
