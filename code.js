@@ -821,7 +821,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.UCNCI2C = [
 		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
-		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,ESP32,MCU_RP2040' },
+		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
 		{ port: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
 		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
 		{ port: 4, mcu: 'MCU_SAMD21' },
