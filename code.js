@@ -429,8 +429,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
-		{ id: 'v1.8.9', tag: 10807, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.9.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
-		{ id: 'v1.8.8', tag: 10807, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.8.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.10', tag: 10810, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.10.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.9', tag: 10809, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.9.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.8', tag: 10808, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.8.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.7', tag: 10807, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.7.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.6', tag: 10806, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.6.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.5', tag: 10805, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.5.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
