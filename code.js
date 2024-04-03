@@ -226,8 +226,6 @@ function updateTool(scope = null, tool = null) {
 }
 
 function updateBoardmap(scope = null) {
-	document.getElementById('loadingtext').innerText = "Fetching processor...";
-	document.getElementById('reloading').style.display = "block";
 	var settings = [];
 	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
 
@@ -1141,12 +1139,20 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	}
 
 	$scope.mcuChanged = function () {
-		updateScope(document.getElementById('BOARD'), null);
-		updateBoardmap($scope);
+		document.getElementById('loadingtext').innerText = "Fetching processor...this may take a while";
+		document.getElementById('reloading').style.display = "block";
+		setTimeout(function () {
+			updateScope(document.getElementById('BOARD'), null);
+			updateBoardmap($scope);
+		}, 50);
 	};
 
 	$scope.boardChanged = function () {
-		updateBoardmap($scope);
+		document.getElementById('loadingtext').innerText = "Fetching processor...this may take a while";
+		document.getElementById('reloading').style.display = "block";
+		setTimeout(function () {
+			updateBoardmap($scope);
+		}, 50);
 	};
 
 	$scope.tmcChanged = function () {
