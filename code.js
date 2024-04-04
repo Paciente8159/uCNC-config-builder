@@ -1,430 +1,324 @@
-const boardloaded = new Event('boardloaded');
-const halloaded = new Event('halloaded');
-const toolloaded = new Event('toolloaded');
+// const boardloaded = new Event('boardloaded');
+// const halloaded = new Event('halloaded');
+// const toolloaded = new Event('toolloaded');
 
-var loadingfile = false;
+// var loadingfile = false;
 
-function ready(fn) {
-	if (document.readyState !== 'loading') {
-		fn();
-	} else {
-		document.addEventListener('DOMContentLoaded', fn);
-	}
-}
+// function ready(fn) {
+// 	if (document.readyState !== 'loading') {
+// 		fn();
+// 	} else {
+// 		document.addEventListener('DOMContentLoaded', fn);
+// 	}
+// }
 
-function parsePreprocessor(file, settings = [], callback) {
-	if (loadingfile) {
-		return;
-	}
-	document.getElementById('reloading').style.display = "block";
-	const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
-	var txtFile = new XMLHttpRequest();
-	txtFile.open("GET", file, true);
-	txtFile.onreadystatechange = function () {
-		if (txtFile.readyState === 4 && txtFile.status === 200) {  // Makes sure it's found the file.
-			allText = txtFile.responseText;
-			const matches = [...allText.matchAll(defineregex)];
-			for (var i = 0; i < matches.length; i++) {
-				settings[matches[i][1]] = matches[i][2];
-			}
-			if (callback) {
-				callback(settings);
-			}
-		}
+// function parsePreprocessor(file, settings = [], callback) {
+// 	if (loadingfile) {
+// 		return;
+// 	}
+// 	document.getElementById('reloading').style.display = "block";
+// 	const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
+// 	var txtFile = new XMLHttpRequest();
+// 	txtFile.open("GET", file, true);
+// 	txtFile.onreadystatechange = function () {
+// 		if (txtFile.readyState === 4 && txtFile.status === 200) {  // Makes sure it's found the file.
+// 			allText = txtFile.responseText;
+// 			const matches = [...allText.matchAll(defineregex)];
+// 			for (var i = 0; i < matches.length; i++) {
+// 				settings[matches[i][1]] = matches[i][2];
+// 			}
+// 			if (callback) {
+// 				callback(settings);
+// 			}
+// 		}
 
-	}
-	txtFile.onerror = function () {
-	}
-	txtFile.send(null);
-}
-
-function getScope(node = null, final = true) {
-	if (!node) {
-		return null;
-	}
-
-	var val;
-	var scope = angular.element(node).scope();
-	var notempty = node.classList.contains('ng-not-empty');
-
-	if (node.hasAttribute('model-scope-name')) {
-		var arr = node.getAttribute('model-scope-name').split('.');
-		switch (arr.length) {
-			case 1:
-				val = (notempty) ? scope[arr[0]] : null;
-				break;
-			case 2:
-				val = (notempty) ? scope[arr[0]][arr[1]] : null;
-				break;
-			case 3:
-				val = (notempty) ? scope[arr[0]][arr[1]][arr[2]] : null;
-				break;
-			case 4:
-				val = (notempty) ? scope[arr[0]][arr[1]][arr[2]][arr[3]] : null;
-				break;
-			default:
-				val = scope[node.id];
-				break;
-
-		}
-	}
-	else {
-		val = (notempty) ? scope[node.id] : null;
-	}
-
-	return (final && (typeof val !== 'object')) ? val : null;
-}
-
-function updateScope(node = null, val = null) {
-	if (!node) {
-		return;
-	}
-
-	var v;
-	var scope = angular.element(node).scope();
-
-	switch (node.getAttribute('var-type')) {
-		case 'int':
-			v = (val !== null) ? parseInt(val) : null;
-			break;
-		case 'float':
-			v = (val !== null) ? parseFloat(val) : null;
-			break;
-		case 'bool':
-			v = (val !== null) ? (val === 'true') : false;
-		default:
-			v = (val !== null) ? val : null;
-			break;
-	}
-
-	scope.safeApply(function () {
-
-		if (node.hasAttribute('model-scope-name')) {
-			var arr = node.getAttribute('model-scope-name').split('.');
-
-			if (arr.length > 0 && !scope[arr[0]]) {
-				scope[arr[0]] = (arr.length == 1) ? v : {};
-			}
-			else if (arr.length == 1) {
-				scope[arr[0]] = (arr.length == 1) ? v : {};
-			}
-
-			if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
-				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-			}
-			else if (arr.length == 2) {
-				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-			}
-
-			if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
-				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-			}
-			else if (arr.length == 3) {
-				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-			}
-
-			if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
-				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-			}
-			else if (arr.length == 4) {
-				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-			}
-		}
-		else {
-			scope[node.id] = v;
-		}
-
-		// try {
-		// 	scope.$apply();
-		// }
-		// catch (error) {
-		// }
-		// console.log('apply in progress var:' + node.id);
-	});
-}
-
-function updateFields(settings = [], loadedevent = null) {
-	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
-	document.getElementById('reloading').style.display = "block";
-	for (var s in settings) {
-		if (settings.hasOwnProperty(s)) {
-			var node = document.querySelector("#" + s);
-			if (node) {
-				switch (node.type) {
-					case 'range':
-						updateScope(node, settings[s]);
-						break;
-					case 'checkbox':
-						updateScope(node, (settings[s]) ? settings[s] : true);
-						break;
-					case 'select-one':
-						updateScope(node, settings[s]);
-						break;
-					default:
-						updateScope(node, settings[s]);
-						break;
-				}
-			}
-		}
-	}
-
-	angular.element(document.getElementById("uCNCapp")).scope().definedPins();
-
-	document.getElementById('reloading').style.display = "none";
-	if (loadedevent) {
-		document.dispatchEvent(loadedevent);
-	}
-}
-
-function resetBoardPins() {
-	const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT', 'BAUDRATE', 'S_CURVE_ACCELERATION_LEVEL'];
-
-	document.querySelectorAll('[config-file="boardmap"]').forEach((e, i, p) => {
-		if (!excludeids.includes(e.id)) {
-			updateScope(e, null);
-		}
-	});
-}
-
-function updateHAL(scope = null) {
-	document.getElementById('loadingtext').innerText = "Fetching HAL...";
-	document.getElementById('reloading').style.display = "block";
-	var settings = [];
-	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
-	var hal = coreurl + "/uCNC/cnc_hal_config.h";
-
-	parsePreprocessor(hal, settings, function (newsettings) {
-		updateFields(newsettings, halloaded);
-		if (scope) {
-			scope.$apply();
-		}
-	});
-}
+// 	}
+// 	txtFile.onerror = function () {
+// 	}
+// 	txtFile.send(null);
+// }
 
 
-function updateTool(scope = null, tool = null) {
-	document.getElementById('loadingtext').innerText = "Fetching tools...";
-	document.getElementById('reloading').style.display = "block";
-	var settings = [];
-	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
+// function updateFields(settings = [], loadedevent = null) {
+// 	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+// 	document.getElementById('reloading').style.display = "block";
+// 	for (var s in settings) {
+// 		if (settings.hasOwnProperty(s)) {
+// 			var node = document.querySelector("#" + s);
+// 			if (node) {
+// 				switch (node.type) {
+// 					case 'range':
+// 						$scope.updateScope(node, settings[s]);
+// 						break;
+// 					case 'checkbox':
+// 						$scope.updateScope(node, (settings[s]) ? settings[s] : true);
+// 						break;
+// 					case 'select-one':
+// 						$scope.updateScope(node, settings[s]);
+// 						break;
+// 					default:
+// 						$scope.updateScope(node, settings[s]);
+// 						break;
+// 				}
+// 			}
+// 		}
+// 	}
 
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
-	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
+// 	angular.element(document.getElementById("uCNCapp")).scope().definedPins();
 
-	if (!tool) {
-		document.getElementById('reloading').style.display = "none";
-		return;
-	}
+// 	document.getElementById('reloading').style.display = "none";
+// 	if (loadedevent) {
+// 		document.dispatchEvent(loadedevent);
+// 	}
+// }
 
-	parsePreprocessor(tool, settings, function (newsettings) {
-		updateFields(newsettings, toolloaded);
-		if (scope) {
-			scope.$apply();
-		}
-	});
-}
+// function resetBoardPins() {
+// 	var scope = angular.element(document.getElementById("uCNCapp")).scope();
+// 	scope.BOARDMAP = {};
+// }
 
-function updateBoardmap(scope = null) {
-	var settings = [];
-	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
+// function updateHAL(scope = null) {
+// 	document.getElementById('loadingtext').innerText = "Fetching HAL...";
+// 	document.getElementById('reloading').style.display = "block";
+// 	var settings = [];
+// 	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
+// 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
+// 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
-	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
+// 	parsePreprocessor(hal, settings, function (newsettings) {
+// 		updateFields(newsettings, halloaded);
+// 		if (scope) {
+// 			scope.$apply();
+// 		}
+// 	});
+// }
 
-	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
 
-	if (!scope) {
-		document.getElementById('reloading').style.display = "none";
-		return;
-	}
+// function updateTool(scope = null, tool = null) {
+// 	document.getElementById('loadingtext').innerText = "Fetching tools...";
+// 	document.getElementById('reloading').style.display = "block";
+// 	var settings = [];
+// 	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
 
-	if (scope.MCU === scope.PREV_MCU && scope.BOARD === scope.PREV_BOARD) {
-		document.getElementById('reloading').style.display = "none";
-		return;
-	}
+// 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
+// 	var tool = coreurl + "/uCNC/src/hal/tools/tools/" + tool + ".c";
 
-	scope.PREV_MCU = scope.MCU;
-	scope.PREV_BOARD = scope.BOARD;
+// 	if (!tool) {
+// 		document.getElementById('reloading').style.display = "none";
+// 		return;
+// 	}
 
-	resetBoardPins();
+// 	parsePreprocessor(tool, settings, function (newsettings) {
+// 		updateFields(newsettings, toolloaded);
+// 		if (scope) {
+// 			scope.$apply();
+// 		}
+// 	});
+// }
 
-	switch (scope.MCU) {
-		case 'MCU_AVR':
-			mcuurl = mcuurl + "avr/mcumap_avr.h";
-			break;
-		case 'MCU_STM32F1X':
-			mcuurl = mcuurl + "stm32f1x/mcumap_stm32f1x.h";
-			break;
-		case 'MCU_STM32F4X':
-			mcuurl = mcuurl + "stm32f4x/mcumap_stm32f4x.h";
-			break;
-		case 'MCU_SAMD21':
-			mcuurl = mcuurl + "samd21/mcumap_samd21.h";
-			break;
-		case 'MCU_LPC176X':
-			mcuurl = mcuurl + "lpc176x/mcumap_lpc176x.h";
-			break;
-		case 'MCU_ESP8266':
-			mcuurl = mcuurl + "esp8266/mcumap_esp8266.h";
-			break;
-		case 'MCU_ESP32':
-			mcuurl = mcuurl + "esp32/mcumap_esp32.h";
-			break;
-		case 'MCU_RP2040':
-			mcuurl = mcuurl + "rp2040/mcumap_rp2040.h";
-			break;
-		default:
-			document.getElementById('reloading').style.display = "none";
-			return;
-	}
+// function updateBoardmap(scope = null) {
+// 	var settings = [];
+// 	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
 
-	parsePreprocessor(mcuurl, settings, function (newsettings) {
-		document.getElementById('loadingtext').innerText = "Fetching board...";
-		document.getElementById('reloading').style.display = "block";
-		settings = newsettings;
-		var boardurl = coreurl + "/uCNC/src/hal/boards/";
-		switch (scope.BOARD) {
-			case 'BOARD_UNO':
-				boardurl = boardurl + "avr/boardmap_uno.h";
-				break;
-			case 'BOARD_MKS_DLC':
-				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_X_CONTROLLER':
-				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_UNO_SHIELD_V3':
-				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_RAMBO14':
-				boardurl = boardurl + "avr/boardmap_rambo14.h";
-				break;
-			case 'BOARD_MKS_GEN_L_V1':
-				parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_RAMPS14':
-				boardurl = boardurl + "avr/boardmap_ramps14.h";
-				break;
-			case 'BOARD_BLUEPILL':
-				boardurl = boardurl + "stm32/boardmap_bluepill.h";
-				break;
-			case 'BOARD_BLACKPILL':
-				boardurl = boardurl + "stm32/boardmap_blackpill.h";
-				break;
-			case 'BOARD_MKS_ROBIN_NANO_V1_2':
-				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
-				break;
-			case 'BOARD_SKR_PRO_V1_2':
-				boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
-				break;
-			case 'BOARD_NUCLEO_F411RE_SHIELD_V3':
-				boardurl = boardurl + "stm32/boardmap_nucleo_f411re_shield_v3.h";
-				break;
-			case 'BOARD_MZERO':
-				boardurl = boardurl + "samd21/boardmap_mzero.h";
-				break;
-			case 'BOARD_ZERO':
-				parsePreprocessor(boardurl + "samd21/boardmap_mzero.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "samd21/boardmap_zero.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_RE_ARM':
-				boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
-				break;
-			case 'BOARD_MKS_BASE13':
-				boardurl = boardurl + "lpc176x/boardmap_mks_base13.h";
-				break;
-			case 'BOARD_SKR_V14_TURBO':
-				boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
-				break;
-			case 'BOARD_WEMOS_D1':
-				boardurl = boardurl + "esp8266/boardmap_wemos_d1.h";
-				break;
-			case 'BOARD_WEMOS_D1_R32':
-				boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
-				break;
-			case 'BOARD_MKS_TINYBEE':
-				boardurl = boardurl + "esp32/boardmap_mks_tinybee.h";
-				break;
-			case 'BOARD_MKS_DLC32':
-				boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
-				break;
-			case 'BOARD_RPI_PICO':
-				boardurl = boardurl + "rp2040/boardmap_rpi_pico.h";
-				break;
-			case 'BOARD_RPI_PICO_W':
-				parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico_w.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_CUSTOM':
-			default:
-				updateFields(newsettings, boardloaded);
-				if (scope) {
-					scope.$apply();
-				}
-				document.getElementById('reloading').style.display = "none";
-				return;
-		}
+// 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 
-		parsePreprocessor(boardurl, settings, function (newsettings) {
-			updateFields(newsettings, boardloaded);
-			if (scope) {
-				scope.$apply();
-			}
-		});
-	});
-}
+// 	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
+
+// 	if (!scope) {
+// 		document.getElementById('reloading').style.display = "none";
+// 		return;
+// 	}
+
+// 	if (scope.MCU === scope.PREV_MCU && scope.BOARD === scope.PREV_BOARD) {
+// 		document.getElementById('reloading').style.display = "none";
+// 		return;
+// 	}
+
+// 	scope.PREV_MCU = scope.MCU;
+// 	scope.PREV_BOARD = scope.BOARD;
+
+// 	resetBoardPins();
+
+// 	switch (scope.MCU) {
+// 		case 'MCU_AVR':
+// 			mcuurl = mcuurl + "avr/mcumap_avr.h";
+// 			break;
+// 		case 'MCU_STM32F1X':
+// 			mcuurl = mcuurl + "stm32f1x/mcumap_stm32f1x.h";
+// 			break;
+// 		case 'MCU_STM32F4X':
+// 			mcuurl = mcuurl + "stm32f4x/mcumap_stm32f4x.h";
+// 			break;
+// 		case 'MCU_SAMD21':
+// 			mcuurl = mcuurl + "samd21/mcumap_samd21.h";
+// 			break;
+// 		case 'MCU_LPC176X':
+// 			mcuurl = mcuurl + "lpc176x/mcumap_lpc176x.h";
+// 			break;
+// 		case 'MCU_ESP8266':
+// 			mcuurl = mcuurl + "esp8266/mcumap_esp8266.h";
+// 			break;
+// 		case 'MCU_ESP32':
+// 			mcuurl = mcuurl + "esp32/mcumap_esp32.h";
+// 			break;
+// 		case 'MCU_RP2040':
+// 			mcuurl = mcuurl + "rp2040/mcumap_rp2040.h";
+// 			break;
+// 		default:
+// 			document.getElementById('reloading').style.display = "none";
+// 			return;
+// 	}
+
+// 	debugger;
+// 	settings = $scope.parseRemoteFile(mcuurl, settings);
+
+// 	parsePreprocessor(mcuurl, settings, function (newsettings) {
+// 		document.getElementById('loadingtext').innerText = "Fetching board...";
+// 		document.getElementById('reloading').style.display = "block";
+// 		settings = newsettings;
+// 		var boardurl = coreurl + "/uCNC/src/hal/boards/";
+// 		switch (scope.BOARD) {
+// 			case 'BOARD_UNO':
+// 				boardurl = boardurl + "avr/boardmap_uno.h";
+// 				break;
+// 			case 'BOARD_MKS_DLC':
+// 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+// 					settings = newsettings;
+// 					parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
+// 						updateFields(newsettings, boardloaded);
+// 						if (scope) {
+// 							scope.$apply();
+// 						}
+// 					});
+// 				});
+// 				return;
+// 			case 'BOARD_X_CONTROLLER':
+// 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+// 					settings = newsettings;
+// 					parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
+// 						updateFields(newsettings, boardloaded);
+// 						if (scope) {
+// 							scope.$apply();
+// 						}
+// 					});
+// 				});
+// 				return;
+// 			case 'BOARD_UNO_SHIELD_V3':
+// 				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+// 					settings = newsettings;
+// 					parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
+// 						updateFields(newsettings, boardloaded);
+// 						if (scope) {
+// 							scope.$apply();
+// 						}
+// 					});
+// 				});
+// 				return;
+// 			case 'BOARD_RAMBO14':
+// 				boardurl = boardurl + "avr/boardmap_rambo14.h";
+// 				break;
+// 			case 'BOARD_MKS_GEN_L_V1':
+// 				parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
+// 					settings = newsettings;
+// 					parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
+// 						updateFields(newsettings, boardloaded);
+// 						if (scope) {
+// 							scope.$apply();
+// 						}
+// 					});
+// 				});
+// 				return;
+// 			case 'BOARD_RAMPS14':
+// 				boardurl = boardurl + "avr/boardmap_ramps14.h";
+// 				break;
+// 			case 'BOARD_BLUEPILL':
+// 				boardurl = boardurl + "stm32/boardmap_bluepill.h";
+// 				break;
+// 			case 'BOARD_BLACKPILL':
+// 				boardurl = boardurl + "stm32/boardmap_blackpill.h";
+// 				break;
+// 			case 'BOARD_MKS_ROBIN_NANO_V1_2':
+// 				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
+// 				break;
+// 			case 'BOARD_SKR_PRO_V1_2':
+// 				boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
+// 				break;
+// 			case 'BOARD_NUCLEO_F411RE_SHIELD_V3':
+// 				boardurl = boardurl + "stm32/boardmap_nucleo_f411re_shield_v3.h";
+// 				break;
+// 			case 'BOARD_MZERO':
+// 				boardurl = boardurl + "samd21/boardmap_mzero.h";
+// 				break;
+// 			case 'BOARD_ZERO':
+// 				parsePreprocessor(boardurl + "samd21/boardmap_mzero.h", settings, function (newsettings) {
+// 					settings = newsettings;
+// 					parsePreprocessor(boardurl + "samd21/boardmap_zero.h", settings, function (newsettings) {
+// 						updateFields(newsettings, boardloaded);
+// 						if (scope) {
+// 							scope.$apply();
+// 						}
+// 					});
+// 				});
+// 				return;
+// 			case 'BOARD_RE_ARM':
+// 				boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
+// 				break;
+// 			case 'BOARD_MKS_BASE13':
+// 				boardurl = boardurl + "lpc176x/boardmap_mks_base13.h";
+// 				break;
+// 			case 'BOARD_SKR_V14_TURBO':
+// 				boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
+// 				break;
+// 			case 'BOARD_WEMOS_D1':
+// 				boardurl = boardurl + "esp8266/boardmap_wemos_d1.h";
+// 				break;
+// 			case 'BOARD_WEMOS_D1_R32':
+// 				boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
+// 				break;
+// 			case 'BOARD_MKS_TINYBEE':
+// 				boardurl = boardurl + "esp32/boardmap_mks_tinybee.h";
+// 				break;
+// 			case 'BOARD_MKS_DLC32':
+// 				boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
+// 				break;
+// 			case 'BOARD_RPI_PICO':
+// 				boardurl = boardurl + "rp2040/boardmap_rpi_pico.h";
+// 				break;
+// 			case 'BOARD_RPI_PICO_W':
+// 				parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico.h", settings, function (newsettings) {
+// 					settings = newsettings;
+// 					parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico_w.h", settings, function (newsettings) {
+// 						updateFields(newsettings, boardloaded);
+// 						if (scope) {
+// 							scope.$apply();
+// 						}
+// 					});
+// 				});
+// 				return;
+// 			case 'BOARD_CUSTOM':
+// 			default:
+// 				updateFields(newsettings, boardloaded);
+// 				if (scope) {
+// 					scope.$apply();
+// 				}
+// 				document.getElementById('reloading').style.display = "none";
+// 				return;
+// 		}
+
+// 		parsePreprocessor(boardurl, settings, function (newsettings) {
+// 			updateFields(newsettings, boardloaded);
+// 			if (scope) {
+// 				scope.$apply();
+// 			}
+// 		});
+// 	});
+// }
 
 var app = angular.module("uCNCapp", []);
-var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
+var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$http', '$q', function ($scope, $rootScope, $http, $q) {
 
 	$scope.JSON_BUILD = null;
-
+	$scope.VERSION = 99999;
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.11', tag: 10811, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.11.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -465,14 +359,14 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	]
 
 	$scope.MCUS = [
-		{ id: 'MCU_AVR', name: 'Atmel AVR' },
-		{ id: 'MCU_SAMD21', name: 'Atmel SAMD21' },
-		{ id: 'MCU_STM32F1X', name: 'STM32F1x' },
-		{ id: 'MCU_STM32F4X', name: 'STM32F4X' },
-		{ id: 'MCU_LPC176X', name: 'LPC176X' },
-		{ id: 'MCU_ESP8266', name: 'ESP8266' },
-		{ id: 'MCU_ESP32', name: 'ESP32' },
-		{ id: 'MCU_RP2040', name: 'RPi RP2040' }
+		{ id: 'MCU_AVR', name: 'Atmel AVR', extras: '' },
+		{ id: 'MCU_SAMD21', name: 'Atmel SAMD21', extras: '' },
+		{ id: 'MCU_STM32F1X', name: 'STM32F1x', extras: '' },
+		{ id: 'MCU_STM32F4X', name: 'STM32F4X', extras: '' },
+		{ id: 'MCU_LPC176X', name: 'LPC176X', extras: '' },
+		{ id: 'MCU_ESP8266', name: 'ESP8266', extras: 'WIFI' },
+		{ id: 'MCU_ESP32', name: 'ESP32', extras: 'WIFI,BTH' },
+		{ id: 'MCU_RP2040', name: 'RPi RP2040', extras: 'WIFI,BTH' }
 	];
 	$scope.KINEMATICS = [
 		{ id: 'KINEMATIC_CARTESIAN', name: 'Cartesian', version: 0 },
@@ -969,7 +863,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		6
 	];
 
-	$scope.DYNAMIC = {};
+	$scope.BOARDMAP = {};
+	$scope.HAL = {};
 
 	$scope.TOOL_OPTIONS = [
 		{ id: 'spindle_pwm', name: 'Spindle PWM' },
@@ -1085,6 +980,340 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.DEFINED_PINS = [];
 	$scope.PREBUILD_CONFIGS = null;
 
+	$scope.parseRemoteFile = async function (url = '', settings = []) {
+		var deferred = $q.defer();
+		const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
+		$http.get(url).then(function (response) {
+			deferred.resolve(response.data);
+		}).catch(function (error) {
+			deferred.reject(error);
+		});
+
+		return await deferred.promise.then(function (data) {
+			allText = data;
+			const matches = [...allText.matchAll(defineregex)];
+			for (var i = 0; i < matches.length; i++) {
+				settings[matches[i][1]] = matches[i][2];
+			}
+			return settings;
+		}
+		).catch(function (error) {
+			console.log(error);
+			return settings;
+		});
+	}
+
+	$scope.getScope = function (node = null, final = true) {
+		if (!node) {
+			return null;
+		}
+
+		var val;
+		var scope = $scope;//angular.element(node).scope();
+		var notempty = node.classList.contains('ng-not-empty');
+
+		if (node.hasAttribute('model-scope-name')) {
+			var arr = node.getAttribute('model-scope-name').split('.');
+			switch (arr.length) {
+				case 1:
+					val = (notempty) ? scope[arr[0]] : null;
+					break;
+				case 2:
+					val = (notempty) ? scope[arr[0]][arr[1]] : null;
+					break;
+				case 3:
+					val = (notempty) ? scope[arr[0]][arr[1]][arr[2]] : null;
+					break;
+				case 4:
+					val = (notempty) ? scope[arr[0]][arr[1]][arr[2]][arr[3]] : null;
+					break;
+				default:
+					val = scope[node.id];
+					break;
+
+			}
+		}
+		else {
+			val = (notempty) ? scope[node.id] : null;
+		}
+
+		return (final && (typeof val !== 'object')) ? val : null;
+	}
+
+	$scope.updateScope = function (node = null, val = null) {
+		if (!node) {
+			return;
+		}
+
+		var v;
+		var scope = $scope;//angular.element(node).scope();
+
+		switch (node.getAttribute('var-type')) {
+			case 'int':
+				v = (val != null) ? parseInt(val) : null;
+				break;
+			case 'float':
+				v = (val != null) ? parseFloat(val) : null;
+				break;
+			case 'bool':
+				v = (val != null) ? (val === 'true') : false;
+			default:
+				v = (val != null) ? val : null;
+				break;
+		}
+
+		// scope.safeApply(function () {
+
+		if (node.hasAttribute('model-scope-name')) {
+			var arr = node.getAttribute('model-scope-name').split('.');
+
+			if (arr.length > 0 && !scope[arr[0]]) {
+				scope[arr[0]] = (arr.length == 1) ? v : {};
+			}
+			else if (arr.length == 1) {
+				scope[arr[0]] = (arr.length == 1) ? v : {};
+			}
+
+			if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
+				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+			}
+			else if (arr.length == 2) {
+				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+			}
+
+			if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
+				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+			}
+			else if (arr.length == 3) {
+				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+			}
+
+			if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+			}
+			else if (arr.length == 4) {
+				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+			}
+		}
+		else {
+			scope[node.id] = v;
+		}
+
+		// });
+	}
+
+	$scope.updateFields = function (settings = []) {
+		document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+		document.getElementById('reloading').style.display = "block";
+		for (var s in settings) {
+			if (settings.hasOwnProperty(s)) {
+				var node = document.querySelector("#" + s);
+				if (node) {
+					switch (node.type) {
+						case 'range':
+							$scope.updateScope(node, settings[s]);
+							break;
+						case 'checkbox':
+							$scope.updateScope(node, (settings[s]) ? settings[s] : true);
+							break;
+						case 'select-one':
+							$scope.updateScope(node, settings[s]);
+							break;
+						default:
+							$scope.updateScope(node, settings[s]);
+							break;
+					}
+				}
+			}
+		}
+
+		$scope.definedPins();
+
+		document.getElementById('reloading').style.display = "none";
+	}
+
+	$scope.updateTool = async function (tool = null) {
+		
+		var settings = [];
+		var version_name = $scope.VERSIONS.filter(obj => { return obj.tag === $scope.VERSION; })[0].id;
+		var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
+		var toolurl = coreurl + "/uCNC/src/hal/tools/tools/" + $scope.getScope(tool) + ".c";
+
+		if (!tool) {
+			
+			return;
+		}
+		document.getElementById('loadingtext').innerText = "Fetching tools...";
+		document.getElementById('reloading').style.display = "block";
+		settings = await $scope.parseRemoteFile(toolurl, settings);
+		document.getElementById('reloading').style.display = "none";
+		$scope.updateFields();
+	}
+
+	$scope.updateHAL = async function () {
+		var settings = [];
+		var version_name = $scope.VERSIONS.filter(obj => { return obj.tag === $scope.VERSION; })[0].id;
+		var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
+		var hal = coreurl + "/uCNC/cnc_hal_config.h";
+
+		document.getElementById('loadingtext').innerText = "Fetching HAL...";
+		document.getElementById('reloading').style.display = "block";
+		settings = await $scope.parseRemoteFile(hal, settings);
+		document.getElementById('reloading').style.display = "none";
+
+		$scope.updateFields(settings);
+	}
+
+	$scope.updateBoardmap = async function () {
+		var settings = [];
+		var version_name = $scope.VERSIONS.filter(obj => { return obj.tag === $scope.VERSION; })[0].id;
+
+		var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
+
+		var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
+
+		if ($scope.MCU === $scope.PREV_MCU && $scope.BOARD === $scope.PREV_BOARD) {
+			document.getElementById('reloading').style.display = "none";
+			return;
+		}
+
+		$scope.PREV_MCU = $scope.MCU;
+		$scope.PREV_BOARD = $scope.BOARD;
+
+		$scope.BOARDMAP = {};
+
+		switch ($scope.MCU) {
+			case 'MCU_AVR':
+				mcuurl = mcuurl + "avr/mcumap_avr.h";
+				break;
+			case 'MCU_STM32F1X':
+				mcuurl = mcuurl + "stm32f1x/mcumap_stm32f1x.h";
+				break;
+			case 'MCU_STM32F4X':
+				mcuurl = mcuurl + "stm32f4x/mcumap_stm32f4x.h";
+				break;
+			case 'MCU_SAMD21':
+				mcuurl = mcuurl + "samd21/mcumap_samd21.h";
+				break;
+			case 'MCU_LPC176X':
+				mcuurl = mcuurl + "lpc176x/mcumap_lpc176x.h";
+				break;
+			case 'MCU_ESP8266':
+				mcuurl = mcuurl + "esp8266/mcumap_esp8266.h";
+				break;
+			case 'MCU_ESP32':
+				mcuurl = mcuurl + "esp32/mcumap_esp32.h";
+				break;
+			case 'MCU_RP2040':
+				mcuurl = mcuurl + "rp2040/mcumap_rp2040.h";
+				break;
+			default:
+				document.getElementById('reloading').style.display = "none";
+				return;
+		}
+
+		document.getElementById('loadingtext').innerText = "Fetching MCU...this may take a while";
+		document.getElementById('reloading').style.display = "block";
+		settings = await $scope.parseRemoteFile(mcuurl, settings);
+
+		var boardurl = coreurl + "/uCNC/src/hal/boards/";
+		switch ($scope.BOARD) {
+			case 'BOARD_UNO':
+				boardurl = boardurl + "avr/boardmap_uno.h";
+				break;
+			case 'BOARD_MKS_DLC':
+				settings = await $scope.parseRemoteFile(boardurl + "avr/boardmap_uno.h", settings);
+				boardurl = boardurl + "avr/boardmap_mks_dlc.h";
+				break;
+			case 'BOARD_X_CONTROLLER':
+				settings = await $scope.parseRemoteFile(boardurl + "avr/boardmap_uno.h", settings);
+				boardurl = boardurl + "avr/boardmap_x_controller.h";
+				break;
+			case 'BOARD_UNO_SHIELD_V3':
+				settings = await $scope.parseRemoteFile(boardurl + "avr/boardmap_uno.h", settings);
+				boardurl = boardurl + "avr/boardmap_uno_shield_v3.h";
+				break;
+			case 'BOARD_RAMBO14':
+				boardurl = boardurl + "avr/boardmap_rambo14.h";
+				break;
+			case 'BOARD_MKS_GEN_L_V1':
+				settings = await $scope.parseRemoteFile(boardurl + "avr/boardmap_rambo14.h", settings);
+				boardurl = boardurl + "avr/boardmap_mks_gen_l_v1.h";
+				break;
+			case 'BOARD_RAMPS14':
+				boardurl = boardurl + "avr/boardmap_ramps14.h";
+				break;
+			case 'BOARD_BLUEPILL':
+				boardurl = boardurl + "stm32/boardmap_bluepill.h";
+				break;
+			case 'BOARD_BLACKPILL':
+				boardurl = boardurl + "stm32/boardmap_blackpill.h";
+				break;
+			case 'BOARD_MKS_ROBIN_NANO_V1_2':
+				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
+				break;
+			case 'BOARD_SKR_PRO_V1_2':
+				boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
+				break;
+			case 'BOARD_NUCLEO_F411RE_SHIELD_V3':
+				boardurl = boardurl + "stm32/boardmap_nucleo_f411re_shield_v3.h";
+				break;
+			case 'BOARD_MZERO':
+				boardurl = boardurl + "samd21/boardmap_mzero.h";
+				break;
+			case 'BOARD_ZERO':
+				settings = await $scope.parseRemoteFile(boardurl + "samd21/boardmap_mzero.h", settings);
+				boardurl = boardurl + "samd21/boardmap_zero.h";
+				break;
+			case 'BOARD_RE_ARM':
+				boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
+				break;
+			case 'BOARD_MKS_BASE13':
+				boardurl = boardurl + "lpc176x/boardmap_mks_base13.h";
+				break;
+			case 'BOARD_SKR_V14_TURBO':
+				boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
+				break;
+			case 'BOARD_WEMOS_D1':
+				boardurl = boardurl + "esp8266/boardmap_wemos_d1.h";
+				break;
+			case 'BOARD_WEMOS_D1_R32':
+				boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
+				break;
+			case 'BOARD_MKS_TINYBEE':
+				boardurl = boardurl + "esp32/boardmap_mks_tinybee.h";
+				break;
+			case 'BOARD_MKS_DLC32':
+				boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
+				break;
+			case 'BOARD_RPI_PICO':
+				boardurl = boardurl + "rp2040/boardmap_rpi_pico.h";
+				break;
+			case 'BOARD_RPI_PICO_W':
+				settings = await $scope.parseRemoteFile(boardurl + "rp2040/boardmap_rpi_pico.h", settings);
+				boardurl = boardurl + "rp2040/boardmap_rpi_pico_w.h";
+				break;
+			case 'BOARD_CUSTOM':
+			default:
+				boardurl = null;
+				break;
+		}
+
+		if (boardurl) {
+			document.getElementById('loadingtext').innerText = "Fetching Board...this may take a while";
+			document.getElementById('reloading').style.display = "block";
+			settings = await $scope.parseRemoteFile(boardurl, settings);
+		}
+
+		$scope.updateFields(settings);
+		$scope.updateHAL();
+	}
+
+	$scope.init = function () {
+		// Your initialization code here
+		$scope.updateBoardmap();
+	};
+
 	$scope.safeApply = function (fn) {
 		var phase = this.$root.$$phase;
 		if (phase == '$apply' || phase == '$digest') {
@@ -1139,31 +1368,25 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	}
 
 	$scope.mcuChanged = function () {
-		document.getElementById('loadingtext').innerText = "Fetching processor...this may take a while";
-		document.getElementById('reloading').style.display = "block";
-		setTimeout(function () {
-			updateScope(document.getElementById('BOARD'), null);
-			updateBoardmap($scope);
-		}, 50);
+		$scope.BOARD = '';
+		$scope.updateBoardmap();
 	};
 
 	$scope.boardChanged = function () {
-		document.getElementById('loadingtext').innerText = "Fetching processor...this may take a while";
-		document.getElementById('reloading').style.display = "block";
-		setTimeout(function () {
-			updateBoardmap($scope);
-		}, 50);
+		$scope.updateBoardmap();
 	};
 
 	$scope.tmcChanged = function () {
-		updateHAL($scope);
+		$scope.updateHAL($scope);
 	};
 
 	$scope.definedPins = function () {
+		document.getElementById('loadingtext').innerText = "Updating pins...";
+		document.getElementById('reloading').style.display = "block";
 		var pins = $scope.UCNCPINS.map(x => x.pin);
 		$scope.DEFINED_PINS = [];
 		pins.forEach(pin => {
-			if ($scope.DYNAMIC['PINS'] !== null && $scope.DYNAMIC['PINS'][pin] !== null && ($scope.DYNAMIC['PINS'][pin]['BIT'] !== null || $scope.DYNAMIC['PINS'][pin]['IO_OFFSET'] !== null)) {
+			if ($scope.BOARDMAP && $scope.BOARDMAP['PINS'] != null && $scope.BOARDMAP['PINS'][pin] != null && ($scope.BOARDMAP['PINS'][pin]['BIT'] != null || $scope.BOARDMAP['PINS'][pin]['IO_OFFSET'] != null)) {
 				switch ($scope.MCU) {
 					case 'MCU_ESP8266':
 					case 'MCU_ESP32':
@@ -1171,7 +1394,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 						$scope.DEFINED_PINS.push(pin);
 						break;
 					default:
-						if ($scope.DYNAMIC['PINS'][pin]['PORT'] !== null) {
+						if ($scope.BOARDMAP['PINS'][pin]['PORT'] != null) {
 							$scope.DEFINED_PINS.push(pin);
 						}
 						break;
@@ -1179,24 +1402,38 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 			}
 		});
-
+		document.getElementById('reloading').style.display = "none";
 	};
+
+	$scope.assertField = function (array = null, ref = null, matcher = '', field = '', needle = '') {
+		if (!array || !ref) {
+			return false;
+		}
+
+		for (var i = 0; i < array.length; i++) {
+			if (array[i][matcher] === ref) {
+				return array[i][field].includes(needle);
+			}
+		}
+	}
+
 
 	$scope.toolChanged = function (tool, contents) {
 
-		if (contents['JSON_BUILD'] !== null) {
+		if (contents['JSON_BUILD'] != null) {
 			var build = JSON.parse(contents['JSON_BUILD']);
 			for (const [k, v] of Object.entries(build)) {
-				updateScope(document.getElementById(k), v);
+				$scope.updateScope(document.getElementById(k), v);
 			}
 			$scope.definedPins();
 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-				updateScope(e, getScope(e).toString());
+				$scope.updateScope(e, getScope(e).toString());
 			});
 			$scope.JSON_BUILD = null;
 		}
 		else {
-			updateTool($scope, getScope(document.querySelector('#TOOL' + tool.x)));
+			debugger;
+			$scope.updateTool(document.querySelector('#TOOL' + tool.x));
 		}
 	};
 
@@ -1230,7 +1467,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		});
 
 
-		updateScope(input, mask);
+		$scope.updateScope(input, mask);
 	};
 
 	$scope.checkGroupInit = function (node, mask, val) {
@@ -1278,13 +1515,11 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			var val = model.val();
 			var mask = parseInt(val);
 			if (input && mask) {
-				setTimeout(function () {
-					document.querySelectorAll('[checkgroup="' + e.id + '"]').forEach((e, i, p) => {
-						if (mask & parseInt(e.getAttribute('ng-true-value'))) {
-							e.checked = true;
-						}
-					});
-				}.bind(e), 500);
+				document.querySelectorAll('[checkgroup="' + e.id + '"]').forEach((e, i, p) => {
+					if (mask & parseInt(e.getAttribute('ng-true-value'))) {
+						e.checked = true;
+					}
+				});
 			}
 		});
 	};
@@ -1300,24 +1535,22 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 				var build = JSON.parse($scope.JSON_BUILD);
 				loadingfile = true;
 				for (const [k, v] of Object.entries(build)) {
-					updateScope(document.getElementById(k), v);
+					$scope.updateScope(document.getElementById(k), v);
 				}
 				$scope.definedPins();
 				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-					updateScope(e, getScope(e).toString());
+					$scope.updateScope(e, getScope(e).toString());
 				});
 
-				setTimeout(function () {
-					for (const [k, v] of Object.entries(build)) {
-						updateScope(document.getElementById(k), v);
-					}
-					$scope.definedPins();
-					document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-						updateScope(e, getScope(e).toString());
-					});
-					loadingfile = false;
-					document.getElementById('reloading').style.display = "none";
-				}, 5000);
+				for (const [k, v] of Object.entries(build)) {
+					$scope.updateScope(document.getElementById(k), v);
+				}
+				$scope.definedPins();
+				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+					$scope.updateScope(e, getScope(e).toString());
+				});
+				loadingfile = false;
+				document.getElementById('reloading').style.display = "none";
 			}
 		}
 		txtFile.onerror = function () {
@@ -1340,22 +1573,22 @@ var orfilter = app.filter("orTypeFilter", function () {
 	}
 });
 
-ready(function () {
-	var scope = angular.element(document.querySelector('#MCU')).scope();
-	document.addEventListener('boardloaded', function (e) {
-		updateHAL(scope);
-	});
-	scope.boardChanged();
-	scope.checkGroupInit();
+// ready(function () {
+// 	var scope = angular.element(document.querySelector('#MCU')).scope();
+// 	document.addEventListener('boardloaded', function (e) {
+// 		updateHAL(scope);
+// 	});
+// 	scope.boardChanged();
+// 	scope.checkGroupInit();
 
-	// fetch('https://api.github.com/repos/Paciente8159/uCNC-config-builder/contents/pre-configs/').then((resp) => {
-	// 	resp.json().then((data) => {
-	// 		debugger;
-	// 		scope.PREBUILD_CONFIGS = data;
-	// 		scope.$apply();
-	// 	});
-	// });
-});
+// 	// fetch('https://api.github.com/repos/Paciente8159/uCNC-config-builder/contents/pre-configs/').then((resp) => {
+// 	// 	resp.json().then((data) => {
+// 	// 		debugger;
+// 	// 		scope.PREBUILD_CONFIGS = data;
+// 	// 		scope.$apply();
+// 	// 	});
+// 	// });
+// });
 
 function download(filename, text) {
 	var element = document.createElement('a');
@@ -1492,20 +1725,20 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 		var build = JSON.parse(scope.JSON_BUILD);
 		loadingfile = true;
 		for (const [k, v] of Object.entries(build)) {
-			updateScope(document.getElementById(k), v);
+			$scope.updateScope(document.getElementById(k), v);
 		}
 		scope.definedPins();
 		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-			updateScope(e, getScope(e).toString());
+			$scope.updateScope(e, getScope(e).toString());
 		});
 
 		setTimeout(function () {
 			for (const [k, v] of Object.entries(build)) {
-				updateScope(document.getElementById(k), v);
+				$scope.updateScope(document.getElementById(k), v);
 			}
 			scope.definedPins();
 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-				updateScope(e, getScope(e).toString());
+				$scope.updateScope(e, getScope(e).toString());
 			});
 			loadingfile = false;
 			document.getElementById('reloading').style.display = "none";

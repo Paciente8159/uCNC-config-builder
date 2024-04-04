@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 
-<body id="uCNCapp" ng-app="uCNCapp" ng-controller="uCNCcontroller">
+<body id="uCNCapp" ng-app="uCNCapp" ng-controller="uCNCcontroller" ng-init="init()">
 	<header>
 		<!-- place navbar here -->
 		<div class="center-content">
@@ -43,7 +43,7 @@
 			</div>
 			<div class="info alert alert-primary left-align alert-dismissible fade show" role="alert">
 				<h2 style="color:blue">Issues</h2>
-				<p>If you encounter any issue please consider submiting an issue in the Github project page, with an
+				<p>If you encounter any issue please consider <a href="https://github.com/Paciente8159/uCNC-config-builder/issues/new/choose" target="_blank">submiting an issue in the Github project page</a>, with an
 					attached zip with all the override files and the json config file.</p>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
@@ -163,15 +163,15 @@
 
 				<fieldset>
 					<legend>Advanced settings</legend>
-					<div class="form-check form-switch">
+					<div class="form-check form-switch" ng-if="assertField(MCUS,MCU,'id', 'extras', 'WIFI')">
 						<input class="form-check-input" type="checkbox" id="ENABLE_WIFI"
-							ng-model="DYNAMIC['ENABLE_WIFI']" model-scope-name="DYNAMIC.ENABLE_WIFI" config-file="boardmap">
+							ng-model="BOARDMAP['ENABLE_WIFI']" model-scope-name="BOARDMAP.ENABLE_WIFI" config-file="boardmap">
 						<label class="form-check-label" for="ENABLE_WIFI">Enable Wifi (board must support it)</label>
 					</div>
-					<div class="form-check form-switch">
+					<div class="form-check form-switch" ng-if="assertField(MCUS,MCU,'id', 'extras', 'BTH')">
 						<input class="form-check-input" type="checkbox" id="ENABLE_BLUETOOTH"
-							ng-model="DYNAMIC['ENABLE_BLUETOOTH']" model-scope-name="DYNAMIC.ENABLE_BLUETOOTH"
-							config-file="boardmap">
+							ng-model="BOARDMAP['ENABLE_BLUETOOTH']" model-scope-name="BOARDMAP.ENABLE_BLUETOOTH"
+							config-file="boardmap" ng-init="ENABLE_BLUETOOTH=false">
 						<label class="form-check-label" for="ENABLE_BLUETOOTH">Enable Bluetooth (board must support
 							it)</label>
 					</div>
@@ -318,9 +318,9 @@
 					<legend>Special purpose timmers and features</legend>
 					<div class="mb-3">
 						<label for="" class="form-label">The board name printed with $I command? <span
-								ng-bind="DYNAMIC['BOARD_NAME']"></span></label>
+								ng-bind="BOARDMAP['BOARD_NAME']"></span></label>
 						<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME"
-							ng-model="DYNAMIC['BOARD_NAME']" model-scope-name="DYNAMIC.BOARD_NAME"
+							ng-model="BOARDMAP['BOARD_NAME']" model-scope-name="BOARDMAP.BOARD_NAME"
 							aria-describedby="helpId" placeholder="" config-file="boardmap">
 						<small id="helpId" class="form-text text-muted">Name must be between quotation marks
 							(string)</small>
@@ -328,45 +328,45 @@
 					<div class="mb-3" ng-if='MCU=="MCU_AVR" && BOARD=="BOARD_CUSTOM"'>
 						<label for="" class="form-label">In which port are PCINT pins 0 to 7?</label>
 						<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT'
-							ng-model="DYNAMIC['PCINT0_PORT']" model-scope-name="DYNAMIC.PCINT0_PORT"
+							ng-model="BOARDMAP['PCINT0_PORT']" model-scope-name="DYNAMIC.PCINT0_PORT"
 							ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap">
 						</select>
 						<label for="" class="form-label">In which port are PCINT pins 8 to 15?</label>
 						<select class='form-select form-select-sm' name='PCINT1_PORT' id='PCINT1_PORT'
-							ng-model="DYNAMIC['PCINT1_PORT']" model-scope-name="DYNAMIC.PCINT1_PORT"
+							ng-model="BOARDMAP['PCINT1_PORT']" model-scope-name="BOARDMAP.PCINT1_PORT"
 							ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap">
 						</select>
 						<label for="" class="form-label">In which port are PCINT pins 16 to 23?</label>
 						<select class='form-select form-select-sm' name='PCINT2_PORT' id='PCINT2_PORT'
-							ng-model="DYNAMIC['PCINT2_PORT']" model-scope-name="DYNAMIC.PCINT2_PORT"
+							ng-model="BOARDMAP['PCINT2_PORT']" model-scope-name="BOARDMAP.PCINT2_PORT"
 							ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap">
 						</select>
 					</div>
 					<div class="mb-3">
 						<label for="UART_PORT" class="form-label">Which hardware port will be UART_PORT?</label>
 						<select class='form-select form-select-sm' name='UART_PORT' id='UART_PORT'
-							ng-model="DYNAMIC['PORTS']['UART_PORT']" model-scope-name="DYNAMIC.PORTS.UART_PORT"
+							ng-model="BOARDMAP['PORTS']['UART_PORT']" model-scope-name="BOARDMAP.PORTS.UART_PORT"
 							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
 						<label for="UART2_PORT" class="form-label">Which hardware port will be UART2_PORT?</label>
 						<select class='form-select form-select-sm' name='UART2_PORT' id='UART2_PORT'
-							ng-model="DYNAMIC['PORTS']['UART2_PORT']" model-scope-name="DYNAMIC.PORTS.UART2_PORT"
+							ng-model="BOARDMAP['PORTS']['UART2_PORT']" model-scope-name="BOARDMAP.PORTS.UART2_PORT"
 							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
 						<label for="SPI_PORT" class="form-label">Which hardware port will be SPI_PORT?</label>
 						<select class='form-select form-select-sm' name='SPI_PORT' id='SPI_PORT'
-							ng-model="DYNAMIC['PORTS']['SPI_PORT']" model-scope-name="DYNAMIC.PORTS.SPI_PORT"
+							ng-model="BOARDMAP['PORTS']['SPI_PORT']" model-scope-name="BOARDMAP.PORTS.SPI_PORT"
 							ng-options="y.port as y.port for y in UCNCSPI | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
 						<label for="I2C_PORT" class="form-label">Which hardware port will be I2C_PORT?</label>
 						<select class='form-select form-select-sm' name='I2C_PORT' id='I2C_PORT'
-							ng-model="DYNAMIC['PORTS']['I2C_PORT']" model-scope-name="DYNAMIC.PORTS.I2C_PORT"
+							ng-model="BOARDMAP['PORTS']['I2C_PORT']" model-scope-name="BOARDMAP.PORTS.I2C_PORT"
 							ng-options="y.port as y.port for y in UCNCI2C | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
 							<option value=""></option>
@@ -376,7 +376,7 @@
 						<label for="{{x.timer}}_TIMER" class="form-label">Which Timer will be used as
 							{{x.timer}}_TIMER?</label>
 						<select class='form-select form-select-sm' name='{{x.timer}}_TIMER' id='{{x.timer}}_TIMER'
-							ng-model="DYNAMIC['TIMERS'][x.timer]" model-scope-name="DYNAMIC.TIMERS.{{x.timer}}"
+							ng-model="BOARDMAP['TIMERS'][x.timer]" model-scope-name="BOARDMAP.TIMERS.{{x.timer}}"
 							ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}" var-type="int"
 							config-file="boardmap">
 							<option value=""></option>
@@ -403,15 +403,15 @@
 							<tr ng-repeat="x in UCNCPINS">
 								<th scope='row'>{{x.pin}}</th>
 								<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
-										ng-model="DYNAMIC['PINS'][x.pin]['BIT']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+										ng-model="BOARDMAP['PINS'][x.pin]['BIT']"
+										model-scope-name="BOARDMAP.PINS.{{x.pin}}.BIT"
 										ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int"
 										config-file="boardmap" ng-change="definedPins()">
 										<option value=""></option>
 									</select></td>
 								<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
-										ng-model="DYNAMIC['PINS'][x.pin]['PORT']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+										ng-model="BOARDMAP['PINS'][x.pin]['PORT']"
+										model-scope-name="BOARDMAP.PINS.{{x.pin}}.PORT"
 										ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}"
 										config-file="boardmap" ng-change="definedPins()">
 										<option value=""></option>
@@ -419,21 +419,21 @@
 								<td>
 									<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
 										<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
-											id='{{x.pin}}_PULLUP' ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
+											id='{{x.pin}}_PULLUP' ng-model="BOARDMAP['PINS'][x.pin]['PULLUP']"
+											model-scope-name="BOARDMAP.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
 									</div>
 								</td>
 								<td>
 									<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
 										<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR'
-											id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']"
-											ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1"
+											id='{{x.pin}}_ISR' ng-model="BOARDMAP['PINS'][x.pin]['ISRS1']"
+											ng-if='MCU!="MCU_AVR"' model-scope-name="BOARDMAP.PINS.{{x.pin}}.ISRS1"
 											config-file="boardmap">
 										<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
 											<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
-												id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
+												id='{{x.pin}}_ISR' ng-model="BOARDMAP['PINS'][x.pin]['ISRS2']"
 												ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
-												var-type="int" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
+												var-type="int" model-scope-name="BOARDMAP.PINS.{{x.pin}}.ISRS2"
 												config-file="boardmap">
 												<option value=""></option>
 											</select>
@@ -446,16 +446,16 @@
 								<td>
 									<div ng-if='x.type=="pwm" || x.type=="analog"'>
 										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+											id='{{x.pin}}_CHANNEL' ng-model="BOARDMAP['PINS'][x.pin]['CHANNEL']"
 											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
 											var-type="int" ng-if='MCU!="MCU_AVR"'
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+											model-scope-name="BOARDMAP.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
 											<option value=""></option>
 										</select>
 										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+											id='{{x.pin}}_CHANNEL' ng-model="BOARDMAP['PINS'][x.pin]['CHANNEL']"
 											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-											ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
+											ng-if='MCU=="MCU_AVR"' model-scope-name="BOARDMAP.PINS.{{x.pin}}.CHANNEL"
 											config-file="boardmap">
 											<option value=""></option>
 										</select>
@@ -464,8 +464,8 @@
 								<td>
 									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
 											name='{{x.pin}}_TIMER' id='{{x.pin}}_TIMER'
-											ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
+											ng-model="BOARDMAP['PINS'][x.pin]['TIMER']"
+											model-scope-name="BOARDMAP.PINS.{{x.pin}}.TIMER"
 											ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
 											var-type="int" config-file="boardmap">
 											<option value=""></option>
@@ -474,8 +474,8 @@
 								<td>
 									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
 											name='{{x.pin}}_MUX' id='{{x.pin}}_MUX'
-											ng-model="DYNAMIC['PINS'][x.pin]['MUX']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
+											ng-model="BOARDMAP['PINS'][x.pin]['MUX']"
+											model-scope-name="BOARDMAP.PINS.{{x.pin}}.MUX"
 											ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}"
 											config-file="boardmap">
 											<option value=""></option>
@@ -485,8 +485,8 @@
 									<div
 										ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
 										<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
-											id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
+											id='{{x.pin}}_IO_OFFSET' ng-model="BOARDMAP['PINS'][x.pin]['IO_OFFSET']"
+											model-scope-name="BOARDMAP.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
 											ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
 											ng-change="definedPins()">
 											<option value=""></option>
@@ -1022,60 +1022,60 @@
 					<legend>74HC595 IC IO extender</legend>
 					<div>
 						<label for="IC74HC595_COUNT" class="form-label">Number of chained IC74HC595's: <span
-								ng-bind="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"></label>
+								ng-bind="BOARDMAP['IC74HC595']['IC74HC595_COUNT']"></label>
 						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT"
-							id="IC74HC595_COUNT" ng-model="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"
-							model-scope-name="DYNAMIC.IC74HC595.IC74HC595_COUNT" var-type="int" config-file="boardmap"
-							ng-init="DYNAMIC['IC74HC595']['IC74HC595_COUNT']=0">
+							id="IC74HC595_COUNT" ng-model="BOARDMAP['IC74HC595']['IC74HC595_COUNT']"
+							model-scope-name="BOARDMAP.IC74HC595.IC74HC595_COUNT" var-type="int" config-file="boardmap"
+							ng-init="BOARDMAP['IC74HC595']['IC74HC595_COUNT']=0">
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="IC74HC595_CUSTOM_SHIFT_IO"
-								ng-model="DYNAMIC['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']"
-								model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CUSTOM_SHIFT_IO" config-file="boardmap">
+								ng-model="BOARDMAP['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']"
+								model-scope-name="BOARDMAP.IC74HC595.IC74HC595_CUSTOM_SHIFT_IO" config-file="boardmap">
 							<label class="form-check-label" for="IC74HC595_CUSTOM_SHIFT_IO">Use board custom 74HC595
 								data shifter</label>
 						</div>
-						<div ng-if="!DYNAMIC['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']">
-							<div ng-if="DYNAMIC['IC74HC595']['IC74HC595_COUNT']!=0">
+						<div ng-if="!BOARDMAP['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']">
+							<div ng-if="BOARDMAP['IC74HC595']['IC74HC595_COUNT']!=0">
 								<label for="IC74HC595_DATA" class="form-label">IC74HC595's data pin</label>
 								<select class="form-select form-select-md" name="IC74HC595_DATA" id="IC74HC595_DATA"
-									ng-model="DYNAMIC['IC74HC595']['IC74HC595_DATA']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DATA"
+									ng-model="BOARDMAP['IC74HC595']['IC74HC595_DATA']"
+									model-scope-name="BOARDMAP.IC74HC595.IC74HC595_DATA"
 									ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-									config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DATA']='DOUT8'">
+									config-file="boardmap" ng-init="BOARDMAP['IC74HC595']['IC74HC595_DATA']='DOUT8'">
 								</select>
 								<div class="alert alert-warning" role="alert"
-									ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_DATA'])">
-									{{DYNAMIC['IC74HC595']['IC74HC595_DATA']}} pin is not defined for your board!
+									ng-show="!DEFINED_PINS.includes(BOARDMAP['IC74HC595']['IC74HC595_DATA'])">
+									{{BOARDMAP['IC74HC595']['IC74HC595_DATA']}} pin is not defined for your board!
 								</div>
 								<label for="IC74HC595_CLK" class="form-label">IC74HC595's clock pin</label>
 								<select class="form-select form-select-md" name="IC74HC595_CLK" id="IC74HC595_CLK"
-									ng-model="DYNAMIC['IC74HC595']['IC74HC595_CLK']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CLK"
+									ng-model="BOARDMAP['IC74HC595']['IC74HC595_CLK']"
+									model-scope-name="BOARDMAP.IC74HC595.IC74HC595_CLK"
 									ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-									config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_CLK']='DOUT9'">
+									config-file="boardmap" ng-init="BOARDMAP['IC74HC595']['IC74HC595_CLK']='DOUT9'">
 								</select>
 								<div class="alert alert-warning" role="alert"
-									ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_CLK'])">
-									{{DYNAMIC['IC74HC595']['IC74HC595_CLK']}} pin is not defined for your board!
+									ng-show="!DEFINED_PINS.includes(BOARDMAP['IC74HC595']['IC74HC595_CLK'])">
+									{{BOARDMAP['IC74HC595']['IC74HC595_CLK']}} pin is not defined for your board!
 								</div>
 								<label for="IC74HC595_DATA" class="form-label">IC74HC595's latch pin</label>
 								<select class="form-select form-select-md" name="IC74HC595_LATCH" id="IC74HC595_LATCH"
-									ng-model="DYNAMIC['IC74HC595']['IC74HC595_LATCH']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_LATCH"
+									ng-model="BOARDMAP['IC74HC595']['IC74HC595_LATCH']"
+									model-scope-name="BOARDMAP.IC74HC595.IC74HC595_LATCH"
 									ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-									config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_LATCH']='DOUT10'">
+									config-file="boardmap" ng-init="BOARDMAP['IC74HC595']['IC74HC595_LATCH']='DOUT10'">
 								</select>
 								<div class="alert alert-warning" role="alert"
-									ng-show="!DEFINED_PINS.includes(DYNAMIC['IC74HC595']['IC74HC595_LATCH'])">
-									{{DYNAMIC['IC74HC595']['IC74HC595_LATCH']}} pin is not defined for your board!
+									ng-show="!DEFINED_PINS.includes(BOARDMAP['IC74HC595']['IC74HC595_LATCH'])">
+									{{BOARDMAP['IC74HC595']['IC74HC595_LATCH']}} pin is not defined for your board!
 								</div>
 								<label for="IC74HC595_DELAY_CYCLES" class="form-label">IC74HC595 pulse cycle delay:
-									<span ng-bind="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"></label>
+									<span ng-bind="BOARDMAP['IC74HC595']['IC74HC595_DELAY_CYCLES']"></label>
 								<input type="range" class="form-range" min="0" max="100" name="IC74HC595_DELAY_CYCLES"
 									id="IC74HC595_DELAY_CYCLES"
-									ng-model="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DELAY_CYCLES" var-type="int"
-									config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
+									ng-model="BOARDMAP['IC74HC595']['IC74HC595_DELAY_CYCLES']"
+									model-scope-name="BOARDMAP.IC74HC595.IC74HC595_DELAY_CYCLES" var-type="int"
+									config-file="boardmap" ng-init="BOARDMAP['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
 
 							</div>
 						</div>
