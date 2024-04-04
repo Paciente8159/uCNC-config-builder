@@ -863,9 +863,6 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 		6
 	];
 
-	$scope.BOARDMAP = {};
-	$scope.HAL = {};
-
 	$scope.TOOL_OPTIONS = [
 		{ id: 'spindle_pwm', name: 'Spindle PWM' },
 		{ id: 'spindle_besc', name: 'BESC Spindle' },
@@ -980,6 +977,44 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 	$scope.DEFINED_PINS = [];
 	$scope.PREBUILD_CONFIGS = null;
 
+	$scope.getRemoteFile = async function (url = '') {
+		var deferred = $q.defer();
+		$http.get(url).then(function (response) {
+			deferred.resolve(response.data);
+		}).catch(function (error) {
+			deferred.reject(error);
+		});
+
+		return await deferred.promise.then(function (data) {
+			return data;
+		}
+		).catch(function (error) {
+			console.log(error);
+			return null;
+		});
+	}
+
+	$scope.getLocalFile = async function (file = '') {
+		var deferred = $q.defer();
+		var reader = new FileReader();
+
+		reader.onload = function (e) {
+			deferred.resolve(e.target.result);
+		};
+		reader.onerror = function (e) {
+			deferred.resolve(null);
+		};
+		reader.readAsText(file);
+
+		return await deferred.promise.then(function (data) {
+			return data;
+		}
+		).catch(function (error) {
+			console.log(error);
+			return null;
+		});
+	};
+
 	$scope.parseRemoteFile = async function (url = '', settings = []) {
 		var deferred = $q.defer();
 		const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
@@ -1062,44 +1097,44 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 				break;
 		}
 
-		// scope.safeApply(function () {
+		scope.safeApply(function () {
 
-		if (node.hasAttribute('model-scope-name')) {
-			var arr = node.getAttribute('model-scope-name').split('.');
+			if (node.hasAttribute('model-scope-name')) {
+				var arr = node.getAttribute('model-scope-name').split('.');
 
-			if (arr.length > 0 && !scope[arr[0]]) {
-				scope[arr[0]] = (arr.length == 1) ? v : {};
+				if (arr.length > 0 && !scope[arr[0]]) {
+					scope[arr[0]] = (arr.length == 1) ? v : {};
+				}
+				else if (arr.length == 1) {
+					scope[arr[0]] = (arr.length == 1) ? v : {};
+				}
+
+				if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
+					scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+				}
+				else if (arr.length == 2) {
+					scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+				}
+
+				if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
+					scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+				}
+				else if (arr.length == 3) {
+					scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+				}
+
+				if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+					scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+				}
+				else if (arr.length == 4) {
+					scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+				}
 			}
-			else if (arr.length == 1) {
-				scope[arr[0]] = (arr.length == 1) ? v : {};
+			else {
+				scope[node.id] = v;
 			}
 
-			if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
-				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-			}
-			else if (arr.length == 2) {
-				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-			}
-
-			if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
-				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-			}
-			else if (arr.length == 3) {
-				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-			}
-
-			if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
-				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-			}
-			else if (arr.length == 4) {
-				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-			}
-		}
-		else {
-			scope[node.id] = v;
-		}
-
-		// });
+		});
 	}
 
 	$scope.updateFields = function (settings = []) {
@@ -1128,26 +1163,25 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 		}
 
 		$scope.definedPins();
-
 		document.getElementById('reloading').style.display = "none";
 	}
 
 	$scope.updateTool = async function (tool = null) {
-		
+
 		var settings = [];
 		var version_name = $scope.VERSIONS.filter(obj => { return obj.tag === $scope.VERSION; })[0].id;
 		var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 		var toolurl = coreurl + "/uCNC/src/hal/tools/tools/" + $scope.getScope(tool) + ".c";
 
 		if (!tool) {
-			
+
 			return;
 		}
 		document.getElementById('loadingtext').innerText = "Fetching tools...";
 		document.getElementById('reloading').style.display = "block";
 		settings = await $scope.parseRemoteFile(toolurl, settings);
 		document.getElementById('reloading').style.display = "none";
-		$scope.updateFields();
+		$scope.updateFields(settings);
 	}
 
 	$scope.updateHAL = async function () {
@@ -1177,10 +1211,10 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 			return;
 		}
 
-		$scope.PREV_MCU = $scope.MCU;
-		$scope.PREV_BOARD = $scope.BOARD;
-
-		$scope.BOARDMAP = {};
+		$scope.safeApply(function () {
+			$scope.PREV_MCU = $scope.MCU;
+			$scope.PREV_BOARD = $scope.BOARD;
+		});
 
 		switch ($scope.MCU) {
 			case 'MCU_AVR':
@@ -1304,6 +1338,14 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 			document.getElementById('reloading').style.display = "block";
 			settings = await $scope.parseRemoteFile(boardurl, settings);
 		}
+
+		const excludeids = ['MCU', 'BOARD', 'AXIS_COUNT', 'TOOL_COUNT', 'KINEMATIC', 'ENABLE_COOLANT', 'BAUDRATE', 'S_CURVE_ACCELERATION_LEVEL'];
+
+		document.querySelectorAll('[config-file="boardmap"]').forEach((e, i, p) => {
+			if (!excludeids.includes(e.id)) {
+				$scope.updateScope(e, null);
+			}
+		});
 
 		$scope.updateFields(settings);
 		$scope.updateHAL();
@@ -1432,7 +1474,6 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 			$scope.JSON_BUILD = null;
 		}
 		else {
-			debugger;
 			$scope.updateTool(document.querySelector('#TOOL' + tool.x));
 		}
 	};
@@ -1558,7 +1599,68 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', '$htt
 		}
 		txtFile.send(null);
 	};
+	$scope.UPLOADBUILD = null;
+	$scope.loadSettings = async function (e = null) {
+		var file = e.target.files[0];
+		if (!file) {
+			return;
+		}
+		var scope = $scope;//angular.element(document.getElementById("uCNCapp")).scope();
+		scope.PREV_MCU = scope.MCU;
+		scope.PREV_BOARD = scope.BOARD;
+		var reader = new FileReader();
+		document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+		document.getElementById('reloading').style.display = "block";
+		scope.JSON_BUILD = await $scope.getLocalFile(file);
+		var build = JSON.parse(scope.JSON_BUILD);
+		loadingfile = true;
+		for (const [k, v] of Object.entries(build)) {
+			$scope.updateScope(document.getElementById(k), v);
+		}
+		scope.definedPins();
+		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+			$scope.updateScope(e, getScope(e).toString());
+		});
+
+		document.getElementById('reloading').style.display = "none";
+		$scope.safeApply();
+
+		// for (const [k, v] of Object.entries(build)) {
+		// 	$scope.updateScope(document.getElementById(k), v);
+		// }
+		// scope.definedPins();
+		// document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+		// 	$scope.updateScope(e, getScope(e).toString());
+		// });
+		// loadingfile = false;
+		// $scope.$apply();
+		// document.getElementById('reloading').style.display = "none";
+
+		// setTimeout(function () {
+		// 	for (const [k, v] of Object.entries(build)) {
+		// 		$scope.updateScope(document.getElementById(k), v);
+		// 	}
+		// 	scope.definedPins();
+		// 	document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+		// 		$scope.updateScope(e, getScope(e).toString());
+		// 	});
+		// 	loadingfile = false;
+		// 	document.getElementById('reloading').style.display = "none";
+		// }, 5000);
+
+	};
+
 }]);
+
+var fileonchange = app.directive('ngFileOnChange', function () {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attrs) {
+			var onChangeHandler = scope.$eval(attrs.ngFileOnChange);
+			element.bind('change', onChangeHandler);
+		}
+	};
+});
 
 var orfilter = app.filter("orTypeFilter", function () {
 	return function (items, arg) {
@@ -1709,41 +1811,41 @@ document.getElementById('store_settings').addEventListener('click', function () 
 	download('ucnc_build.json', JSON.stringify(key_values));
 });
 
-document.getElementById('load_settings').addEventListener('change', function (e) {
-	var file = e.target.files[0];
-	if (!file) {
-		return;
-	}
-	var scope = angular.element(document.getElementById("uCNCapp")).scope();
-	scope.PREV_MCU = scope.MCU;
-	scope.PREV_BOARD = scope.BOARD;
-	var reader = new FileReader();
-	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
-	document.getElementById('reloading').style.display = "block";
-	reader.onload = function (e) {
-		scope.JSON_BUILD = e.target.result;
-		var build = JSON.parse(scope.JSON_BUILD);
-		loadingfile = true;
-		for (const [k, v] of Object.entries(build)) {
-			$scope.updateScope(document.getElementById(k), v);
-		}
-		scope.definedPins();
-		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-			$scope.updateScope(e, getScope(e).toString());
-		});
+// document.getElementById('load_settings').addEventListener('change', function (e) {
+// 	var file = e.target.files[0];
+// 	if (!file) {
+// 		return;
+// 	}
+// 	var scope = angular.element(document.getElementById("uCNCapp")).scope();
+// 	scope.PREV_MCU = scope.MCU;
+// 	scope.PREV_BOARD = scope.BOARD;
+// 	var reader = new FileReader();
+// 	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+// 	document.getElementById('reloading').style.display = "block";
+// 	reader.onload = function (e) {
+// 		scope.JSON_BUILD = e.target.result;
+// 		var build = JSON.parse(scope.JSON_BUILD);
+// 		loadingfile = true;
+// 		for (const [k, v] of Object.entries(build)) {
+// 			$scope.updateScope(document.getElementById(k), v);
+// 		}
+// 		scope.definedPins();
+// 		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+// 			$scope.updateScope(e, getScope(e).toString());
+// 		});
 
-		setTimeout(function () {
-			for (const [k, v] of Object.entries(build)) {
-				$scope.updateScope(document.getElementById(k), v);
-			}
-			scope.definedPins();
-			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-				$scope.updateScope(e, getScope(e).toString());
-			});
-			loadingfile = false;
-			document.getElementById('reloading').style.display = "none";
-		}, 5000);
-	};
-	reader.readAsText(file);
+// 		setTimeout(function () {
+// 			for (const [k, v] of Object.entries(build)) {
+// 				$scope.updateScope(document.getElementById(k), v);
+// 			}
+// 			scope.definedPins();
+// 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+// 				$scope.updateScope(e, getScope(e).toString());
+// 			});
+// 			loadingfile = false;
+// 			document.getElementById('reloading').style.display = "none";
+// 		}, 5000);
+// 	};
+// 	reader.readAsText(file);
 
-}, false);
+// }, false);
