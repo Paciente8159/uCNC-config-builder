@@ -3,11 +3,11 @@
 
 	<div class="mb-3">
 		<label for="" class="form-label">Define PEN_SERVO</label>
-		<select class="form-select form-select-md" name="PEN_SERVO_PWM" id="PEN_SERVO_PWM" ng-model="PEN_SERVO_PWM" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'servo'}">
+		<select class="form-select form-select-md" name="PEN_SERVO" id="PEN_SERVO" ng-model="PEN_SERVO" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'servo'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(PEN_SERVO_PWM)">
-			{{PEN_SERVO_PWM}} pin is not defined for
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(PEN_SERVO)">
+			{{PEN_SERVO}} pin is not defined for
 			your board!
 		</div>
 	</div>
