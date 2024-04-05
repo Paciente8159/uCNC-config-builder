@@ -6,7 +6,7 @@
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+	<link rel="icon" href="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" sizes="32x32">
 	<!-- Bootstrap CSS v5.2.1 -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.2/css/bootstrap.min.css"
 		integrity="sha512-CpIKUSyh9QX2+zSdfGP+eWLx23C8Dj9/XmHjZY2uDtfkdLGo0uY12jgcnkX9vXOgYajEKb/jiw67EYm+kBf+6g=="
@@ -346,28 +346,28 @@
 						<label for="UART_PORT" class="form-label">Which hardware port will be UART_PORT?</label>
 						<select class='form-select form-select-sm' name='UART_PORT' id='UART_PORT'
 							ng-model="DYNAMIC['PORTS']['UART_PORT']" model-scope-name="DYNAMIC.PORTS.UART_PORT"
-							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int"
+							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int-nullable"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
 						<label for="UART2_PORT" class="form-label">Which hardware port will be UART2_PORT?</label>
 						<select class='form-select form-select-sm' name='UART2_PORT' id='UART2_PORT'
 							ng-model="DYNAMIC['PORTS']['UART2_PORT']" model-scope-name="DYNAMIC.PORTS.UART2_PORT"
-							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int"
+							ng-options="y.port as y.port for y in UCNCUARTS | filter: {'mcu': MCU}" var-type="int-nullable"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
 						<label for="SPI_PORT" class="form-label">Which hardware port will be SPI_PORT?</label>
 						<select class='form-select form-select-sm' name='SPI_PORT' id='SPI_PORT'
 							ng-model="DYNAMIC['PORTS']['SPI_PORT']" model-scope-name="DYNAMIC.PORTS.SPI_PORT"
-							ng-options="y.port as y.port for y in UCNCSPI | filter: {'mcu': MCU}" var-type="int"
+							ng-options="y.port as y.port for y in UCNCSPI | filter: {'mcu': MCU}" var-type="int-nullable"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
 						<label for="I2C_PORT" class="form-label">Which hardware port will be I2C_PORT?</label>
 						<select class='form-select form-select-sm' name='I2C_PORT' id='I2C_PORT'
 							ng-model="DYNAMIC['PORTS']['I2C_PORT']" model-scope-name="DYNAMIC.PORTS.I2C_PORT"
-							ng-options="y.port as y.port for y in UCNCI2C | filter: {'mcu': MCU}" var-type="int"
+							ng-options="y.port as y.port for y in UCNCI2C | filter: {'mcu': MCU}" var-type="int-nullable"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
@@ -377,7 +377,7 @@
 							{{x.timer}}_TIMER?</label>
 						<select class='form-select form-select-sm' name='{{x.timer}}_TIMER' id='{{x.timer}}_TIMER'
 							ng-model="DYNAMIC['TIMERS'][x.timer]" model-scope-name="DYNAMIC.TIMERS.{{x.timer}}"
-							ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}" var-type="int"
+							ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}" var-type="int-nullable"
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
@@ -405,7 +405,7 @@
 								<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
 										ng-model="DYNAMIC['PINS'][x.pin]['BIT']"
 										model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
-										ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int"
+										ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
 										config-file="boardmap" ng-change="definedPins()">
 										<option value=""></option>
 									</select></td>
@@ -433,7 +433,7 @@
 											<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
 												id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
 												ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
-												var-type="int" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
+												var-type="int-nullable" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
 												config-file="boardmap">
 												<option value=""></option>
 											</select>
@@ -448,7 +448,7 @@
 										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
 											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
 											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-											var-type="int" ng-if='MCU!="MCU_AVR"'
+											var-type="int-nullable" ng-if='MCU!="MCU_AVR"'
 											model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
 											<option value=""></option>
 										</select>
@@ -467,7 +467,7 @@
 											ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
 											model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
 											ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
-											var-type="int" config-file="boardmap">
+											var-type="int-nullable" config-file="boardmap">
 											<option value=""></option>
 										</select></div>
 								</td>
@@ -486,7 +486,7 @@
 										ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
 										<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
 											id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int"
+											model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
 											ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
 											ng-change="definedPins()">
 											<option value=""></option>
@@ -1330,6 +1330,8 @@
 		<div>
 			<div class="modal-content">
 				<div class="d-flex justify-content-center align-items-center flex-column">
+					<img class="card-img-top logo-sm"
+				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
 					<p id="loadingtext">Updating...</p>
 					<div class="spinner spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
 					</div>

@@ -84,11 +84,14 @@ function updateScope(node = null, val = null) {
 	var scope = angular.element(node).scope();
 
 	switch (node.getAttribute('var-type')) {
-		case 'int':
+		case 'int-nullable':
 			v = (val !== null) ? parseInt(val) : null;
 			break;
+		case 'int':
+			v = (val !== null) ? parseInt(val) : 0;
+			break;
 		case 'float':
-			v = (val !== null) ? parseFloat(val) : null;
+			v = (val !== null) ? parseFloat(val) : 0;
 			break;
 		case 'bool':
 			v = (val !== null) ? (val === 'true') : false;
@@ -1139,7 +1142,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	}
 
 	$scope.mcuChanged = function () {
-		document.getElementById('loadingtext').innerText = "Fetching processor...this may take a while";
+		document.getElementById('loadingtext').innerText = "Fetching MCU...this may take a while";
 		document.getElementById('reloading').style.display = "block";
 		setTimeout(function () {
 			updateScope(document.getElementById('BOARD'), null);
@@ -1148,7 +1151,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	};
 
 	$scope.boardChanged = function () {
-		document.getElementById('loadingtext').innerText = "Fetching processor...this may take a while";
+		document.getElementById('loadingtext').innerText = "Fetching MCU...this may take a while";
 		document.getElementById('reloading').style.display = "block";
 		setTimeout(function () {
 			updateBoardmap($scope);
