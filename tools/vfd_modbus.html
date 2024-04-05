@@ -1,4 +1,56 @@
 <fieldset>
 	<legend>VFD Modbus settings</legend>
-	<p>VFD Modbus config is not yet implemented</p>
+	<div class="mb-3">
+		<label for="" class="form-label">Define VFD_TX_PIN</label>
+		<select class="form-select form-select-md" name="VFD_TX_PIN" id="VFD_TX_PIN" ng-model="VFD_TX_PIN" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(VFD_TX_PIN)">
+			{{VFD_TX_PIN}} pin is not defined for
+			your board!
+		</div>
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Define VFD_RX_PIN</label>
+		<select class="form-select form-select-md" name="VFD_RX_PIN" id="VFD_RX_PIN" ng-model="VFD_RX_PIN" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(VFD_RX_PIN)">
+			{{VFD_RX_PIN}} pin is not defined for
+			your board!
+		</div>
+	</div>
+
+	<div class="mb-3">
+		<label for="" class="form-label">What is your VFD softport baudrate</label>
+		<select class="form-select form-select-md" name="VFD_BAUDRATE" id="VFD_BAUDRATE" ng-model="VFD_BAUDRATE"
+			ng-options="x as x for x in BAUDRATES | range:0:56701" var-type="int" config-file="hal" ng-init="VFD_BAUDRATE=9600">
+		</select>
+	</div>
+
+	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
+		<label for="" class="form-label">Define VFD_COOLANT_FLOOD</label>
+		<select class="form-select form-select-md" name="VFD_COOLANT_FLOOD" id="VFD_COOLANT_FLOOD"
+			ng-model="VFD_COOLANT_FLOOD" config-file="hal"
+			ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(VFD_COOLANT_FLOOD)">
+			{{VFD_COOLANT_FLOOD}} pin is not defined for
+			your board!
+		</div>
+	</div>
+	<div class="mb-3" ng-if="$parent.$parent.ENABLE_COOLANT">
+		<label for="" class="form-label">Define VFD_COOLANT_MIST</label>
+		<select class="form-select form-select-md" name="VFD_COOLANT_MIST" id="VFD_COOLANT_MIST"
+			ng-model="VFD_COOLANT_MIST" config-file="hal"
+			ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		</select>
+		<div class="alert alert-warning" role="alert"
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(VFD_COOLANT_MIST)">
+			{{VFD_COOLANT_MIST}} pin is not defined for
+			your board!
+		</div>
+	</div>
+
 </fieldset>

@@ -1343,6 +1343,20 @@ var orfilter = app.filter("orTypeFilter", function () {
 	}
 });
 
+var rangefilter = app.filter("range", function () {
+	//our function will need three arguments 
+	return function(items, greaterThan, lowerThan) { 
+		//then we filter the array with dedicated ES5 method
+		items = items.filter(function(item){
+				//if item price is included between the two boundaries we return true
+				return item > greaterThan && item < lowerThan;
+		});
+
+		//then we return the filtered items array
+		return items;
+};
+});
+
 ready(function () {
 	var scope = angular.element(document.querySelector('#MCU')).scope();
 	document.addEventListener('boardloaded', function (e) {
