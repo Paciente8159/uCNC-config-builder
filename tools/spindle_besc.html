@@ -2,42 +2,42 @@
 	<legend>Spindle BESC settings</legend>
 
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_BESC_PWM</label>
-		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM" id="SPINDLE_BESC_PWM" ng-model="SPINDLE_BESC_PWM" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}">
+		<label for="" class="form-label">Define SPINDLE_BESC_SERVO</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_SERVO" id="SPINDLE_BESC_SERVO" ng-model="SPINDLE_BESC_SERVO" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_PWM)">
-			{{SPINDLE_BESC_PWM}} pin is not defined for
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_SERVO)">
+			{{SPINDLE_BESC_SERVO}} pin is not defined for
 			your board!
 		</div>
 	</div>
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_BESC_PWM_DIR</label>
-		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM_DIR" id="SPINDLE_BESC_PWM_DIR" ng-model="SPINDLE_BESC_PWM_DIR" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		<label for="" class="form-label">Define SPINDLE_BESC_SERVO_POWER_RELAY</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_SERVO_POWER_RELAY" id="SPINDLE_BESC_SERVO_POWER_RELAY" ng-model="SPINDLE_BESC_SERVO_POWER_RELAY" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_PWM_DIR)">
-			{{SPINDLE_BESC_PWM_DIR}} pin is not defined for
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_SERVO_POWER_RELAY)">
+			{{SPINDLE_BESC_SERVO_POWER_RELAY}} pin is not defined for
 			your board!
 		</div>
 	</div>
 	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
-		<label for="" class="form-label">Define SPINDLE_BESC_PWM_COOLANT_FLOOD</label>
-		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM_COOLANT_FLOOD" id="SPINDLE_BESC_PWM_COOLANT_FLOOD" ng-model="SPINDLE_BESC_PWM_COOLANT_FLOOD" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		<label for="" class="form-label">Define SPINDLE_BESC_COOLANT_FLOOD</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_COOLANT_FLOOD" id="SPINDLE_BESC_COOLANT_FLOOD" ng-model="SPINDLE_BESC_COOLANT_FLOOD" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_PWM_COOLANT_FLOOD)">
-			{{SPINDLE_BESC_PWM_COOLANT_FLOOD}} pin is not defined for
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_COOLANT_FLOOD)">
+			{{SPINDLE_BESC_COOLANT_FLOOD}} pin is not defined for
 			your board!
 		</div>
 	</div>
 	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
-		<label for="" class="form-label">Define SPINDLE_BESC_PWM_COOLANT_MIST</label>
-		<select class="form-select form-select-md" name="SPINDLE_BESC_PWM_COOLANT_MIST" id="SPINDLE_BESC_PWM_COOLANT_MIST" ng-model="SPINDLE_BESC_PWM_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		<label for="" class="form-label">Define SPINDLE_BESC_COOLANT_MIST</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_COOLANT_MIST" id="SPINDLE_BESC_COOLANT_MIST" ng-model="SPINDLE_BESC_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_PWM_COOLANT_MIST)">
-			{{SPINDLE_BESC_PWM_COOLANT_MIST}} pin is not defined for
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_COOLANT_MIST)">
+			{{SPINDLE_BESC_COOLANT_MIST}} pin is not defined for
 			your board!
 		</div>
 	</div>
