@@ -12,12 +12,12 @@
 		</div>
 	</div>
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_BESC_SERVO_POWER_RELAY</label>
-		<select class="form-select form-select-md" name="SPINDLE_BESC_SERVO_POWER_RELAY" id="SPINDLE_BESC_SERVO_POWER_RELAY" ng-model="SPINDLE_BESC_SERVO_POWER_RELAY" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
+		<label for="" class="form-label">Define SPINDLE_BESC_POWER_RELAY</label>
+		<select class="form-select form-select-md" name="SPINDLE_BESC_POWER_RELAY" id="SPINDLE_BESC_POWER_RELAY" ng-model="SPINDLE_BESC_POWER_RELAY" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_SERVO_POWER_RELAY)">
-			{{SPINDLE_BESC_SERVO_POWER_RELAY}} pin is not defined for
+			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_POWER_RELAY)">
+			{{SPINDLE_BESC_POWER_RELAY}} pin is not defined for
 			your board!
 		</div>
 	</div>
