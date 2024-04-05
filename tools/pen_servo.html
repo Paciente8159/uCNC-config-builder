@@ -2,8 +2,8 @@
 	<legend>Pen Servo settings</legend>
 
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_PWM</label>
-		<select class="form-select form-select-md" name="PEN_SERVO_PWM" id="PEN_SERVO_PWM" ng-model="PEN_SERVO_PWM" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}">
+		<label for="" class="form-label">Define PEN_SERVO</label>
+		<select class="form-select form-select-md" name="PEN_SERVO_PWM" id="PEN_SERVO_PWM" ng-model="PEN_SERVO_PWM" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'servo'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
 			ng-show="!$parent.$parent.DEFINED_PINS.includes(PEN_SERVO_PWM)">
@@ -12,33 +12,24 @@
 		</div>
 	</div>
 	<div class="mb-3">
-		<label for="" class="form-label">Define SPINDLE_PWM_DIR</label>
-		<select class="form-select form-select-md" name="PEN_SERVO_PWM_DIR" id="PEN_SERVO_PWM_DIR" ng-model="PEN_SERVO_PWM_DIR" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
-		</select>
-		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(PEN_SERVO_PWM_DIR)">
-			{{PEN_SERVO_PWM_DIR}} pin is not defined for
-			your board!
-		</div>
+		<label for="PEN_SERVO_LOW" class="form-label">Pen servo minimum position value: <span
+			ng-bind="PEN_SERVO_LOW"></span> (8bit)</label>
+	<input type="range" class="form-range" min="0" max="255" name="PEN_SERVO_LOW"
+		id="PEN_SERVO_LOW" ng-model="PEN_SERVO_LOW"
+		ng-init="PEN_SERVO_LOW=50" var-type="int" config-file="hal">
 	</div>
-	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
-		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_FLOOD</label>
-		<select class="form-select form-select-md" name="PEN_SERVO_COOLANT_FLOOD" id="PEN_SERVO_COOLANT_FLOOD" ng-model="LASEPEN_SERVO_COOLANT_FLOODR_PPI_AIR_ASSIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
-		</select>
-		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(PEN_SERVO_COOLANT_FLOOD)">
-			{{PEN_SERVO_COOLANT_FLOOD}} pin is not defined for
-			your board!
-		</div>
+	<div class="mb-3">
+		<label for="PEN_SERVO_MID" class="form-label">Pen servo middle position value: <span
+			ng-bind="PEN_SERVO_MID"></span> (8bit)</label>
+	<input type="range" class="form-range" min="0" max="255" name="PEN_SERVO_MID"
+		id="PEN_SERVO_MID" ng-model="PEN_SERVO_MID"
+		ng-init="PEN_SERVO_MID=127" var-type="int" config-file="hal">
 	</div>
-	<div class="mb-3" ng-if="$parent.ENABLE_COOLANT">
-		<label for="" class="form-label">Define SPINDLE_PWM_COOLANT_MIST</label>
-		<select class="form-select form-select-md" name="PEN_SERVO_COOLANT_MIST" id="PEN_SERVO_COOLANT_MIST" ng-model="PEN_SERVO_COOLANT_MIST" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}">
-		</select>
-		<div class="alert alert-warning" role="alert"
-			ng-show="!$parent.$parent.DEFINED_PINS.includes(PEN_SERVO_COOLANT_MIST)">
-			{{PEN_SERVO_COOLANT_MIST}} pin is not defined for
-			your board!
-		</div>
+	<div class="mb-3">
+		<label for="PEN_SERVO_HIGH" class="form-label">Pen servo maximum value: <span
+			ng-bind="PEN_SERVO_HIGH"></span> (8bit)</label>
+	<input type="range" class="form-range" min="0" max="255" name="PEN_SERVO_HIGH"
+		id="PEN_SERVO_HIGH" ng-model="PEN_SERVO_HIGH"
+		ng-init="PEN_SERVO_HIGH=255" var-type="int" config-file="hal">
 	</div>
 </fieldset>

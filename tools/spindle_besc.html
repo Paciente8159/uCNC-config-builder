@@ -3,7 +3,7 @@
 
 	<div class="mb-3">
 		<label for="" class="form-label">Define SPINDLE_BESC_SERVO</label>
-		<select class="form-select form-select-md" name="SPINDLE_BESC_SERVO" id="SPINDLE_BESC_SERVO" ng-model="SPINDLE_BESC_SERVO" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'pwm'}">
+		<select class="form-select form-select-md" name="SPINDLE_BESC_SERVO" id="SPINDLE_BESC_SERVO" ng-model="SPINDLE_BESC_SERVO" config-file="hal" ng-options="x.pin as x.pin for x in $parent.$parent.UCNCPINS | filter: {'type': 'servo'}">
 		</select>
 		<div class="alert alert-warning" role="alert"
 			ng-show="!$parent.$parent.DEFINED_PINS.includes(SPINDLE_BESC_SERVO)">
