@@ -430,6 +430,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.8.x-bugfix', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.11', tag: 10811, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.11.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.10', tag: 10810, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.10.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.9', tag: 10809, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.9.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -443,14 +444,14 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'v1.8.1', tag: 10801, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.8.0', tag: 10800, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.8.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.7.x-bugfix', tag: 10779, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.7.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
-		{ id: 'v1.7.6', tag: 10706, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.6.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
+		/*{ id: 'v1.7.6', tag: 10706, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.6.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.5', tag: 10705, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.5.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.4', tag: 10704, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.4.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.3', tag: 10703, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.3.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.2', tag: 10702, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.2.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.1', tag: 10701, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.7.0', tag: 10700, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
-		/*{ id: 'v1.7.0-beta', tag: 10680, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0-beta.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
+		{ id: 'v1.7.0-beta', tag: 10680, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.7.0-beta.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 		{ id: 'v1.6.2', tag: 10602, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.2.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip' },
 		{ id: 'v1.6.1', tag: 10601, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip' },
 		{ id: 'v1.6.0', tag: 10600, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.6.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v1.5.0.zip' },*/
@@ -999,10 +1000,12 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
 		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display' },
 		/*{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI (DEPRECATED)' },*/
-		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS' },
+		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS (requires up to v1.8.x to work)', condition:'VERSION<010880'},
+		{ id: 'sd_card_v2', name: 'Support for SD/MMC card via hardware/software SPI (v2 requires at least v1.9.0 to work)', condition:'VERSION>010879' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
-		{ id: 'web_pendant', name: 'Adds a web pendant for WiFi capable devices. (requires at least v1.8.1 to work)' },
-		{ id: 'tmc_driver', name: 'Support for TMC drivers.  (requires at least v1.8.7 to work)' },
+		{ id: 'web_pendant', name: 'Adds a web pendant for WiFi capable devices. (requires at least v1.8.1 to work and up to 1.8.x)', condition:'VERSION>010800 && VERSION<010880' },
+		{ id: 'web_pendant', name: 'Adds an improved web pendant for WiFi capable devices. (requires at least v1.9.0 to work)', condition:'VERSION>010879' },
+		{ id: 'tmc_driver', name: 'Support for TMC drivers. (requires at least v1.8.7 to work)', condition:'VERSION>010806' },
 		{ id: 'tone_speaker', name: 'Plays sounds and tunes using a PWM output.' },
 	];
 
@@ -1132,6 +1135,17 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.smallerThenFilter = function (prop, val) {
 		return function (item) {
 			return (item[prop] < val);
+		}
+	}
+
+	$scope.filterModules = function (version) {
+		return function (item) {
+			
+			if (!item.condition || !item.condition.length) {
+				return true;
+			}
+
+			return $scope.$eval(item.condition.replaceAll('VERSION', version.VERSION));
 		}
 	}
 
@@ -1345,16 +1359,16 @@ var orfilter = app.filter("orTypeFilter", function () {
 
 var rangefilter = app.filter("range", function () {
 	//our function will need three arguments 
-	return function(items, greaterThan, lowerThan) { 
+	return function (items, greaterThan, lowerThan) {
 		//then we filter the array with dedicated ES5 method
-		items = items.filter(function(item){
-				//if item price is included between the two boundaries we return true
-				return item > greaterThan && item < lowerThan;
+		items = items.filter(function (item) {
+			//if item price is included between the two boundaries we return true
+			return item > greaterThan && item < lowerThan;
 		});
 
 		//then we return the filtered items array
 		return items;
-};
+	};
 });
 
 ready(function () {

@@ -1,0 +1,28 @@
+<div>
+	<label for="SD_CARD_DETECT_PIN" class="form-label">Define SD_CARD_DETECT_PIN</label>
+	<select class="form-select form-select-md" name="SD_CARD_DETECT_PIN" id="SD_CARD_DETECT_PIN"
+		ng-model="SD_CARD_DETECT_PIN"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+		config-file="hal" ng-init="SD_CARD_DETECT_PIN='DIN19'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_CARD_DETECT_PIN)">
+		{{SD_CARD_DETECT_PIN}} pin is not defined for
+		your board!
+	</div>
+
+	<!-- <label for="SD_FAT_FS" class="form-label">Define FAT FS library</label>
+	<select class="form-select form-select-md" name="SD_FAT_FS" id="SD_FAT_FS" ng-model="SD_FAT_FS" config-file="hal"
+		ng-init="SD_FAT_FS=2">
+		<option value="1">Petit FS</option>
+		<option value="2">Fat FS</option>
+	</select> -->
+
+	<!-- <div ng-show="SD_FAT_FS==2"> -->
+		<label for="FF_USE_LFN" class="form-label">Enable Long File Names</label>
+		<select class="form-select form-select-md" name="FF_USE_LFN" id="FF_USE_LFN" ng-model="FF_USE_LFN"
+			config-file="hal" ng-init="FF_USE_LFN=1">
+			<option value="0">Disable</option>
+			<option value="1">Enable</option>
+		</select>
+	<!-- </div> -->
+</div>

@@ -1224,7 +1224,7 @@
 
 				<fieldset>
 					<legend>Enable extension modules</legend>
-					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS">
+					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS | filter: filterModules({VERSION})">
 						<input class="form-check-input" type="checkbox" name="{{x.id}}" id="{{x.id}}"
 							ng-model="DYNAMIC['MODULES'][x.id]" model-scope-name="DYNAMIC.MODULES.{{x.id}}"
 							config-file="module">
