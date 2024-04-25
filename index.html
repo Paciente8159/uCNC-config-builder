@@ -277,7 +277,7 @@
 						<input class="form-check-input" type="checkbox" id="ENABLE_G39_H_MAPPING"
 							ng-model="DYNAMIC['ENABLE_G39_H_MAPPING']" model-scope-name="DYNAMIC.ENABLE_G39_H_MAPPING" config-file="hal">
 						<label class="form-check-label" for="ENABLE_G39_H_MAPPING">Enable height map generation</label>
-						<div ng-if="DYNAMIC['ENABLE_G39_H_MAPPING']" config-file="hal">
+						<div ng-if="DYNAMIC['ENABLE_G39_H_MAPPING']">
 							<label for="H_MAPING_GRID_FACTOR" class="form-label">Grid factor (number of points is [grid
 								factor]^ 2): <span ng-bind="DYNAMIC['H_MAPING_GRID_FACTOR']"></span></label>
 							<input type="range" class="form-range" min="2" max="6" id="H_MAPING_GRID_FACTOR"
