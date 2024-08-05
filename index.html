@@ -103,7 +103,7 @@
 					<label for="" class="form-label">What version will you be using?</label>
 					<select class="form-select form-select-md" name="VERSION" id="VERSION" ng-model="VERSION"
 						ng-options="x.tag as x.id for x in VERSIONS" config-file="none" ng-init="VERSION=99999"
-						ng-change="mcuChanged()">
+						ng-change="versionChanged()">
 					</select>
 				</div>
 
