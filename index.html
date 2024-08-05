@@ -446,7 +446,7 @@
 										</select></td>
 									<td>
 										<div
-											ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+											ng-if='x.type.includes("special_output") || x.type=="pwm" || x.type=="servo" || x.type.includes("generic_output")'>
 											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
 												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
 												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
@@ -525,7 +525,7 @@
 									</td>
 									<td>
 										<div
-											ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+											ng-if='x.type.includes("special_output") || x.type=="pwm" || x.type=="servo" || x.type.includes("generic_output")'>
 											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
 												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
 												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
@@ -567,7 +567,7 @@
 										</select></td>
 									<td>
 										<div
-											ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+											ng-if='x.type.includes("special_output") || x.type=="pwm" || x.type=="servo" || x.type.includes("generic_output")'>
 											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
 												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
 												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
@@ -750,6 +750,7 @@
 										<th scope="col">Pin number</th>
 										<th scope="col">Pin port</th>
 										<th scope="col">Pullup</th>
+										<th scope="col">IO OFFSET(74HC595)</th>
 									</tr>
 								</thead>
 								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['communications']">
@@ -771,6 +772,18 @@
 											<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP' id='{{x.pin}}_PULLUP'
 												ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP"
 												config-file="boardmap">
+										</div>
+									</td>
+									<td>
+										<div
+											ng-if='x.type=="pwm" || x.type=="servo" || x.type.includes("generic_output")'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
+												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
+												ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
+												ng-change="definedPins()">
+												<option value=""></option>
+											</select>
 										</div>
 									</td>
 								</tr>
