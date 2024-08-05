@@ -143,3 +143,7 @@ div.tab-content {
 	width: 100%;
 	min-height: 400px !important;
   }
+
+	.d-gap-10{
+		gap: 10px;
+	}

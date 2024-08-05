@@ -21,8 +21,8 @@
 	<header>
 		<!-- place navbar here -->
 		<div class="center-content">
-			<img class="card-img-top logo-sm"
-				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
+			<img class="card-img-top logo-sm" src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png"
+				alt="µCNC logo">
 			<h1>µCNC config generator</h1>
 			<div class="alert alert-danger left-align alert-dismissible fade show" role="alert">
 				<h2 style="color: var(--bs-alert-color)">NOTICE</h2>
@@ -43,7 +43,9 @@
 			</div>
 			<div class="info alert alert-primary left-align alert-dismissible fade show" role="alert">
 				<h2 style="color:blue">Issues</h2>
-				<p>If you encounter any issue please consider <a href="https://github.com/Paciente8159/uCNC-config-builder/issues/new" target="_blank">submiting an issue in the Github project page</a>, with an
+				<p>If you encounter any issue please consider <a
+						href="https://github.com/Paciente8159/uCNC-config-builder/issues/new" target="_blank">submiting an issue in
+						the Github project page</a>, with an
 					attached zip with all the override files and the json config file.</p>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
@@ -62,8 +64,8 @@
 					type="button" role="tab" aria-controls="configboardmap" aria-selected="false">Board</button>
 			</li>
 			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="confighal-tab" data-bs-toggle="tab" data-bs-target="#confighal"
-					type="button" role="tab" aria-controls="confighal" aria-selected="false">HAL</button>
+				<button class="nav-link" id="confighal-tab" data-bs-toggle="tab" data-bs-target="#confighal" type="button"
+					role="tab" aria-controls="confighal" aria-selected="false">HAL</button>
 			</li>
 			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="configmodules-tab" data-bs-toggle="tab" data-bs-target="#configmodules"
@@ -76,8 +78,8 @@
 					configurations</button>
 			</li>
 			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="configfiles-tab" data-bs-toggle="tab" data-bs-target="#configfiles"
-					type="button" role="tab" aria-controls="configfiles" aria-selected="false">Config files</button>
+				<button class="nav-link" id="configfiles-tab" data-bs-toggle="tab" data-bs-target="#configfiles" type="button"
+					role="tab" aria-controls="configfiles" aria-selected="false">Config files</button>
 			</li>
 		</ul>
 
@@ -110,8 +112,8 @@
 
 					<div class="mb-3">
 						<label for="" class="form-label">What MCU family will you be using?</label>
-						<select class="form-select form-select-md" name="MCU" id="MCU" ng-model="MCU"
-							ng-change="mcuChanged()" ng-options="y.id as y.name for y in MCUS" config-file="boardmap">
+						<select class="form-select form-select-md" name="MCU" id="MCU" ng-model="MCU" ng-change="mcuChanged()"
+							ng-options="y.id as y.name for y in MCUS" config-file="boardmap">
 						</select>
 					</div>
 
@@ -131,17 +133,15 @@
 
 					<div class="mb-3">
 						<label for="" class="form-label">How many axis does your machine have?</label>
-						<select class="form-select form-select-md" name="AXIS_COUNT" id="AXIS_COUNT"
-							ng-model="AXIS_COUNT" ng-options="x as x for x in AXIS" var-type="int"
-							config-file="boardmap">
+						<select class="form-select form-select-md" name="AXIS_COUNT" id="AXIS_COUNT" ng-model="AXIS_COUNT"
+							ng-options="x as x for x in AXIS" var-type="int" config-file="boardmap">
 						</select>
 					</div>
 
 					<div class="mb-3">
 						<label for="" class="form-label">How many tools do you have on your machine</label>
-						<select class="form-select form-select-md" name="TOOL_COUNT" id="TOOL_COUNT"
-							ng-model="TOOL_COUNT" ng-options="x as x for x in TOOLS" var-type="int"
-							config-file="boardmap">
+						<select class="form-select form-select-md" name="TOOL_COUNT" id="TOOL_COUNT" ng-model="TOOL_COUNT"
+							ng-options="x as x for x in TOOLS" var-type="int" config-file="boardmap">
 						</select>
 					</div>
 
@@ -164,21 +164,20 @@
 				<fieldset>
 					<legend>Advanced settings</legend>
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="ENABLE_WIFI"
-							ng-model="DYNAMIC['ENABLE_WIFI']" model-scope-name="DYNAMIC.ENABLE_WIFI" config-file="boardmap">
+						<input class="form-check-input" type="checkbox" id="ENABLE_WIFI" ng-model="DYNAMIC['ENABLE_WIFI']"
+							model-scope-name="DYNAMIC.ENABLE_WIFI" config-file="boardmap">
 						<label class="form-check-label" for="ENABLE_WIFI">Enable Wifi (board must support it)</label>
 					</div>
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="ENABLE_BLUETOOTH"
-							ng-model="DYNAMIC['ENABLE_BLUETOOTH']" model-scope-name="DYNAMIC.ENABLE_BLUETOOTH"
-							config-file="boardmap">
+						<input class="form-check-input" type="checkbox" id="ENABLE_BLUETOOTH" ng-model="DYNAMIC['ENABLE_BLUETOOTH']"
+							model-scope-name="DYNAMIC.ENABLE_BLUETOOTH" config-file="boardmap">
 						<label class="form-check-label" for="ENABLE_BLUETOOTH">Enable Bluetooth (board must support
 							it)</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_SKEW_COMPENSATION"
-							ng-model="DYNAMIC['ENABLE_SKEW_COMPENSATION']"
-							model-scope-name="DYNAMIC.ENABLE_SKEW_COMPENSATION" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_SKEW_COMPENSATION']" model-scope-name="DYNAMIC.ENABLE_SKEW_COMPENSATION"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_SKEW_COMPENSATION">Enable X-Y-Z axis skew
 							compensation</label>
 					</div>
@@ -210,51 +209,47 @@
 
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_BACKLASH_COMPENSATION"
-							ng-model="DYNAMIC['ENABLE_BACKLASH_COMPENSATION']"
-							model-scope-name="DYNAMIC.ENABLE_BACKLASH_COMPENSATION" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_BACKLASH_COMPENSATION']" model-scope-name="DYNAMIC.ENABLE_BACKLASH_COMPENSATION"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_BACKLASH_COMPENSATION">Enable backlash
 							compensation</label>
 					</div>
 					<div class="form-check form-switch" ng-if="VERSION<10780">
 						<input class="form-check-input" type="checkbox" id="ENABLE_S_CURVE_ACCELERATION"
-							ng-model="DYNAMIC['ENABLE_S_CURVE_ACCELERATION']"
-							model-scope-name="DYNAMIC.ENABLE_S_CURVE_ACCELERATION" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_S_CURVE_ACCELERATION']" model-scope-name="DYNAMIC.ENABLE_S_CURVE_ACCELERATION"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_S_CURVE_ACCELERATION">Enable S-Curve
 							acceleration</label>
 					</div>
 					<div class="form-check form-switch" ng-if="VERSION>10779">
 						<label for="S_CURVE_ACCELERATION_LEVEL" class="form-label">Curve
 							acceleration type</label>
-						<select class="form-select form-select-md" name="S_CURVE_ACCELERATION_LEVEL"
-							id="S_CURVE_ACCELERATION_LEVEL" ng-model="S_CURVE_ACCELERATION_LEVEL"
-							ng-options="x.id as x.name for x in ACCELERATIONS" var-type="int" config-file="hal"
-							ng-init="S_CURVE_ACCELERATION_LEVEL=0"></select>
+						<select class="form-select form-select-md" name="S_CURVE_ACCELERATION_LEVEL" id="S_CURVE_ACCELERATION_LEVEL"
+							ng-model="S_CURVE_ACCELERATION_LEVEL" ng-options="x.id as x.name for x in ACCELERATIONS" var-type="int"
+							config-file="hal" ng-init="S_CURVE_ACCELERATION_LEVEL=0"></select>
 						</select>
 					</div>
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="BRESENHAM_16BIT"
-							ng-model="DYNAMIC['BRESENHAM_16BIT']" model-scope-name="DYNAMIC.BRESENHAM_16BIT"
-							config-file="hal">
+						<input class="form-check-input" type="checkbox" id="BRESENHAM_16BIT" ng-model="DYNAMIC['BRESENHAM_16BIT']"
+							model-scope-name="DYNAMIC.BRESENHAM_16BIT" config-file="hal">
 						<label class="form-check-label" for="BRESENHAM_16BIT">Use 16-bit Bresenham step generation (for
 							machines that run very short segments like deltas or laser engravers)</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_EXTRA_SYSTEM_CMDS"
-							ng-model="DYNAMIC['ENABLE_EXTRA_SYSTEM_CMDS']"
-							model-scope-name="DYNAMIC.ENABLE_EXTRA_SYSTEM_CMDS" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_EXTRA_SYSTEM_CMDS']" model-scope-name="DYNAMIC.ENABLE_EXTRA_SYSTEM_CMDS"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_EXTRA_SYSTEM_CMDS">Enable extra settings store
 							commands ($SS, $SL, $SR) and pin state print commands ($P)</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="RAM_ONLY_SETTINGS"
-							ng-model="DYNAMIC['RAM_ONLY_SETTINGS']" model-scope-name="DYNAMIC.RAM_ONLY_SETTINGS"
-							config-file="hal">
+							ng-model="DYNAMIC['RAM_ONLY_SETTINGS']" model-scope-name="DYNAMIC.RAM_ONLY_SETTINGS" config-file="hal">
 						<label class="form-check-label" for="RAM_ONLY_SETTINGS">Disable EEPROM storing</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="FORCE_SOFT_POLLING"
-							ng-model="DYNAMIC['FORCE_SOFT_POLLING']" model-scope-name="DYNAMIC.FORCE_SOFT_POLLING"
-							config-file="hal">
+							ng-model="DYNAMIC['FORCE_SOFT_POLLING']" model-scope-name="DYNAMIC.FORCE_SOFT_POLLING" config-file="hal">
 						<label class="form-check-label" for="FORCE_SOFT_POLLING">Force interruptable inputs software
 							polling</label>
 					</div>
@@ -267,33 +262,36 @@
 						<div ng-if="DYNAMIC['STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE']">
 							<label for="STATUS_AUTOMATIC_REPORT_INTERVAL" class="form-label">Frequency: <span
 									ng-bind="DYNAMIC['STATUS_AUTOMATIC_REPORT_INTERVAL']"></span> ms</label>
-							<input type="range" class="form-range" min="100" max="1000"
-								id="STATUS_AUTOMATIC_REPORT_INTERVAL"
+							<input type="range" class="form-range" min="100" max="1000" id="STATUS_AUTOMATIC_REPORT_INTERVAL"
 								ng-model="DYNAMIC['STATUS_AUTOMATIC_REPORT_INTERVAL']"
 								model-scope-name="DYNAMIC.STATUS_AUTOMATIC_REPORT_INTERVAL" config-file="hal">
 						</div>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_G39_H_MAPPING"
-							ng-model="DYNAMIC['ENABLE_G39_H_MAPPING']" model-scope-name="DYNAMIC.ENABLE_G39_H_MAPPING" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_G39_H_MAPPING']" model-scope-name="DYNAMIC.ENABLE_G39_H_MAPPING"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_G39_H_MAPPING">Enable height map generation</label>
 						<div ng-if="DYNAMIC['ENABLE_G39_H_MAPPING']">
 							<label for="H_MAPING_GRID_FACTOR" class="form-label">Grid factor (number of points is [grid
 								factor]^ 2): <span ng-bind="DYNAMIC['H_MAPING_GRID_FACTOR']"></span></label>
 							<input type="range" class="form-range" min="2" max="6" id="H_MAPING_GRID_FACTOR"
-								ng-model="DYNAMIC['H_MAPING_GRID_FACTOR']"
-								model-scope-name="DYNAMIC.H_MAPING_GRID_FACTOR" config-file="hal">
+								ng-model="DYNAMIC['H_MAPING_GRID_FACTOR']" model-scope-name="DYNAMIC.H_MAPING_GRID_FACTOR"
+								config-file="hal">
 						</div>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_CANNED_CYCLES"
-							ng-model="DYNAMIC['ENABLE_CANNED_CYCLES']" model-scope-name="DYNAMIC.ENABLE_CANNED_CYCLES" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_CANNED_CYCLES']" model-scope-name="DYNAMIC.ENABLE_CANNED_CYCLES"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_CANNED_CYCLES">Enable canned cycles subset</label>
 					</div>
 					<div class="form-check form-switch" ng-if="VERSION>10901">
 						<input class="form-check-input" type="checkbox" id="ENABLE_RS274NGC_EXPRESSIONS"
-							ng-model="DYNAMIC['ENABLE_RS274NGC_EXPRESSIONS']" model-scope-name="DYNAMIC.ENABLE_RS274NGC_EXPRESSIONS" config-file="hal">
-						<label class="form-check-label" for="ENABLE_RS274NGC_EXPRESSIONS">Enable canned expression parsing and numbered parameters</label>
+							ng-model="DYNAMIC['ENABLE_RS274NGC_EXPRESSIONS']" model-scope-name="DYNAMIC.ENABLE_RS274NGC_EXPRESSIONS"
+							config-file="hal">
+						<label class="form-check-label" for="ENABLE_RS274NGC_EXPRESSIONS">Enable canned expression parsing and
+							numbered parameters</label>
 					</div>
 				</fieldset>
 			</div>
@@ -304,8 +302,7 @@
 					<div class="mb-3">
 						<label for="" class="form-label">What board will you be using?</label>
 						<select class="form-select form-select-md" name="BOARD" id="BOARD" ng-model="BOARD"
-							ng-change="boardChanged()"
-							ng-options="y.id as y.name for y in BOARDS | filter: {'mcu': MCU}"
+							ng-change="boardChanged()" ng-options="y.id as y.name for y in BOARDS | filter: {'mcu': MCU}"
 							config-file="boardmap"></select>
 						<!-- <option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option> -->
 						</select>
@@ -324,9 +321,8 @@
 					<div class="mb-3">
 						<label for="" class="form-label">The board name printed with $I command? <span
 								ng-bind="DYNAMIC['BOARD_NAME']"></span></label>
-						<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME"
-							ng-model="DYNAMIC['BOARD_NAME']" model-scope-name="DYNAMIC.BOARD_NAME"
-							aria-describedby="helpId" placeholder="" config-file="boardmap">
+						<input type="text" class="form-control" name="BOARD_NAME" id="BOARD_NAME" ng-model="DYNAMIC['BOARD_NAME']"
+							model-scope-name="DYNAMIC.BOARD_NAME" aria-describedby="helpId" placeholder="" config-file="boardmap">
 						<small id="helpId" class="form-text text-muted">Name must be between quotation marks
 							(string)</small>
 					</div>
@@ -390,118 +386,398 @@
 				</fieldset>
 				<fieldset>
 					<legend>Board pin mapping</legend>
-					<div class="table-container">
-						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col">µCNC pin</th>
-									<th scope="col">Pin number</th>
-									<th scope="col">Pin port</th>
-									<th scope="col">Pullup</th>
-									<th scope="col">ISR</th>
-									<th scope="col">CHANNEL</th>
-									<th scope="col">TIMER</th>
-									<th scope="col">MUX</th>
-									<th scope="col">IO OFFSET(74HC595)</th>
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" id="pinsTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link active" id="stepperpins-tab" data-bs-toggle="tab" data-bs-target="#stepperpins"
+								type="button" role="tab" aria-controls="stepperpins" aria-selected="true">Stepper pins</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="pwmsandservos-tab" data-bs-toggle="tab" data-bs-target="#pwmsandservos"
+								type="button" role="tab" aria-controls="pwmsandservos" aria-selected="false">PWMs and Servos</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="genericoutputs-tab" data-bs-toggle="tab" data-bs-target="#genericoutputs"
+								type="button" role="tab" aria-controls="genericoutputs" aria-selected="false">Generic Outputs</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="controlslimitsandprobe-tab" data-bs-toggle="tab"
+								data-bs-target="#controlslimitsandprobe" type="button" role="tab" aria-controls="controlslimitsandprobe"
+								aria-selected="false">Controls, Limits and probe</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="analoginputs-tab" data-bs-toggle="tab" data-bs-target="#analoginputs"
+								type="button" role="tab" aria-controls="analoginputs" aria-selected="false">Analog inputs</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="genericinputs-tab" data-bs-toggle="tab" data-bs-target="#genericinputs"
+								type="button" role="tab" aria-controls="genericinputs" aria-selected="false">Generic Inputs</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="communicationports-tab" data-bs-toggle="tab" data-bs-target="#communicationports"
+								type="button" role="tab" aria-controls="communicationports" aria-selected="false">Communication ports</button>
+						</li>
+					</ul>
+					<div class="tab-content" id="pinsTabContent">
+						<div class="tab-pane active table-container" id="stepperpins" role="tabpanel"
+							aria-labelledby="stepperpins-tab">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">µCNC pin</th>
+										<th scope="col">Pin number</th>
+										<th scope="col">Pin port</th>
+										<th scope="col">IO OFFSET(74HC595)</th>
+									</tr>
+								</thead>
+								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['stepper']">
+									<th scope='row'>{{x.pin}}</th>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+											ng-model="DYNAMIC['PINS'][x.pin]['BIT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+											ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+											ng-model="DYNAMIC['PINS'][x.pin]['PORT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+											ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap"
+											ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td>
+										<div
+											ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
+												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
+												ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
+												ng-change="definedPins()">
+												<option value=""></option>
+											</select>
+										</div>
+									</td>
 								</tr>
-							</thead>
-							<tr ng-repeat="x in UCNCPINS">
-								<th scope='row'>{{x.pin}}</th>
-								<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
-										ng-model="DYNAMIC['PINS'][x.pin]['BIT']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
-										ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
-										config-file="boardmap" ng-change="definedPins()">
-										<option value=""></option>
-									</select></td>
-								<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
-										ng-model="DYNAMIC['PINS'][x.pin]['PORT']"
-										model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
-										ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}"
-										config-file="boardmap" ng-change="definedPins()">
-										<option value=""></option>
-									</select></td>
-								<td>
-									<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
-										<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP'
-											id='{{x.pin}}_PULLUP' ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP" config-file="boardmap">
-									</div>
-								</td>
-								<td>
-									<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
-										<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR'
-											id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']"
-											ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1"
-											config-file="boardmap">
-										<div class="mb-3" ng-if='MCU=="MCU_AVR"'>
-											<select class='form-select form-select-sm' name='{{x.pin}}_ISR'
-												id='{{x.pin}}_ISR' ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
-												ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}"
-												var-type="int-nullable" model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2"
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane table-container" id="pwmsandservos" role="tabpanel"
+							aria-labelledby="pwmsandservos-tab">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">µCNC pin</th>
+										<th scope="col">Pin number</th>
+										<th scope="col">Pin port</th>
+										<th scope="col">CHANNEL</th>
+										<th scope="col">TIMER</th>
+										<th scope="col">MUX</th>
+										<th scope="col">IO OFFSET(74HC595)</th>
+									</tr>
+								</thead>
+								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['pwm','servo']">
+									<th scope='row'>{{x.pin}}</th>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+											ng-model="DYNAMIC['PINS'][x.pin]['BIT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+											ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+											ng-model="DYNAMIC['PINS'][x.pin]['PORT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+											ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap"
+											ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td>
+										<div ng-if='x.type=="pwm" || x.type=="analog"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
+												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+												var-type="int-nullable" ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
 												config-file="boardmap">
 												<option value=""></option>
 											</select>
-											<small id="helpId" class="form-text text-muted"><a
-													href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
-													target="_blank">wiki</a></small>
+											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
+												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+												ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+												<option value=""></option>
+											</select>
 										</div>
-									</div>
-								</td>
-								<td>
-									<div ng-if='x.type=="pwm" || x.type=="analog"'>
-										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-											var-type="int-nullable" ng-if='MCU!="MCU_AVR"'
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+									</td>
+									<td>
+										<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_TIMER'
+												id='{{x.pin}}_TIMER' ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
+												ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}" var-type="int-nullable"
+												config-file="boardmap">
+												<option value=""></option>
+											</select></div>
+									</td>
+									<td>
+										<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm' name='{{x.pin}}_MUX'
+												id='{{x.pin}}_MUX' ng-model="DYNAMIC['PINS'][x.pin]['MUX']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
+												ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}" config-file="boardmap">
+												<option value=""></option>
+											</select></div>
+									</td>
+									<td>
+										<div
+											ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
+												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
+												ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
+												ng-change="definedPins()">
+												<option value=""></option>
+											</select>
+										</div>
+									</td>
+								</tr>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane table-container" id="genericoutputs" role="tabpanel"
+							aria-labelledby="genericoutputs-tab">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">µCNC pin</th>
+										<th scope="col">Pin number</th>
+										<th scope="col">Pin port</th>
+										<th scope="col">IO OFFSET(74HC595)</th>
+									</tr>
+								</thead>
+								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['dout']">
+									<th scope='row'>{{x.pin}}</th>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+											ng-model="DYNAMIC['PINS'][x.pin]['BIT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+											ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
+											config-file="boardmap" ng-change="definedPins()">
 											<option value=""></option>
-										</select>
-										<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL'
-											id='{{x.pin}}_CHANNEL' ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-											ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-											ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
-											config-file="boardmap">
-											<option value=""></option>
-										</select>
-									</div>
-								</td>
-								<td>
-									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
-											name='{{x.pin}}_TIMER' id='{{x.pin}}_TIMER'
-											ng-model="DYNAMIC['PINS'][x.pin]['TIMER']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.TIMER"
-											ng-options="y.timer as y.timer for y in TIMERS | filter: {'mcu': MCU}"
-											var-type="int-nullable" config-file="boardmap">
-											<option value=""></option>
-										</select></div>
-								</td>
-								<td>
-									<div ng-if='x.type=="pwm"'><select class='form-select form-select-sm'
-											name='{{x.pin}}_MUX' id='{{x.pin}}_MUX'
-											ng-model="DYNAMIC['PINS'][x.pin]['MUX']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.MUX"
-											ng-options="y.mux as y.mux for y in MUXS | filter: {'mcu': MCU}"
-											config-file="boardmap">
-											<option value=""></option>
-										</select></div>
-								</td>
-								<td>
-									<div
-										ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
-										<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET'
-											id='{{x.pin}}_IO_OFFSET' ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
-											model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
-											ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
+										</select></td>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+											ng-model="DYNAMIC['PINS'][x.pin]['PORT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+											ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap"
 											ng-change="definedPins()">
 											<option value=""></option>
-										</select>
-									</div>
-								</td>
-							</tr>
-							<tbody>
-							</tbody>
-						</table>
+										</select></td>
+									<td>
+										<div
+											ng-if='x.type=="special_output" || x.type=="pwm" || x.type=="servo" || x.type=="generic_output"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
+												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
+												ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
+												ng-change="definedPins()">
+												<option value=""></option>
+											</select>
+										</div>
+									</td>
+								</tr>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane table-container" id="controlslimitsandprobe" role="tabpanel"
+							aria-labelledby="controlslimitsandprobe-tab">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">µCNC pin</th>
+										<th scope="col">Pin number</th>
+										<th scope="col">Pin port</th>
+										<th scope="col">Pullup</th>
+										<th scope="col">ISR</th>
+									</tr>
+								</thead>
+								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['control','limit','probe']">
+									<th scope='row'>{{x.pin}}</th>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+											ng-model="DYNAMIC['PINS'][x.pin]['BIT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+											ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+											ng-model="DYNAMIC['PINS'][x.pin]['PORT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+											ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap"
+											ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td>
+										<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
+											<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP' id='{{x.pin}}_PULLUP'
+												ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP"
+												config-file="boardmap">
+										</div>
+									</td>
+									<td>
+										<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
+											<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
+												ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']" ng-if='MCU!="MCU_AVR"'
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1" config-file="boardmap">
+											<div class="mb-3 d-flex d-gap-10" ng-if='MCU=="MCU_AVR"'>
+												<select class='form-select form-select-sm' name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
+													ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
+													ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}" var-type="int-nullable"
+													model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2" config-file="boardmap">
+													<option value=""></option>
+												</select>
+												<small id="helpId" class="form-text text-muted"><a
+														href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
+														target="_blank">wiki</a></small>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane table-container" id="analoginputs" role="tabpanel"
+							aria-labelledby="analoginputs-tab">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">µCNC pin</th>
+										<th scope="col">Pin number</th>
+										<th scope="col">Pin port</th>
+										<th scope="col">CHANNEL</th>
+									</tr>
+								</thead>
+								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['analog']">
+									<th scope='row'>{{x.pin}}</th>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+											ng-model="DYNAMIC['PINS'][x.pin]['BIT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+											ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+											ng-model="DYNAMIC['PINS'][x.pin]['PORT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+											ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap"
+											ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td>
+										<div ng-if='x.type=="pwm" || x.type=="analog"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
+												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+												var-type="int-nullable" ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
+												config-file="boardmap">
+												<option value=""></option>
+											</select>
+											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
+												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+												ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+												<option value=""></option>
+											</select>
+										</div>
+									</td>
+								</tr>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane table-container" id="genericinputs" role="tabpanel"
+							aria-labelledby="genericinputs-tab">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">µCNC pin</th>
+										<th scope="col">Pin number</th>
+										<th scope="col">Pin port</th>
+										<th scope="col">Pullup</th>
+										<th scope="col">ISR</th>
+									</tr>
+								</thead>
+								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['din']">
+									<th scope='row'>{{x.pin}}</th>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+											ng-model="DYNAMIC['PINS'][x.pin]['BIT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+											ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+											ng-model="DYNAMIC['PINS'][x.pin]['PORT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+											ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap"
+											ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td>
+										<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
+											<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP' id='{{x.pin}}_PULLUP'
+												ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP"
+												config-file="boardmap">
+										</div>
+									</td>
+									<td>
+										<div class="form-check form-switch" ng-if='x.type.includes("interruptable_input")'>
+											<input class="form-check-input" type="checkbox" name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
+												ng-model="DYNAMIC['PINS'][x.pin]['ISRS1']" ng-if='MCU!="MCU_AVR"'
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS1" config-file="boardmap">
+											<div class="mb-3 d-flex d-gap-10" ng-if='MCU=="MCU_AVR"'>
+												<select class='form-select form-select-sm' name='{{x.pin}}_ISR' id='{{x.pin}}_ISR'
+													ng-model="DYNAMIC['PINS'][x.pin]['ISRS2']"
+													ng-options="y.isr as y.isr for y in ISRS | filter: {'mcu': MCU}" var-type="int-nullable"
+													model-scope-name="DYNAMIC.PINS.{{x.pin}}.ISRS2" config-file="boardmap">
+													<option value=""></option>
+												</select>
+												<small id="helpId" class="form-text text-muted"><a
+														href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
+														target="_blank">wiki</a></small>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane table-container" id="communicationports" role="tabpanel"
+							aria-labelledby="communicationports-tab">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">µCNC pin</th>
+										<th scope="col">Pin number</th>
+										<th scope="col">Pin port</th>
+										<th scope="col">Pullup</th>
+									</tr>
+								</thead>
+								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['communications']">
+									<th scope='row'>{{x.pin}}</th>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_BIT' id='{{x.pin}}_BIT'
+											ng-model="DYNAMIC['PINS'][x.pin]['BIT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.BIT"
+											ng-options="y.pin as y.pin for y in PINS | filter: {'mcu': MCU}" var-type="int-nullable"
+											config-file="boardmap" ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td><select class='form-select form-select-sm' name='{{x.pin}}_PORT' id='{{x.pin}}_PORT'
+											ng-model="DYNAMIC['PINS'][x.pin]['PORT']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PORT"
+											ng-options="y.port as y.port for y in PORTS | filter: {'mcu': MCU}" config-file="boardmap"
+											ng-change="definedPins()">
+											<option value=""></option>
+										</select></td>
+									<td>
+										<div class="form-check form-switch" ng-if='x.type.includes("pullup")'>
+											<input class="form-check-input" type="checkbox" name='{{x.pin}}_PULLUP' id='{{x.pin}}_PULLUP'
+												ng-model="DYNAMIC['PINS'][x.pin]['PULLUP']" model-scope-name="DYNAMIC.PINS.{{x.pin}}.PULLUP"
+												config-file="boardmap">
+										</div>
+									</td>
+								</tr>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</fieldset>
 			</div>
@@ -520,9 +796,9 @@
 					</div>
 					<div ng-hide="DYNAMIC['DISABLE_ALL_CONTROLS']">
 						<div class="form-check form-check-inline" ng-repeat="y in CONTROLS">
-							<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP_ENABLE"
-								value="{{y}}_PULLUP_ENABLE" ng-model="DYNAMIC['PULLUPS_ENABLE'][y]"
-								model-scope-name="DYNAMIC.PULLUPS_ENABLE.{{y}}" config-file="hal">
+							<input class="form-check-input" type="checkbox" id="{{y}}_PULLUP_ENABLE" value="{{y}}_PULLUP_ENABLE"
+								ng-model="DYNAMIC['PULLUPS_ENABLE'][y]" model-scope-name="DYNAMIC.PULLUPS_ENABLE.{{y}}"
+								config-file="hal">
 							<label class="form-check-label" for="{{y}}_PULLUP_ENABLE">Enable {{y}} internal pullup
 								resistor</label>
 						</div>
@@ -532,27 +808,24 @@
 					<legend>Limit switches</legend>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="DISABLE_ALL_LIMITS"
-							ng-model="DYNAMIC['DISABLE_ALL_LIMITS']" model-scope-name="DYNAMIC.DISABLE_ALL_LIMITS"
-							config-file="hal">
+							ng-model="DYNAMIC['DISABLE_ALL_LIMITS']" model-scope-name="DYNAMIC.DISABLE_ALL_LIMITS" config-file="hal">
 						<label class="form-check-label" for="DISABLE_ALL_LIMITS">Disable all limit switches</label>
 					</div>
 					<!-- <div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']"> -->
 					<div ng-hide="1">
-						<div class="form-check form-check-inline"
-							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
-							<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE"
-								value="{{y.limit}}_DISABLE" ng-model="DYNAMIC['DISABLES'][y.limit]"
-								model-scope-name="DYNAMIC.DISABLES.{{y.limit}}" config-file="hal">
+						<div class="form-check form-check-inline" ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
+							<input class="form-check-input" type="checkbox" id="{{y.limit}}_DISABLE" value="{{y.limit}}_DISABLE"
+								ng-model="DYNAMIC['DISABLES'][y.limit]" model-scope-name="DYNAMIC.DISABLES.{{y.limit}}"
+								config-file="hal">
 							<label class="form-check-label" for="{{y.limit}}_DISABLE">Disable {{y.limit}}</label>
 						</div>
 					</div>
 					<div ng-hide="DYNAMIC['DISABLE_ALL_LIMITS']">
-						<div class="form-check form-check-inline"
-							ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
+						<div class="form-check form-check-inline" ng-repeat="y in LIMITS | filter: {'axis': AXIS_COUNT}">
 							<input class="form-check-input" type="checkbox" id="{{y.limit}}_PULLUP_ENABLE"
 								value="{{y.limit}}_PULLUP_ENABLE" ng-disabled="{{y.limit}}_DISABLE"
-								ng-model="DYNAMIC['PULLUPS_ENABLE'][y.limit]"
-								model-scope-name="DYNAMIC.PULLUPS_ENABLE.{{y.limit}}" config-file="hal">
+								ng-model="DYNAMIC['PULLUPS_ENABLE'][y.limit]" model-scope-name="DYNAMIC.PULLUPS_ENABLE.{{y.limit}}"
+								config-file="hal">
 							<label class="form-check-label" for="{{y.limit}}_PULLUP_ENABLE">Enable {{y.limit}} internal
 								pullup
 								resistor</label>
@@ -562,16 +835,15 @@
 				<fieldset>
 					<legend>Probe</legend>
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="DISABLE_PROBE"
-							ng-model="DYNAMIC['DISABLE_PROBE']" model-scope-name="DYNAMIC.DISABLE_PROBE"
-							config-file="hal">
+						<input class="form-check-input" type="checkbox" id="DISABLE_PROBE" ng-model="DYNAMIC['DISABLE_PROBE']"
+							model-scope-name="DYNAMIC.DISABLE_PROBE" config-file="hal">
 						<label class="form-check-label" for="DISABLE_PROBE">Disable probe</label>
 					</div>
 					<div ng-hide="DYNAMIC['DISABLE_PROBE']">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" id="PROBE_PULLUP_ENABLE"
-								value="PROBE_PULLUP_ENABLE" ng-model="DYNAMIC['PROBE_PULLUP_ENABLE']"
-								model-scope-name="DYNAMIC.PROBE_PULLUP_ENABLE" config-file="hal">
+							<input class="form-check-input" type="checkbox" id="PROBE_PULLUP_ENABLE" value="PROBE_PULLUP_ENABLE"
+								ng-model="DYNAMIC['PROBE_PULLUP_ENABLE']" model-scope-name="DYNAMIC.PROBE_PULLUP_ENABLE"
+								config-file="hal">
 							<label class="form-check-label" for="">Enable PROBE internal pullup resistor</label>
 						</div>
 					</div>
@@ -581,16 +853,15 @@
 					<legend>Multi drive axis</legend>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_DUAL_DRIVE_AXIS"
-							ng-model="DYNAMIC['ENABLE_DUAL_DRIVE_AXIS']"
-							model-scope-name="DYNAMIC.ENABLE_DUAL_DRIVE_AXIS" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_DUAL_DRIVE_AXIS']" model-scope-name="DYNAMIC.ENABLE_DUAL_DRIVE_AXIS"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_DUAL_DRIVE_AXIS">Enable multi-drive AXIS</label>
 					</div>
 					<div ng-show="DYNAMIC['ENABLE_DUAL_DRIVE_AXIS']">
 						<div class="mb-3">
 							<label for="" class="form-label">Select multi-drive FIRST axis</label>
 							<select class="form-select form-select-md" name="DUAL_DRIVE0_AXIS" id="DUAL_DRIVE0_AXIS"
-								ng-model="DYNAMIC['DUAL_DRIVE0_AXIS']" model-scope-name="DYNAMIC.DUAL_DRIVE0_AXIS"
-								config-file="hal">
+								ng-model="DYNAMIC['DUAL_DRIVE0_AXIS']" model-scope-name="DYNAMIC.DUAL_DRIVE0_AXIS" config-file="hal">
 								<option value="" selected></option>
 								<option value="X">X</option>
 								<option value="Y">Y</option>
@@ -600,9 +871,9 @@
 
 						<div class="mb-3">
 							<label for="" class="form-label">Select FIRST multi-drive axis second stepper</label>
-							<select class="form-select form-select-md" name="DUAL_DRIVE0_STEPPER"
-								id="DUAL_DRIVE0_STEPPER" ng-model="DYNAMIC['DUAL_DRIVE0_STEPPER']"
-								model-scope-name="DYNAMIC.DUAL_DRIVE0_STEPPER" config-file="hal">
+							<select class="form-select form-select-md" name="DUAL_DRIVE0_STEPPER" id="DUAL_DRIVE0_STEPPER"
+								ng-model="DYNAMIC['DUAL_DRIVE0_STEPPER']" model-scope-name="DYNAMIC.DUAL_DRIVE0_STEPPER"
+								config-file="hal">
 								<option value=""></option>
 								<option value="0">0</option>
 								<option value="1">1</option>
@@ -626,8 +897,7 @@
 						<div class="mb-3">
 							<label for="" class="form-label">Select multi-drive SECOND axis</label>
 							<select class="form-select form-select-md" name="DUAL_DRIVE1_AXIS" id="DUAL_DRIVE1_AXIS"
-								ng-model="DYNAMIC['DUAL_DRIVE1_AXIS']" model-scope-name="DYNAMIC.DUAL_DRIVE1_AXIS"
-								config-file="hal">
+								ng-model="DYNAMIC['DUAL_DRIVE1_AXIS']" model-scope-name="DYNAMIC.DUAL_DRIVE1_AXIS" config-file="hal">
 								<option value="" selected></option>
 								<option value="X">X</option>
 								<option value="Y">Y</option>
@@ -637,9 +907,9 @@
 
 						<div class="mb-3">
 							<label for="" class="form-label">Select SECOND multi-drive axis second stepper</label>
-							<select class="form-select form-select-md" name="DUAL_DRIVE1_STEPPER"
-								id="DUAL_DRIVE1_STEPPER" ng-model="DYNAMIC['DUAL_DRIVE1_STEPPER']"
-								model-scope-name="DYNAMIC.DUAL_DRIVE1_STEPPER" config-file="hal">
+							<select class="form-select form-select-md" name="DUAL_DRIVE1_STEPPER" id="DUAL_DRIVE1_STEPPER"
+								ng-model="DYNAMIC['DUAL_DRIVE1_STEPPER']" model-scope-name="DYNAMIC.DUAL_DRIVE1_STEPPER"
+								config-file="hal">
 								<option value=""></option>
 								<option value="0">0</option>
 								<option value="1">1</option>
@@ -667,8 +937,8 @@
 					<legend>Multi motor axis</legend>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_MULTI_STEPPER_AXIS"
-							ng-model="DYNAMIC['ENABLE_MULTI_STEPPER_AXIS']"
-							model-scope-name="DYNAMIC.ENABLE_MULTI_STEPPER_AXIS" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_MULTI_STEPPER_AXIS']" model-scope-name="DYNAMIC.ENABLE_MULTI_STEPPER_AXIS"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_MULTI_STEPPER_AXIS">Enable multi-drive AXIS</label>
 					</div>
 					<!-- <div class="mb-3 alert alert-warning">
@@ -676,49 +946,45 @@
 					</div> -->
 					<div ng-if="DYNAMIC['ENABLE_MULTI_STEPPER_AXIS']">
 						<!-- <div> -->
-						<div class="mb-3"
-							ng-repeat="linact in LINACTS | filter : smallerThenFilter('axisnum', AXIS_COUNT)">
+						<div class="mb-3" ng-repeat="linact in LINACTS | filter : smallerThenFilter('axisnum', AXIS_COUNT)">
 							<label for="" class="form-label">{{linact.label}} IO MASK</label>
 							<div class="mb-8"></div>
 							<div class="form-check form-check-inline" ng-repeat="step_io in STEP_IOS">
 								<input class="form-check-input" type="checkbox" id="{{linact.name}}_{{step_io.name}}"
-									ng-true-value="{{step_io.value}}" ng-false-value="0"
-									ng-model="DYNAMIC[linact.name][step_io.name]"
-									model-scope-name="DYNAMIC.{{linact.name}}.{{step_io.name}}"
-									ng-click="checkGroupClick(linact.name)" checkgroup="{{linact.name}}"
+									ng-true-value="{{step_io.value}}" ng-false-value="0" ng-model="DYNAMIC[linact.name][step_io.name]"
+									model-scope-name="DYNAMIC.{{linact.name}}.{{step_io.name}}" ng-click="checkGroupClick(linact.name)"
+									checkgroup="{{linact.name}}"
 									ng-init="checkGroupInit('DYNAMIC.'+linact.name+'.'+step_io.name, linact.value, step_io.value)">
-								<label class="form-check-label"
-									for="{{linact.name}}_{{step_io.name}}">{{step_io.name}}</label>
+								<label class="form-check-label" for="{{linact.name}}_{{step_io.name}}">{{step_io.name}}</label>
 							</div>
 							<input type="number" class="form-select-md" name="{{linact.name}}" id="{{linact.name}}"
 								ng-model="DYNAMIC[linact.name]['MASK']" model-scope-name="DYNAMIC.{{linact.name}}.MASK"
 								config-file="hal" var-type="int"
-								ng-init="DYNAMIC[linact.name]={}; DYNAMIC[linact.name]['MASK']=linact.value"
-								checkgroup-display disabled>
+								ng-init="DYNAMIC[linact.name]={}; DYNAMIC[linact.name]['MASK']=linact.value" checkgroup-display
+								disabled>
 							</input>
 						</div>
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="ENABLE_AXIS_AUTOLEVEL"
-								ng-model="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']"
-								model-scope-name="DYNAMIC.ENABLE_AXIS_AUTOLEVEL" config-file="hal">
+								ng-model="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']" model-scope-name="DYNAMIC.ENABLE_AXIS_AUTOLEVEL"
+								config-file="hal">
 
 							<label class="form-check-label" for="ENABLE_AXIS_AUTOLEVEL">Enable AXIS Autolevel</label>
 						</div>
 						<!-- AUTOLEVEL -->
 						<div class="mb-3" ng-if="DYNAMIC['ENABLE_AXIS_AUTOLEVEL']">
-							<div class="mb-3" ng-repeat="limit in LINACTS_LIMITS"
-								ng-init="DYNAMIC[limit.name]=limit.value" ng-if="DEFINED_PINS.includes(limit.pin)">
+							<div class="mb-3" ng-repeat="limit in LINACTS_LIMITS" ng-init="DYNAMIC[limit.name]=limit.value"
+								ng-if="DEFINED_PINS.includes(limit.pin)">
 								<label for="" class="form-label">{{limit.label}}</label>
 								<div class="mb-8"></div>
 								<div class="form-check form-check-inline" ng-repeat="step_io in STEP_IOS">
 									<input class="form-check-input" type="radio" ng-model="DYNAMIC[limit.name]"
 										model-scope-name="DYNAMIC.{{limit.name}}" value="{{step_io.value}}">
-									<label class="form-check-label"
-										for="{{linact.name}}_{{step_io.name}}">{{step_io.name}}</label>
+									<label class="form-check-label" for="{{linact.name}}_{{step_io.name}}">{{step_io.name}}</label>
 								</div>
 								<input type="text" class="form-select-md" name="{{limit.name}}" id="{{limit.name}}"
-									ng-model="DYNAMIC[limit.name]" model-scope-name="DYNAMIC.{{limit.name}}"
-									config-file="hal" var-type="int" disabled>
+									ng-model="DYNAMIC[limit.name]" model-scope-name="DYNAMIC.{{limit.name}}" config-file="hal"
+									var-type="int" disabled>
 								</input>
 							</div>
 
@@ -734,38 +1000,34 @@
 					</div>
 					<div class="mb-3" ng-repeat="x in numSmallerOrEq(TOOLS,'TOOL_COUNT')">
 						<label for="" class="form-label">Select TOOL{{x}}</label>
-						<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}"
-							ng-model="DYNAMIC['TOOLS'][x]" ng-options="y.id as y.name for y in TOOL_OPTIONS"
-							model-scope-name="DYNAMIC.TOOLS.{{x}}" config-file="hal"></select>
+						<select class="form-select form-select-md" name="TOOL{{x}}" id="TOOL{{x}}" ng-model="DYNAMIC['TOOLS'][x]"
+							ng-options="y.id as y.name for y in TOOL_OPTIONS" model-scope-name="DYNAMIC.TOOLS.{{x}}"
+							config-file="hal"></select>
 						</select>
-						<div ng-include="'./tools/'+DYNAMIC['TOOLS'][x]+'.html'"
-							onload="toolChanged({x}, {JSON_BUILD})"></div>
+						<div ng-include="'./tools/'+DYNAMIC['TOOLS'][x]+'.html'" onload="toolChanged({x}, {JSON_BUILD})"></div>
 					</div>
 				</fieldset>
 				<fieldset>
 					<legend>Laser options</legend>
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="ENABLE_LASER_PPI"
-							ng-model="DYNAMIC['ENABLE_LASER_PPI']" model-scope-name="DYNAMIC.ENABLE_LASER_PPI"
-							config-file="hal">
+						<input class="form-check-input" type="checkbox" id="ENABLE_LASER_PPI" ng-model="DYNAMIC['ENABLE_LASER_PPI']"
+							model-scope-name="DYNAMIC.ENABLE_LASER_PPI" config-file="hal">
 						<label class="form-check-label" for="ENABLE_LASER_PPI">Enable Laser PPI</label>
 					</div>
 					<div class="mb-3" ng-if="DYNAMIC['ENABLE_LASER_PPI']">
 						<label for="" class="form-label">Laser PPI output µCNC pin</label>
-						<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI"
-							ng-model="DYNAMIC['LASER_PPI']" model-scope-name="DYNAMIC.LASER_PPI"
-							ng-options="y.pin as y.pin for y in UCNCPINS | orTypeFilter: ['pwm','generic_output']"
-							config-file="hal">
+						<select class="form-select form-select-md" name="LASER_PPI" id="LASER_PPI" ng-model="DYNAMIC['LASER_PPI']"
+							model-scope-name="DYNAMIC.LASER_PPI"
+							ng-options="y.pin as y.pin for y in UCNCPINS | orTypeFilter: ['pwm','generic_output']" config-file="hal">
 						</select>
-						<div class="alert alert-warning" role="alert"
-							ng-show="!DEFINED_PINS.includes(DYNAMIC['LASER_PPI'])">
+						<div class="alert alert-warning" role="alert" ng-show="!DEFINED_PINS.includes(DYNAMIC['LASER_PPI'])">
 							{{DYNAMIC['LASER_PPI']}} pin is not defined for your board!
 						</div>
 
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="INVERT_LASER_PPI_LOGIC"
-								ng-model="DYNAMIC['INVERT_LASER_PPI_LOGIC']"
-								model-scope-name="DYNAMIC.INVERT_LASER_PPI_LOGIC" config-file="hal">
+								ng-model="DYNAMIC['INVERT_LASER_PPI_LOGIC']" model-scope-name="DYNAMIC.INVERT_LASER_PPI_LOGIC"
+								config-file="hal">
 							<label class="form-check-label" for="INVERT_LASER_PPI_LOGIC">Invert Laser PPI signal
 								logic</label>
 						</div>
@@ -775,39 +1037,32 @@
 					<legend>SPI and I2C Expansion interfaces</legend>
 					<p>Software SPI port</p>
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="SOFT_SPI_ENABLED"
-							ng-model="DYNAMIC['SOFT_SPI_ENABLED']" model-scope-name="DYNAMIC.SOFT_SPI_ENABLED"
-							config-file="hal">
+						<input class="form-check-input" type="checkbox" id="SOFT_SPI_ENABLED" ng-model="DYNAMIC['SOFT_SPI_ENABLED']"
+							model-scope-name="DYNAMIC.SOFT_SPI_ENABLED" config-file="hal">
 						<label class="form-check-label" for="SOFT_SPI_ENABLED">Enable shared software SPI port</label>
 					</div>
 					<div ng-if="DYNAMIC['SOFT_SPI_ENABLED']">
 						<label for="SOFT_SPI_CLK" class="form-label">SPI Clock</label>
 						<select class="form-select form-select-md" name="SOFT_SPI_CLK" id="SOFT_SPI_CLK"
 							ng-model="DYNAMIC['SOFT_SPI_CLK']" model-scope-name="DYNAMIC.SOFT_SPI_CLK"
-							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-							config-file="hal">
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}" config-file="hal">
 						</select>
-						<div class="alert alert-warning" role="alert"
-							ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_CLK'])">
+						<div class="alert alert-warning" role="alert" ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_CLK'])">
 							{{DYNAMIC['SOFT_SPI_CLK']}} pin is not defined for your board!
 						</div>
 						<label for="SOFT_SPI_SDO" class="form-label">SPI Serial Data Out</label>
 						<select class="form-select form-select-md" name="SOFT_SPI_SDO" id="SOFT_SPI_SDO"
 							ng-model="DYNAMIC['SOFT_SPI_SDO']" model-scope-name="DYNAMIC.SOFT_SPI_SDO"
-							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
-							config-file="hal">
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}" config-file="hal">
 						</select>
-						<div class="alert alert-warning" role="alert"
-							ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDO'])">
+						<div class="alert alert-warning" role="alert" ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDO'])">
 							{{DYNAMIC['SOFT_SPI_SDO']}} pin is not defined for your board!
 						</div>
 						<label for="SOFT_SPI_SDI" class="form-label">SPI Serial Data In</label>
 						<select class="form-select form-select-md" name="SOFT_SPI_SDI" id="SOFT_SPI_SDI"
 							ng-model="DYNAMIC['SOFT_SPI_SDI']" model-scope-name="DYNAMIC.SOFT_SPI_SDI"
-							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
-							config-file="hal">
-							<div class="alert alert-warning" role="alert"
-								ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDI'])">
+							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}" config-file="hal">
+							<div class="alert alert-warning" role="alert" ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDI'])">
 								{{DYNAMIC['SOFT_SPI_SDI']}} pin is not defined for your board!
 							</div>
 						</select>
@@ -826,18 +1081,16 @@
 								<div class="mb-3">
 									<label for="" class="form-label">Stepper{{x}} TMC type</label>
 									<select class="form-select form-select-md" name="STEPPER{{x}}_DRIVER_TYPE"
-										id="STEPPER{{x}}_DRIVER_TYPE"
-										ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_DRIVER_TYPE']"
-										model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_DRIVER_TYPE"
-										ng-options="y as y for y in TMCS" var-type="int" config-file="hal">
+										id="STEPPER{{x}}_DRIVER_TYPE" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_DRIVER_TYPE']"
+										model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_DRIVER_TYPE" ng-options="y as y for y in TMCS"
+										var-type="int" config-file="hal">
 									</select>
 								</div>
 								<div class="mb-3">
 									<label for="STEPPER{{x}}_TMC_INTERFACE" class="form-label">Stepper{{x}} TMC
 										interface</label>
 									<select class="form-select form-select-md" name="STEPPER{{x}}_TMC_INTERFACE"
-										id="STEPPER{{x}}_TMC_INTERFACE"
-										ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']"
+										id="STEPPER{{x}}_TMC_INTERFACE" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']"
 										model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_TMC_INTERFACE"
 										ng-options="y.id as y.name for y in TMCS_COM" config-file="hal">
 									</select>
@@ -846,8 +1099,7 @@
 									<div class="mb-3">
 										<label for="STEPPER{{x}}_UART_TX" class="form-label">Stepper{{x}} TMC UART TX
 											pin</label>
-										<select class="form-select form-select-md" name="STEPPER{{x}}_UART_TX"
-											id="STEPPER{{x}}_UART_TX"
+										<select class="form-select form-select-md" name="STEPPER{{x}}_UART_TX" id="STEPPER{{x}}_UART_TX"
 											ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_TX']"
 											model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_TX"
 											ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
@@ -860,8 +1112,7 @@
 										</div>
 										<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} TMC UART RX
 											pin</label>
-										<select class="form-select form-select-md" name="STEPPER{{x}}_UART_RX"
-											id="STEPPER{{x}}_UART_RX"
+										<select class="form-select form-select-md" name="STEPPER{{x}}_UART_RX" id="STEPPER{{x}}_UART_RX"
 											ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_RX']"
 											model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_RX"
 											ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
@@ -874,13 +1125,10 @@
 										</div>
 										<div ng-if="VERSION>10703">
 											<label for="STEPPER{{x}}_UART_ADDRESS" class="form-label">Stepper{{x}} UART
-												address: <span
-													ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
-											<input type="range" class="form-range" min="0" max="3"
-												name="STEPPER{{x}}_UART_ADDRESS" id="STEPPER{{x}}_UART_ADDRESS"
-												ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
-												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS"
-												config-file="hal" var-type="int"
+												address: <span ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"></span></label>
+											<input type="range" class="form-range" min="0" max="3" name="STEPPER{{x}}_UART_ADDRESS"
+												id="STEPPER{{x}}_UART_ADDRESS" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']"
+												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_ADDRESS" config-file="hal" var-type="int"
 												ng-init="DYNAMIC['STEPPERS'][x]['STEPPER_UART_ADDRESS']=0">
 										</div>
 									</div>
@@ -889,8 +1137,8 @@
 									<div class="mb-3">
 										<label for="STEPPER{{x}}_SPI_CS" class="form-label">Stepper{{x}} TMC SPI CS
 											pin</label>
-										<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CS"
-											id="STEPPER{{x}}_SPI_CS" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_SPI_CS']"
+										<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CS" id="STEPPER{{x}}_SPI_CS"
+											ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_SPI_CS']"
 											model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_SPI_CS"
 											ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
 											config-file="hal">
@@ -903,8 +1151,7 @@
 										<div class="form-check form-switch">
 											<input class="form-check-input" type="checkbox" id="STEPPER{{x}}_SPI_CUSTOM"
 												ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_SPI_CUSTOM']"
-												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_SPI_CUSTOM"
-												config-file="none">
+												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_SPI_CUSTOM" config-file="none">
 											<label class="form-check-label" for="STEPPER{{x}}_SPI_CUSTOM">Enable Soft
 												SPI pins (if disabled uses predefined software SPI port)</label>
 										</div>
@@ -912,8 +1159,7 @@
 											<label for="STEPPER{{x}}_SPI_CLK" class="form-label">Stepper{{x}} TMC SPI
 												CLK
 												pin</label>
-											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CLK"
-												id="STEPPER{{x}}_SPI_CLK"
+											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_CLK" id="STEPPER{{x}}_SPI_CLK"
 												ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_SPI_CLK']"
 												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_SPI_CLK"
 												ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
@@ -928,8 +1174,7 @@
 											<label for="STEPPER{{x}}_SPI_SDO" class="form-label">Stepper{{x}} TMC SPI
 												SDO
 												pin</label>
-											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDO"
-												id="STEPPER{{x}}_SPI_SDO"
+											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDO" id="STEPPER{{x}}_SPI_SDO"
 												ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_SPI_SDO']"
 												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_SPI_SDO"
 												ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
@@ -944,8 +1189,7 @@
 											<label for="STEPPER{{x}}_SPI_SDI" class="form-label">Stepper{{x}} TMC SPI
 												SDI
 												pin</label>
-											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDI"
-												id="STEPPER{{x}}_SPI_SDI"
+											<select class="form-select form-select-md" name="STEPPER{{x}}_SPI_SDI" id="STEPPER{{x}}_SPI_SDI"
 												ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_SPI_SDI']"
 												model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_SPI_SDI"
 												ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
@@ -964,43 +1208,36 @@
 										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"></span> mA</label>
 								<input type="range" class="form-range" min="0" max="1500" name="STEPPER{{x}}_CURRENT_MA"
 									id="STEPPER{{x}}_CURRENT_MA" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_CURRENT_MA']"
-									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_CURRENT_MA" config-file="hal"
-									var-type="int">
+									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_CURRENT_MA" config-file="hal" var-type="int">
 								<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} microstepping</label>
-								<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP"
-									id="STEPPER{{x}}_MICROSTEP" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_MICROSTEP']"
-									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_MICROSTEP"
-									ng-options="y as y for y in MICROSTEPS" var-type="int" config-file="hal">
+								<select class="form-select form-select-md" name="STEPPER{{x}}_MICROSTEP" id="STEPPER{{x}}_MICROSTEP"
+									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_MICROSTEP']"
+									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_MICROSTEP" ng-options="y as y for y in MICROSTEPS"
+									var-type="int" config-file="hal">
 								</select>
 								<label for="STEPPER{{x}}_RSENSE" class="form-label">Stepper{{x}} RSense: <span
 										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_RSENSE']"></span> ohms</label>
-								<input type="range" class="form-range" step="0.01" min="0" max="2"
-									name="STEPPER{{x}}_RSENSE" id="STEPPER{{x}}_RSENSE"
-									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_RSENSE']"
-									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_RSENSE" var-type="float"
-									config-file="hal">
+								<input type="range" class="form-range" step="0.01" min="0" max="2" name="STEPPER{{x}}_RSENSE"
+									id="STEPPER{{x}}_RSENSE" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_RSENSE']"
+									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_RSENSE" var-type="float" config-file="hal">
 								<label for="STEPPER{{x}}_HOLD_MULT" class="form-label">Stepper{{x}} Hold multiplier:
 									<span ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_HOLD_MULT']"></span></label>
-								<input type="range" class="form-range" step="0.01" min="0" max="1"
-									name="STEPPER{{x}}_HOLD_MULT" id="STEPPER{{x}}_HOLD_MULT"
-									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_HOLD_MULT']"
-									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_HOLD_MULT" var-type="float"
-									config-file="hal">
+								<input type="range" class="form-range" step="0.01" min="0" max="1" name="STEPPER{{x}}_HOLD_MULT"
+									id="STEPPER{{x}}_HOLD_MULT" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_HOLD_MULT']"
+									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_HOLD_MULT" var-type="float" config-file="hal">
 								<label for="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" class="form-label">Stepper{{x}}
-									stealthchop threshold: <span
-										ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_STEALTHCHOP_THERSHOLD']"></span>
+									stealthchop threshold: <span ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_STEALTHCHOP_THERSHOLD']"></span>
 									Hz</label>
-								<input type="range" class="form-range" min="0" max="1048575"
-									name="STEPPER{{x}}_STEALTHCHOP_THERSHOLD" id="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
+								<input type="range" class="form-range" min="0" max="1048575" name="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
+									id="STEPPER{{x}}_STEALTHCHOP_THERSHOLD"
 									ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_STEALTHCHOP_THERSHOLD']"
-									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_STEALTHCHOP_THERSHOLD"
-									var-type="int" config-file="hal">
+									model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_STEALTHCHOP_THERSHOLD" var-type="int"
+									config-file="hal">
 								<div class="form-check form-switch">
-									<input class="form-check-input" type="checkbox"
-										id="STEPPER{{x}}_ENABLE_INTERPLATION"
+									<input class="form-check-input" type="checkbox" id="STEPPER{{x}}_ENABLE_INTERPLATION"
 										ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_ENABLE_INTERPLATION']"
-										model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_ENABLE_INTERPLATION"
-										var-type="bool" config-file="hal">
+										model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_ENABLE_INTERPLATION" var-type="bool"
+										config-file="hal">
 									<label class="form-check-label" for="STEPPER{{x}}_ENABLE_INTERPLATION">Stepper{{x}}
 										microstepping
 										interpolation</label>
@@ -1008,13 +1245,11 @@
 								<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_DRIVER_TYPE'][x]=='2209'">
 									<label for="STEPPER{{x}}_STALL_SENSITIVITY" class="form-label">Stepper{{x}}
 										stall sensitivity:
-										<span
-											ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_STALL_SENSITIVITY']"></span></label>
-									<input type="range" class="form-range" min="0" max="255"
-										name="STEPPER{{x}}_STALL_SENSITIVITY" id="STEPPER{{x}}_STALL_SENSITIVITY"
-										ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_STALL_SENSITIVITY']"
-										model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_STALL_SENSITIVITY"
-										var-type="int" config-file="hal">
+										<span ng-bind="DYNAMIC['STEPPERS'][x]['STEPPER_STALL_SENSITIVITY']"></span></label>
+									<input type="range" class="form-range" min="0" max="255" name="STEPPER{{x}}_STALL_SENSITIVITY"
+										id="STEPPER{{x}}_STALL_SENSITIVITY" ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_STALL_SENSITIVITY']"
+										model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_STALL_SENSITIVITY" var-type="int"
+										config-file="hal">
 								</div>
 							</div>
 						</div>
@@ -1028,10 +1263,9 @@
 					<div>
 						<label for="IC74HC595_COUNT" class="form-label">Number of chained IC74HC595's: <span
 								ng-bind="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"></label>
-						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT"
-							id="IC74HC595_COUNT" ng-model="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"
-							model-scope-name="DYNAMIC.IC74HC595.IC74HC595_COUNT" var-type="int" config-file="boardmap"
-							ng-init="DYNAMIC['IC74HC595']['IC74HC595_COUNT']=0">
+						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT" id="IC74HC595_COUNT"
+							ng-model="DYNAMIC['IC74HC595']['IC74HC595_COUNT']" model-scope-name="DYNAMIC.IC74HC595.IC74HC595_COUNT"
+							var-type="int" config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_COUNT']=0">
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" id="IC74HC595_CUSTOM_SHIFT_IO"
 								ng-model="DYNAMIC['IC74HC595']['IC74HC595_CUSTOM_SHIFT_IO']"
@@ -1043,8 +1277,7 @@
 							<div ng-if="DYNAMIC['IC74HC595']['IC74HC595_COUNT']!=0">
 								<label for="IC74HC595_DATA" class="form-label">IC74HC595's data pin</label>
 								<select class="form-select form-select-md" name="IC74HC595_DATA" id="IC74HC595_DATA"
-									ng-model="DYNAMIC['IC74HC595']['IC74HC595_DATA']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DATA"
+									ng-model="DYNAMIC['IC74HC595']['IC74HC595_DATA']" model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DATA"
 									ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
 									config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DATA']='DOUT8'">
 								</select>
@@ -1054,8 +1287,7 @@
 								</div>
 								<label for="IC74HC595_CLK" class="form-label">IC74HC595's clock pin</label>
 								<select class="form-select form-select-md" name="IC74HC595_CLK" id="IC74HC595_CLK"
-									ng-model="DYNAMIC['IC74HC595']['IC74HC595_CLK']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CLK"
+									ng-model="DYNAMIC['IC74HC595']['IC74HC595_CLK']" model-scope-name="DYNAMIC.IC74HC595.IC74HC595_CLK"
 									ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_output'}"
 									config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_CLK']='DOUT9'">
 								</select>
@@ -1077,10 +1309,9 @@
 								<label for="IC74HC595_DELAY_CYCLES" class="form-label">IC74HC595 pulse cycle delay:
 									<span ng-bind="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"></label>
 								<input type="range" class="form-range" min="0" max="100" name="IC74HC595_DELAY_CYCLES"
-									id="IC74HC595_DELAY_CYCLES"
-									ng-model="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"
-									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DELAY_CYCLES" var-type="int"
-									config-file="boardmap" ng-init="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
+									id="IC74HC595_DELAY_CYCLES" ng-model="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']"
+									model-scope-name="DYNAMIC.IC74HC595.IC74HC595_DELAY_CYCLES" var-type="int" config-file="boardmap"
+									ng-init="DYNAMIC['IC74HC595']['IC74HC595_DELAY_CYCLES']=0">
 
 							</div>
 						</div>
@@ -1089,9 +1320,8 @@
 				<fieldset>
 					<legend>Encoders</legend>
 					<label for="ENCODERS" class="form-label">Number of ENCODERS: <span ng-bind="ENCODERS"></label>
-					<input type="range" class="form-range" min="0" max="8" name="ENCODERS" id="ENCODERS"
-						ng-model="ENCODERS" model-scope-name="ENCODERS" var-type="int" ng-init="ENCODERS=0"
-						config-file="hal">
+					<input type="range" class="form-range" min="0" max="8" name="ENCODERS" id="ENCODERS" ng-model="ENCODERS"
+						model-scope-name="ENCODERS" var-type="int" ng-init="ENCODERS=0" config-file="hal">
 					<div class="mb-3" ng-repeat="x in numSmaller(ENCODER, 'ENCODERS')">
 						<label for="ENC{{x}}_PULSE" class="form-label">Select ENC{{x}}_PULSE pin</label>
 						<select class="form-select form-select-md" name="ENC{{x}}_PULSE" id="ENC{{x}}_PULSE"
@@ -1108,15 +1338,14 @@
 					</div>
 					<div ng-if="ENCODERS>0">
 						<div class="form-check form-switch">
-							<input class="form-check-input" type="checkbox" id="ASSIGN_ENCODERS"
-								ng-model="ASSIGN_ENCODERS" model-scope-name="ASSIGN_ENCODERS" config-file="none">
+							<input class="form-check-input" type="checkbox" id="ASSIGN_ENCODERS" ng-model="ASSIGN_ENCODERS"
+								model-scope-name="ASSIGN_ENCODERS" config-file="none">
 							<label class="form-check-label" for="ASSIGN_ENCODERS">Assign step encoders</label>
 						</div>
 						<div class="mb-3" ng-repeat="x in STEP_ENCODERS" ng-show="ASSIGN_ENCODERS">
 							<label for="{{x}}" class="form-label">Select {{x}}</label>
-							<select class="form-select form-select-md" name="{{x}}" id="{{x}}"
-								ng-model="DYNAMIC['STEP_ENCODERS'][x]" model-scope-name="DYNAMIC.STEP_ENCODERS.{{x}}"
-								config-file="hal">
+							<select class="form-select form-select-md" name="{{x}}" id="{{x}}" ng-model="DYNAMIC['STEP_ENCODERS'][x]"
+								model-scope-name="DYNAMIC.STEP_ENCODERS.{{x}}" config-file="hal">
 								<option value=""></option>
 								<option value="ENC0">ENC0</option>
 								<option value="ENC1">ENC1</option>
@@ -1129,13 +1358,13 @@
 							</select>
 						</div>
 						<div class="form-check form-switch">
-							<input class="form-check-input" type="checkbox" id="ENABLE_ENCODER_RPM"
-								ng-model="ENABLE_ENCODER_RPM" model-scope-name="ENABLE_ENCODER_RPM" config-file="hal">
+							<input class="form-check-input" type="checkbox" id="ENABLE_ENCODER_RPM" ng-model="ENABLE_ENCODER_RPM"
+								model-scope-name="ENABLE_ENCODER_RPM" config-file="hal">
 							<label class="form-check-label" for="ENABLE_ENCODER_RPM">Assign RPM encoder</label>
 							<div class="mb-3" ng-show="ENABLE_ENCODER_RPM">
 								<label for="RPM_ENCODER" class="form-label">Select RPM_ENCODER</label>
-								<select class="form-select form-select-md" name="RPM_ENCODER" id="RPM_ENCODER"
-									ng-model="RPM_ENCODER" model-scope-name="RPM_ENCODER" config-file="hal">
+								<select class="form-select form-select-md" name="RPM_ENCODER" id="RPM_ENCODER" ng-model="RPM_ENCODER"
+									model-scope-name="RPM_ENCODER" config-file="hal">
 									<option value=""></option>
 									<option value="ENC0">ENC0</option>
 									<option value="ENC1">ENC1</option>
@@ -1147,9 +1376,8 @@
 									<option value="ENC7">ENC7</option>
 								</select>
 								<label for="" class="form-label">RPM encoder PPR (pulses per revolution)</label>
-								<input type="number" class="form-control form-select-md" name="RPM_PPR" id="RPM_PPR"
-									ng-model="RPM_PPR" model-scope-name="RPM_PPR" config-file="hal" var-type="int"
-									ng-init="RPM_PPR=1">
+								<input type="number" class="form-control form-select-md" name="RPM_PPR" id="RPM_PPR" ng-model="RPM_PPR"
+									model-scope-name="RPM_PPR" config-file="hal" var-type="int" ng-init="RPM_PPR=1">
 								</input>
 								<label for="RPM_INDEX_INPUT" class="form-label">Select RPM_INDEX_INPUT pin</label>
 								<select class="form-select form-select-md" name="RPM_INDEX_INPUT" id="RPM_INDEX_INPUT"
@@ -1158,8 +1386,8 @@
 									model-scope-name="RPM_INDEX_INPUT" config-file="hal">
 								</select>
 								<input class="form-check-input" type="checkbox" id="RPM_SYNC_UPDATE_ON_INDEX_ONLY"
-									ng-model="RPM_SYNC_UPDATE_ON_INDEX_ONLY"
-									model-scope-name="RPM_SYNC_UPDATE_ON_INDEX_ONLY" config-file="hal">
+									ng-model="RPM_SYNC_UPDATE_ON_INDEX_ONLY" model-scope-name="RPM_SYNC_UPDATE_ON_INDEX_ONLY"
+									config-file="hal">
 								<label class="form-check-label" for="RPM_SYNC_UPDATE_ON_INDEX_ONLY">RPM sync update only
 									on index pulse</label>
 							</div>
@@ -1173,16 +1401,15 @@
 					<legend>Enable extension options</legend>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_MAIN_LOOP_MODULES"
-							ng-model="DYNAMIC['ENABLE_MAIN_LOOP_MODULES']"
-							model-scope-name="DYNAMIC.ENABLE_MAIN_LOOP_MODULES" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_MAIN_LOOP_MODULES']" model-scope-name="DYNAMIC.ENABLE_MAIN_LOOP_MODULES"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_MAIN_LOOP_MODULES">Enable main cnc application loop
 							extension
 							callbacks</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_IO_MODULES"
-							ng-model="DYNAMIC['ENABLE_IO_MODULES']" model-scope-name="DYNAMIC.ENABLE_IO_MODULES"
-							config-file="hal">
+							ng-model="DYNAMIC['ENABLE_IO_MODULES']" model-scope-name="DYNAMIC.ENABLE_IO_MODULES" config-file="hal">
 						<label class="form-check-label" for="ENABLE_IO_MODULES">Enable IO extension callbacks</label>
 					</div>
 					<div class="form-check form-switch">
@@ -1204,23 +1431,23 @@
 
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_RT_SYNC_MOTIONS"
-							ng-model="DYNAMIC['ENABLE_RT_SYNC_MOTIONS']"
-							model-scope-name="DYNAMIC.ENABLE_RT_SYNC_MOTIONS" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_RT_SYNC_MOTIONS']" model-scope-name="DYNAMIC.ENABLE_RT_SYNC_MOTIONS"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_RT_SYNC_MOTIONS">Enable interpolation realtime
 							extension
 							callbacks</label>
 					</div>
 					<div class="form-check form-switch" ng-if="VERSION<10790">
 						<input class="form-check-input" type="checkbox" id="ENABLE_SETTINGS_MODULES"
-							ng-model="DYNAMIC['ENABLE_SETTINGS_MODULES']"
-							model-scope-name="DYNAMIC.ENABLE_SETTINGS_MODULES" config-file="hal">
+							ng-model="DYNAMIC['ENABLE_SETTINGS_MODULES']" model-scope-name="DYNAMIC.ENABLE_SETTINGS_MODULES"
+							config-file="hal">
 						<label class="form-check-label" for="ENABLE_SETTINGS_MODULES">Enable settings storage extension
 							callbacks</label>
 					</div>
 					<div class="form-check form-switch" ng-if="VERSION>10789">
 						<input class="form-check-input" type="checkbox" id="DISABLE_SETTINGS_MODULES"
-							ng-model="DYNAMIC['DISABLE_SETTINGS_MODULES']"
-							model-scope-name="DYNAMIC.DISABLE_SETTINGS_MODULES" config-file="hal">
+							ng-model="DYNAMIC['DISABLE_SETTINGS_MODULES']" model-scope-name="DYNAMIC.DISABLE_SETTINGS_MODULES"
+							config-file="hal">
 						<label class="form-check-label" for="DISABLE_SETTINGS_MODULES"><b>Disable</b> settings storage
 							extension
 							callbacks</label>
@@ -1231,8 +1458,7 @@
 					<legend>Enable extension modules</legend>
 					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS | filter: filterModules({VERSION})">
 						<input class="form-check-input" type="checkbox" name="{{x.id}}" id="{{x.id}}"
-							ng-model="DYNAMIC['MODULES'][x.id]" model-scope-name="DYNAMIC.MODULES.{{x.id}}"
-							config-file="module">
+							ng-model="DYNAMIC['MODULES'][x.id]" model-scope-name="DYNAMIC.MODULES.{{x.id}}" config-file="module">
 						<label class="form-check-label" for="{{x.id}}" ng-bind="x.name"></label>
 						<div ng-if="DYNAMIC['MODULES'][x.id]" ng-include="'./modules/'+x.id+'.html'"></div>
 					</div>
@@ -1243,8 +1469,7 @@
 					<legend>Custom boardmap configs</legend>
 					<div class="mb-3">
 						<label class="form-check-label" for="CUSTOM_BOARDMAP_CONFIGS">Custom boardmap configs</label>
-						<textarea class="form-control" id="CUSTOM_BOARDMAP_CONFIGS"
-							ng-model="DYNAMIC['CUSTOM_BOARDMAP_CONFIGS']"
+						<textarea class="form-control" id="CUSTOM_BOARDMAP_CONFIGS" ng-model="DYNAMIC['CUSTOM_BOARDMAP_CONFIGS']"
 							model-scope-name="DYNAMIC.CUSTOM_BOARDMAP_CONFIGS" config-file="none"></textarea>
 					</div>
 				</fieldset>
@@ -1261,8 +1486,7 @@
 				<div class="card">
 					<div class="center-content">
 						<img class="card-img-top logo"
-							src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png"
-							alt="µCNC logo">
+							src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
 					</div>
 					<div class="card-body">
 						<h4 class="card-title">Config µCNC</h4>
@@ -1270,37 +1494,37 @@
 					</div>
 					<ul class="list-group list-group-flush">
 
-						<li class="list-group-item"><a class="btn btn-secondary" href="{{getSrc(VERSION)}}"
-								target="_blank">Download and unzip µCNC ({{getVersion(VERSION)}})</a></li>
-						<li class="list-group-item"><a class="btn btn-secondary" href="{{getModules(VERSION)}}"
-								target="_blank">µCNC addon modules</a><small id="helpId" class="form-text text-muted">If
+						<li class="list-group-item"><a class="btn btn-secondary" href="{{getSrc(VERSION)}}" target="_blank">Download
+								and unzip µCNC ({{getVersion(VERSION)}})</a></li>
+						<li class="list-group-item"><a class="btn btn-secondary" href="{{getModules(VERSION)}}" target="_blank">µCNC
+								addon modules</a><small id="helpId" class="form-text text-muted">If
 								you are using modules you need to download them
 								place each used module directory inside
 								uCNC/src/modules/ directory</small></li>
-						<li class="list-group-item"><a name="boardmap_reset" id="boardmap_reset" class="btn btn-primary"
-								href="#" role="button">Download boardmap_reset.h</a>
+						<li class="list-group-item"><a name="boardmap_reset" id="boardmap_reset" class="btn btn-primary" href="#"
+								role="button">Download boardmap_reset.h</a>
 							<small id="helpId" class="form-text text-muted">And place the file inside
 								uCNC root directory</small>
 						</li>
-						<li class="list-group-item"><a name="boardmap_overrides" id="boardmap_overrides"
-								class="btn btn-primary" href="#" role="button">Download boardmap_overrides.h</a>
+						<li class="list-group-item"><a name="boardmap_overrides" id="boardmap_overrides" class="btn btn-primary"
+								href="#" role="button">Download boardmap_overrides.h</a>
 							<small id="helpId" class="form-text text-muted">And replace the existing file inside
 								uCNC root directory</small>
 						</li>
-						<li class="list-group-item"><a name="cnc_hal_reset" id="cnc_hal_reset" class="btn btn-primary"
-								href="#" role="button">Download cnc_hal_reset.h</a>
+						<li class="list-group-item"><a name="cnc_hal_reset" id="cnc_hal_reset" class="btn btn-primary" href="#"
+								role="button">Download cnc_hal_reset.h</a>
 							<small id="helpId" class="form-text text-muted">And place the file inside
 								uCNC root directory</small>
 						</li>
-						<li class="list-group-item"><a name="cnc_hal_overrides" id="cnc_hal_overrides"
-								class="btn btn-primary" href="#" role="button">Download cnc_hal_overrides.h</a>
+						<li class="list-group-item"><a name="cnc_hal_overrides" id="cnc_hal_overrides" class="btn btn-primary"
+								href="#" role="button">Download cnc_hal_overrides.h</a>
 							<small id="helpId" class="form-text text-muted">And replace the existing file inside
 								uCNC root directory</small>
 						</li>
 						<li class="list-group-item">Compile and upload the project either via Platform IO (recommended)
 							or Arduino IDE.</li>
-						<li class="list-group-item"><a name="store_settings" id="store_settings" class="btn btn-success"
-								href="#" role="button">Download config settings</a>
+						<li class="list-group-item"><a name="store_settings" id="store_settings" class="btn btn-success" href="#"
+								role="button">Download config settings</a>
 							<small id="helpId" class="form-text text-muted">These can be later used to reload your
 								settings</small>
 						</li>
@@ -1336,7 +1560,7 @@
 			<div class="modal-content">
 				<div class="d-flex justify-content-center align-items-center flex-column">
 					<img class="card-img-top logo-sm"
-				src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
+						src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
 					<p id="loadingtext">Updating...</p>
 					<div class="spinner spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
 					</div>
