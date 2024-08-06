@@ -1559,7 +1559,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	};
 
 	$scope.mcuChanged = function () {
-		document.getElementById('loadingtext').innerText = "Fetching MCU...this may take a while";
+		document.getElementById('loadingtext').innerHTML = "Fetching MCU...<br>This can take up to a minute and the page may become unresponsive.<br>Please wait and be patient.";
 		document.getElementById('reloading').style.display = "block";
 		setTimeout(function () {
 			updateScope(document.getElementById('BOARD'), null);
@@ -1568,7 +1568,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	};
 
 	$scope.boardChanged = function () {
-		document.getElementById('loadingtext').innerText = "Fetching MCU...this may take a while";
+		document.getElementById('loadingtext').innerHTML = "Fetching MCU...<br>This can take up to a minute and the page may become unresponsive.<br>Please wait and be patient.";
 		document.getElementById('reloading').style.display = "block";
 		setTimeout(function () {
 			updateBoardmap($scope);
@@ -1782,6 +1782,7 @@ ready(function () {
 	});
 	scope.boardChanged();
 	scope.checkGroupInit();
+
 
 	// fetch('https://api.github.com/repos/Paciente8159/uCNC-config-builder/contents/pre-configs/').then((resp) => {
 	// 	resp.json().then((data) => {
