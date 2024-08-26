@@ -1,4 +1,45 @@
 <div>
+	<label for="SD_SPI_CS" class="form-label">Define SD_CARD_INTERFACE</label>
+	<select class="form-select form-select-md" name="SD_CARD_INTERFACE" id="SD_CARD_INTERFACE"
+		ng-model="SD_CARD_INTERFACE"
+		config-file="hal" ng-init="SD_CARD_INTERFACE='SD_CARD_HW_SPI'">
+		<option value="SD_CARD_HW_SPI">SD_CARD_HW_SPI</option>
+		<option value="SD_CARD_HW_SPI2">SD_CARD_HW_SPI2</option>
+		<option value="SD_CARD_SW_SPI">SD_CARD_SW_SPI</option>
+	</select>
+	
+	<div ng-if="SD_CARD_INTERFACE=='SD_CARD_SW_SPI'">
+		<label for="SD_SPI_CLK" class="form-label">Define SD_SPI_CLK</label>
+	<select class="form-select form-select-md" name="SD_SPI_CLK" id="SD_SPI_CLK"
+		ng-model="SD_SPI_CLK"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="SD_SPI_CLK='DOUT30'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_CLK)">
+		{{SD_SPI_CLK}} pin is not defined for
+		your board!
+	</div>
+	<label for="SD_SPI_SDO" class="form-label">Define SD_SPI_SDO</label>
+	<select class="form-select form-select-md" name="SD_SPI_SDO" id="SD_SPI_SDO"
+		ng-model="SD_SPI_SDO"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="SD_SPI_SDO='DOUT29'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_SDO)">
+		{{SD_SPI_SDO}} pin is not defined for
+		your board!
+	</div>
+	<label for="SD_SPI_SDI" class="form-label">Define SD_SPI_SDI</label>
+	<select class="form-select form-select-md" name="SD_SPI_SDI" id="SD_SPI_SDI"
+		ng-model="SD_SPI_SDI"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+		config-file="hal" ng-init="SD_SPI_SDI='DIN29'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_SDI)">
+		{{SD_SPI_SDI}} pin is not defined for
+		your board!
+	</div>
+	</div>
 	<label for="SD_SPI_CS" class="form-label">Define SD_SPI_CS</label>
 	<select class="form-select form-select-md" name="SD_SPI_CS" id="SD_SPI_CS"
 		ng-model="SD_SPI_CS"

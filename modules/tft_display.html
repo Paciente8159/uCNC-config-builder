@@ -1,0 +1,77 @@
+<div>
+	<div class="info alert alert-info left-align" role="alert">
+		<h2 style="color: var(--bs-alert-color)">Dependencies</h2>
+		<p>This module requires you include lvgl_support module. Additional configurations to the platformIO ini file are required.
+			<br>Also additional configuration to select the driver and TFT specs are required in the driver.h file.
+			<br>Please read the README file</p>
+	</div>
+	<label for="TFT_SPI_HARDWARE_PORT" class="form-label">Define TFT_SPI_HARDWARE_PORT</label>
+	<select class="form-select form-select-md" name="TFT_SPI_HARDWARE_PORT" id="TFT_SPI_HARDWARE_PORT"
+		ng-model="TFT_SPI_HARDWARE_PORT"
+		config-file="hal" var-type="int" ng-init="TFT_SPI_HARDWARE_PORT='1'">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<!-- <option value="TFT_DISPLAY_SW_SPI">TFT_DISPLAY_SW_SPI(not available yet)</option> -->
+	</select>
+	<label for="TFT_SPI_CLK" class="form-label">Define TFT_SPI_CLK</label>
+	<select class="form-select form-select-md" name="TFT_SPI_CLK" id="TFT_SPI_CLK"
+		ng-model="TFT_SPI_CLK"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="TFT_SPI_CLK='DOUT6'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(TFT_SPI_CLK)">
+		{{TFT_SPI_CLK}} pin is not defined for
+		your board!
+	</div>
+	<label for="TFT_SPI_MOSI" class="form-label">Define TFT_SPI_MOSI</label>
+	<select class="form-select form-select-md" name="TFT_SPI_MOSI" id="TFT_SPI_MOSI"
+		ng-model="TFT_SPI_MOSI"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="TFT_SPI_MOSI='DOUT6'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(TFT_SPI_MOSI)">
+		{{TFT_SPI_MOSI}} pin is not defined for
+		your board!
+	</div>
+	<label for="TFT_RS" class="form-label">Define TFT_RS</label>
+	<select class="form-select form-select-md" name="TFT_RS" id="TFT_RS"
+		ng-model="TFT_RS"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="TFT_RS='DOUT6'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(TFT_RS)">
+		{{TFT_RS}} pin is not defined for
+		your board!
+	</div>
+	<label for="TFT_CS" class="form-label">Define TFT_CS</label>
+	<select class="form-select form-select-md" name="TFT_CS" id="TFT_CS"
+		ng-model="TFT_CS"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="TFT_CS='DOUT6'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(TFT_CS)">
+		{{TFT_CS}} pin is not defined for
+		your board!
+	</div>
+	<label for="TFT_RESET" class="form-label">Define TFT_RESET</label>
+	<select class="form-select form-select-md" name="TFT_RESET" id="TFT_RESET"
+		ng-model="TFT_RESET"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="TFT_RESET='DOUT6'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(TFT_RESET)">
+		{{TFT_RESET}} pin is not defined for
+		your board!
+	</div>
+	<label for="TFT_BACKLIGHT" class="form-label">Define TFT_BACKLIGHT</label>
+	<select class="form-select form-select-md" name="TFT_BACKLIGHT" id="TFT_BACKLIGHT"
+		ng-model="TFT_BACKLIGHT"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+		config-file="hal" ng-init="TFT_BACKLIGHT='DOUT6'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(TFT_BACKLIGHT)">
+		{{TFT_BACKLIGHT}} pin is not defined for
+		your board!
+	</div>
+
+</div>
