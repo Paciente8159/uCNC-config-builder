@@ -376,6 +376,13 @@
 							config-file="boardmap">
 							<option value=""></option>
 						</select>
+						<label for="SPI2_PORT" class="form-label">Which hardware port will be SPI2_PORT?</label>
+						<select class='form-select form-select-sm' name='SPI2_PORT' id='SPI2_PORT'
+							ng-model="DYNAMIC['PORTS']['SPI2_PORT']" model-scope-name="DYNAMIC.PORTS.SPI2_PORT"
+							ng-options="y.port as y.port for y in UCNCSPI | filter: {'mcu': MCU}" var-type="int-nullable"
+							config-file="boardmap">
+							<option value=""></option>
+						</select>
 						<label for="I2C_PORT" class="form-label">Which hardware port will be I2C_PORT?</label>
 						<select class='form-select form-select-sm' name='I2C_PORT' id='I2C_PORT'
 							ng-model="DYNAMIC['PORTS']['I2C_PORT']" model-scope-name="DYNAMIC.PORTS.I2C_PORT"
