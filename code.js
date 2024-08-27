@@ -1047,7 +1047,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'm80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
 		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
-		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display' },
+		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display', lib_deps: 'olikraus/U8g2' },
 		/*{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI (DEPRECATED)' },*/
 		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS (requires up to v1.8.x to work)', condition: 'VERSION<010880' },
 		{ id: 'sd_card_v2', name: 'Support for SD/MMC card via hardware/software SPI (v2 requires at least v1.9.0 to work)', condition: 'VERSION>010879' },
@@ -1056,9 +1056,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'web_pendant', name: 'Adds an improved web pendant for WiFi capable devices. (requires at least v1.9.0 to work)', condition: 'VERSION>010879' },
 		{ id: 'tmc_driver', name: 'Support for TMC drivers. (requires at least v1.8.7 to work)', condition: 'VERSION>010806' },
 		{ id: 'tone_speaker', name: 'Plays sounds and tunes using a PWM output.' },
-		{ id: 'mks_display', name: 'Adds support for MKS TS35-R display and similar ones.' , condition: 'VERSION>019090'},
-		{ id: 'tft_display', name: 'Adds support for TFT displays like the ILI9341 and others.' , condition: 'VERSION>019090'},
-		{ id: 'lvgl_support', name: 'LVGL system menu emulating Win95 for the tft_display module.' , condition: 'VERSION>019090'},
+		{ id: 'mks_display', name: 'Adds support for MKS TS35-R display and similar ones.', condition: 'VERSION>019090', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="/src/modules/mks_display/lv_conf.h"' },
+		{ id: 'tft_display', name: 'Adds support for TFT displays like the ILI9341 and others.', condition: 'VERSION>019090' },
+		{ id: 'lvgl_support', name: 'LVGL system menu emulating Win95 for the tft_display module.', condition: 'VERSION>019090', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="/src/modules/lvgl_support/lv_conf.h"' },
 	];
 
 	$scope.STEPPERS = [
@@ -1796,151 +1796,160 @@ ready(function () {
 	// 		scope.$apply();
 	// 	});
 	// });
-});
 
-function download(filename, text) {
-	var element = document.createElement('a');
-	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-	element.setAttribute('download', filename);
+	function download(filename, text) {
+		var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('download', filename);
 
-	element.style.display = 'none';
-	document.body.appendChild(element);
+		element.style.display = 'none';
+		document.body.appendChild(element);
 
-	element.click();
+		element.click();
 
-	document.body.removeChild(element);
-}
-
-function generate_user_config(options, defguard, reset_file = "", close = true) {
-	var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n\n';
-	if (reset_file !== "") {
-		gentext += "#include \"" + reset_file + ".h\"\n";
+		document.body.removeChild(element);
 	}
 
-	for (var i = 0; i < options.length; i++) {
-		var node = document.querySelector("#" + options[i]);
-		if (node) {
-			if (reset_file === "") {
-				// gentext += "//undefine " + options[i] + "\n";
-				// gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
-				gentext += "#undef " + options[i] + "\n";
-			}
-			else {
-				switch (node.type) {
-					case 'select-one':
-						if (getScope(node) != null) {
+	function generate_user_config(options, defguard, reset_file = "", close = true) {
+		var gentext = '#ifndef ' + defguard + '\n#define ' + defguard + '\n#ifdef __cplusplus\nextern "C"\n{\n#endif\n\n';
+		if (reset_file !== "") {
+			gentext += "#include \"" + reset_file + ".h\"\n";
+		}
+
+		for (var i = 0; i < options.length; i++) {
+			var node = document.querySelector("#" + options[i]);
+			if (node) {
+				if (reset_file === "") {
+					// gentext += "//undefine " + options[i] + "\n";
+					// gentext += "#ifdef " + options[i] + "\n#undef " + options[i] + "\n#endif\n";
+					gentext += "#undef " + options[i] + "\n";
+				}
+				else {
+					switch (node.type) {
+						case 'select-one':
+							if (getScope(node) != null) {
+								// gentext += "//apply new definition of " + options[i] + "\n";
+								gentext += "#define " + options[i] + " " + getScope(node) + "\n";
+							}
+							break;
+						case 'checkbox':
+							if (node.checked) {
+								// gentext += "//apply new definition of " + options[i] + "\n";
+								gentext += "#define " + options[i] + "\n";
+							}
+							else if (node.getAttribute("var-type") === "bool") {
+								// gentext += "//apply new definition of " + options[i] + "\n";
+								gentext += "#define " + options[i] + " false\n";
+							}
+							break;
+						default:
 							// gentext += "//apply new definition of " + options[i] + "\n";
 							gentext += "#define " + options[i] + " " + getScope(node) + "\n";
-						}
-						break;
-					case 'checkbox':
-						if (node.checked) {
-							// gentext += "//apply new definition of " + options[i] + "\n";
-							gentext += "#define " + options[i] + "\n";
-						}
-						else if (node.getAttribute("var-type") === "bool") {
-							// gentext += "//apply new definition of " + options[i] + "\n";
-							gentext += "#define " + options[i] + " false\n";
-						}
-						break;
-					default:
-						// gentext += "//apply new definition of " + options[i] + "\n";
-						gentext += "#define " + options[i] + " " + getScope(node) + "\n";
-						break;
+							break;
+					}
+				}
+			}
+
+		}
+
+		if (close) {
+			gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+		}
+		return gentext;
+	}
+
+	document.getElementById('boardmap_overrides').addEventListener('click', function () {
+		var exclude = [...document.querySelectorAll('.ng-hide [config-file="boardmap"]')].map(x => x.id);
+		var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'BOADMAP_OVERRIDES_H', "boardmap_reset", false);
+		overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value + '\n\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+		download('boardmap_overrides.h', overrides);
+	});
+
+	document.getElementById('boardmap_reset').addEventListener('click', function () {
+		var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H', '', false);
+		var customs = document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value;
+		var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
+		defs.forEach((e) => {
+			overrides += "#undef " + e[1] + "\n";
+		});
+		overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+		download('boardmap_reset.h', overrides);
+	});
+
+	document.getElementById('cnc_hal_reset').addEventListener('click', function () {
+		var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H', '', false);
+		var customs = document.getElementById('CUSTOM_HAL_CONFIGS').value;
+		var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
+		defs.forEach((e) => {
+			overrides += "#undef " + e[1] + "\n";
+		});
+		overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+		download('cnc_hal_reset.h', overrides);
+	});
+
+	document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
+		var exclude = [...document.querySelectorAll('.ng-hide [config-file="hal"]')].map(x => x.id);
+		var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'CNC_HAL_OVERRIDES_H', "cnc_hal_reset", false);
+		var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
+
+		overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_HAL_CONFIGS').value + "\n";
+
+		if (modules.length) {
+			overrides += "\n#define LOAD_MODULES_OVERRIDE() ({"
+			for (var i = 0; i < modules.length; i++) {
+				overrides += "LOAD_MODULE(" + modules[i] + ");";
+			}
+			overrides += "})\n"
+		}
+
+		overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+
+		download('cnc_hal_overrides.h', overrides);
+	});
+
+	document.getElementById('pio_overrides').addEventListener('click', function () {
+		var modules = [...document.querySelectorAll('[module-name-data]')];
+		var lib_deps = "lib_deps = \r\n";
+		var build_flags = "build_flags = \r\n";
+		if (modules.length) {
+			for (var i = 0; i < modules.length; i++) {
+				var sel = modules[i].querySelector('[config-file=module]:checked');
+				if (sel) {
+					var ld = modules[i].querySelector(".lib_deps");
+					var bf = modules[i].querySelector(".build_flags");
+					if (ld) { lib_deps += "\t" + ld.innerHTML + "\r\n"; }
+					if (bf) { build_flags += "\t" + bf.innerHTML + "\r\n"; }
 				}
 			}
 		}
 
-	}
-
-	if (close) {
-		gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-	}
-	return gentext;
-}
-
-document.getElementById('boardmap_overrides').addEventListener('click', function () {
-	var exclude = [...document.querySelectorAll('.ng-hide [config-file="boardmap"]')].map(x => x.id);
-	var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'BOADMAP_OVERRIDES_H', "boardmap_reset", false);
-	overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value + '\n\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-	download('boardmap_overrides.h', overrides);
-});
-
-document.getElementById('boardmap_reset').addEventListener('click', function () {
-	var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H', '', false);
-	var customs = document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value;
-	var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
-	defs.forEach((e) => {
-		overrides += "#undef " + e[1] + "\n";
-	});
-	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-	download('boardmap_reset.h', overrides);
-});
-
-document.getElementById('cnc_hal_reset').addEventListener('click', function () {
-	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H', '', false);
-	var customs = document.getElementById('CUSTOM_HAL_CONFIGS').value;
-	var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
-	defs.forEach((e) => {
-		overrides += "#undef " + e[1] + "\n";
-	});
-	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-	download('cnc_hal_reset.h', overrides);
-});
-
-document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
-	var exclude = [...document.querySelectorAll('.ng-hide [config-file="hal"]')].map(x => x.id);
-	var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'CNC_HAL_OVERRIDES_H', "cnc_hal_reset", false);
-	var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
-
-	overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_HAL_CONFIGS').value + "\n";
-
-	if (modules.length) {
-		overrides += "\n#define LOAD_MODULES_OVERRIDE() ({"
-		for (var i = 0; i < modules.length; i++) {
-			overrides += "LOAD_MODULE(" + modules[i] + ");";
-		}
-		overrides += "})\n"
-	}
-
-	overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-
-	download('cnc_hal_overrides.h', overrides);
-});
-
-document.getElementById('store_settings').addEventListener('click', function () {
-	var key_values = {};
-	document.querySelectorAll('[config-file]').forEach((e, i, p) => {
-		key_values[e.id] = getScope(e);
+		download('webconfig.ini', build_flags + "\r\n" + lib_deps);
 	});
 
-	download('ucnc_build.json', JSON.stringify(key_values));
-});
-
-document.getElementById('load_settings').addEventListener('change', function (e) {
-	var file = e.target.files[0];
-	if (!file) {
-		return;
-	}
-	var scope = angular.element(document.getElementById("uCNCapp")).scope();
-	scope.PREV_MCU = scope.MCU;
-	scope.PREV_BOARD = scope.BOARD;
-	var reader = new FileReader();
-	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
-	document.getElementById('reloading').style.display = "block";
-	reader.onload = function (e) {
-		scope.JSON_BUILD = e.target.result;
-		var build = JSON.parse(scope.JSON_BUILD);
-		loadingfile = true;
-		for (const [k, v] of Object.entries(build)) {
-			updateScope(document.getElementById(k), v);
-		}
-		scope.definedPins();
-		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-			updateScope(e, getScope(e).toString());
+	document.getElementById('store_settings').addEventListener('click', function () {
+		var key_values = {};
+		document.querySelectorAll('[config-file]').forEach((e, i, p) => {
+			key_values[e.id] = getScope(e);
 		});
 
-		setTimeout(function () {
+		download('ucnc_build.json', JSON.stringify(key_values));
+	});
+
+	document.getElementById('load_settings').addEventListener('change', function (e) {
+		var file = e.target.files[0];
+		if (!file) {
+			return;
+		}
+		var scope = angular.element(document.getElementById("uCNCapp")).scope();
+		scope.PREV_MCU = scope.MCU;
+		scope.PREV_BOARD = scope.BOARD;
+		var reader = new FileReader();
+		document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+		document.getElementById('reloading').style.display = "block";
+		reader.onload = function (e) {
+			scope.JSON_BUILD = e.target.result;
+			var build = JSON.parse(scope.JSON_BUILD);
+			loadingfile = true;
 			for (const [k, v] of Object.entries(build)) {
 				updateScope(document.getElementById(k), v);
 			}
@@ -1948,10 +1957,20 @@ document.getElementById('load_settings').addEventListener('change', function (e)
 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
 				updateScope(e, getScope(e).toString());
 			});
-			loadingfile = false;
-			document.getElementById('reloading').style.display = "none";
-		}, 5000);
-	};
-	reader.readAsText(file);
 
-}, false);
+			setTimeout(function () {
+				for (const [k, v] of Object.entries(build)) {
+					updateScope(document.getElementById(k), v);
+				}
+				scope.definedPins();
+				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+					updateScope(e, getScope(e).toString());
+				});
+				loadingfile = false;
+				document.getElementById('reloading').style.display = "none";
+			}, 5000);
+		};
+		reader.readAsText(file);
+
+	}, false);
+});

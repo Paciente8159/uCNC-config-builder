@@ -1,9 +1,8 @@
 <div>
 	<div class="info alert alert-info left-align" role="alert">
 		<h2 style="color: var(--bs-alert-color)">Dependencies</h2>
-		<p>This module requires you include lvgl_support module. Additional configurations to the platformIO ini file are required.
-			<br>Also additional configuration to select the driver and TFT specs are required in the driver.h file.
-			<br>Please read the README file</p>
+		<p ng-if="VERSION<11001">This module requires you include lvgl_support module. Additional configurations are required in the platformio.ini file and the board ini file also. Check the readme file of this module.</p>
+		<p ng-if="VERSION>11000">This module requires you include lvgl_support module.This module requires external libraries. Download and use the webconfig.ini for PlatformIO.</p>
 	</div>
 	<label for="TFT_SPI_HARDWARE_PORT" class="form-label">Define TFT_SPI_HARDWARE_PORT</label>
 	<select class="form-select form-select-md" name="TFT_SPI_HARDWARE_PORT" id="TFT_SPI_HARDWARE_PORT"

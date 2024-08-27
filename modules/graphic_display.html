@@ -1,9 +1,11 @@
 <div>
 	<div class="info alert alert-info left-align" role="alert">
 		<h2 style="color: var(--bs-alert-color)">Dependencies</h2>
-		<p>This module requires you to uncomment platformio.ini library include line and also enable the Wire and SPI
+		<p ng-if="VERSION<11001">This module requires you to uncomment platformio.ini library include line and also enable the Wire and SPI
 			Arduino libraries in the respective architecture ini file.<br>On Arduino IDE it's necessary to include
 			clib/u8g2.h and clib/u8x8.h files.</p>
+			<p ng-if="VERSION>11000">Download and use the webconfig.ini for PlatformIO.<br>On Arduino IDE it's necessary to include
+				clib/u8g2.h and clib/u8x8.h files.</p>
 	</div>
 	<label for="GRAPHIC_DISPLAY_DRIVER" class="form-label">Define GRAPHIC_DISPLAY_DRIVER</label>
 		<select class="form-select form-select-md" name="GRAPHIC_DISPLAY_DRIVER" id="GRAPHIC_DISPLAY_DRIVER"

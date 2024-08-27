@@ -425,8 +425,9 @@
 								type="button" role="tab" aria-controls="genericinputs" aria-selected="false">Generic Inputs</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="communicationports-tab" data-bs-toggle="tab" data-bs-target="#communicationports"
-								type="button" role="tab" aria-controls="communicationports" aria-selected="false">Communication ports</button>
+							<button class="nav-link" id="communicationports-tab" data-bs-toggle="tab"
+								data-bs-target="#communicationports" type="button" role="tab" aria-controls="communicationports"
+								aria-selected="false">Communication ports</button>
 						</li>
 					</ul>
 					<div class="tab-content" id="pinsTabContent">
@@ -649,8 +650,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="tab-pane table-container" id="analoginputs" role="tabpanel"
-							aria-labelledby="analoginputs-tab">
+						<div class="tab-pane table-container" id="analoginputs" role="tabpanel" aria-labelledby="analoginputs-tab">
 							<table class="table">
 								<thead>
 									<tr>
@@ -786,8 +786,7 @@
 										</div>
 									</td>
 									<td>
-										<div
-											ng-if='x.type=="pwm" || x.type=="servo" || x.type.includes("generic_output")'>
+										<div ng-if='x.type=="pwm" || x.type=="servo" || x.type.includes("generic_output")'>
 											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
 												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
 												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
@@ -1086,10 +1085,10 @@
 						<select class="form-select form-select-md" name="SOFT_SPI_SDI" id="SOFT_SPI_SDI"
 							ng-model="DYNAMIC['SOFT_SPI_SDI']" model-scope-name="DYNAMIC.SOFT_SPI_SDI"
 							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}" config-file="hal">
-							<div class="alert alert-warning" role="alert" ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDI'])">
-								{{DYNAMIC['SOFT_SPI_SDI']}} pin is not defined for your board!
-							</div>
 						</select>
+						<div class="alert alert-warning" role="alert" ng-show="!DEFINED_PINS.includes(DYNAMIC['SOFT_SPI_SDI'])">
+							{{DYNAMIC['SOFT_SPI_SDI']}} pin is not defined for your board!
+						</div>
 					</div>
 				</fieldset>
 				<fieldset>
@@ -1480,9 +1479,11 @@
 
 				<fieldset>
 					<legend>Enable extension modules</legend>
-					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS | filter: filterModules({VERSION})">
+					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS | filter: filterModules({VERSION})" module-name-data="{{x.id}}">
 						<input class="form-check-input" type="checkbox" name="{{x.id}}" id="{{x.id}}"
 							ng-model="DYNAMIC['MODULES'][x.id]" model-scope-name="DYNAMIC.MODULES.{{x.id}}" config-file="module">
+							<div class="lib_deps" hidden>{{x.lib_deps}}</div>
+							<div class="build_flags" hidden>{{x.build_flags}}</div>
 						<label class="form-check-label" for="{{x.id}}" ng-bind="x.name"></label>
 						<div ng-if="DYNAMIC['MODULES'][x.id]" ng-include="'./modules/'+x.id+'.html'"></div>
 					</div>
@@ -1545,6 +1546,10 @@
 							<small id="helpId" class="form-text text-muted">And replace the existing file inside
 								uCNC root directory</small>
 						</li>
+						<li class="list-group-item" ng-if="VERSION>11000"><a name="pio_overrides" id="pio_overrides" class="btn btn-primary"
+								href="#" role="button">Download PlatformIO custom ini</a>
+							<small id="helpId" class="form-text text-muted">And replace webconfig.ini file in uCNC root directory (only on version 1.10.1+)</small>
+						</li>
 						<li class="list-group-item">Compile and upload the project either via Platform IO (recommended)
 							or Arduino IDE.</li>
 						<li class="list-group-item"><a name="store_settings" id="store_settings" class="btn btn-success" href="#"
@@ -1585,7 +1590,7 @@
 				<div class="d-flex justify-content-center align-items-center flex-column">
 					<img class="card-img-top logo-sm"
 						src="https://raw.githubusercontent.com/Paciente8159/uCNC/master/docs/logo.png" alt="µCNC logo">
-					<p id="loadingtext" class="d-flex text-center" >Updating...</p>
+					<p id="loadingtext" class="d-flex text-center">Updating...</p>
 					<div class="spinner spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
 					</div>
 				</div>
