@@ -1909,7 +1909,7 @@ ready(function () {
 
 	document.getElementById('pio_overrides').addEventListener('click', function () {
 		var modules = [...document.querySelectorAll('[module-name-data]')];
-		var lib_deps = "lib_deps = \r\n";
+		var lib_deps = "[webconfig]\r\nlib_deps = \r\n";
 		var build_flags = "build_flags = \r\n";
 		if (modules.length) {
 			for (var i = 0; i < modules.length; i++) {
