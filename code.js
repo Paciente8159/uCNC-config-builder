@@ -1925,25 +1925,25 @@ ready(function () {
 		return overrides;
 	}
 
-	document.getElementById('boardmap_overrides').addEventListener('click', function () {
-		download('boardmap_overrides.h', generateBoardmapOverrides());
-	});
+	// document.getElementById('boardmap_overrides').addEventListener('click', function () {
+	// 	download('boardmap_overrides.h', generateBoardmapOverrides());
+	// });
 
-	document.getElementById('boardmap_reset').addEventListener('click', function () {
-		download('boardmap_reset.h', generateBoardmapReset());
-	});
+	// document.getElementById('boardmap_reset').addEventListener('click', function () {
+	// 	download('boardmap_reset.h', generateBoardmapReset());
+	// });
 
-	document.getElementById('cnc_hal_reset').addEventListener('click', function () {
-		download('cnc_hal_reset.h', generateHalReset());
-	});
+	// document.getElementById('cnc_hal_reset').addEventListener('click', function () {
+	// 	download('cnc_hal_reset.h', generateHalReset());
+	// });
 
-	document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
-		download('cnc_hal_overrides.h', generateHalOverrides());
-	});
+	// document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
+	// 	download('cnc_hal_overrides.h', generateHalOverrides());
+	// });
 
-	document.getElementById('pio_overrides').addEventListener('click', function () {
-		download('webconfig.ini', generatePIOOverrides());
-	});
+	// document.getElementById('pio_overrides').addEventListener('click', function () {
+	// 	download('webconfig.ini', generatePIOOverrides());
+	// });
 
 	document.getElementById('config_files').addEventListener('click', function () {
 		const zip = new JSZip();
