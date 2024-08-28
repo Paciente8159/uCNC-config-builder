@@ -1908,7 +1908,7 @@ ready(function () {
 
 	function generatePIOOverrides() {
 		var modules = [...document.querySelectorAll('[module-name-data]')];
-		var lib_deps = "[webconfig]\r\nlib_deps = \r\n";
+		var lib_deps = "lib_deps = \r\n";
 		var build_flags = "build_flags = \r\n";
 		if (modules.length) {
 			for (var i = 0; i < modules.length; i++) {
@@ -1921,7 +1921,7 @@ ready(function () {
 				}
 			}
 		}
-		var overrides = build_flags + "\r\n" + lib_deps;
+		var overrides = "[webconfig]\r\n" + build_flags + "\r\n" + lib_deps;
 		return overrides;
 	}
 
