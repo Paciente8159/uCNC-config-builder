@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular-csp.min.css"
 		integrity="sha512-nptw3cPhphu13Dy21CXMS1ceuSy2yxpKswAfZ7bAAE2Lvh8rHXhQFOjU+sSnw4B+mEoQmKFLKOj8lmXKVk3gow=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+		integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<link rel="stylesheet" href="style.css">
 </head>
 
@@ -1486,11 +1489,12 @@
 
 				<fieldset>
 					<legend>Enable extension modules</legend>
-					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS | filter: filterModules({VERSION})" module-name-data="{{x.id}}">
+					<div class="mb-3 form-check form-switch" ng-repeat="x in MODULES_OPTIONS | filter: filterModules({VERSION})"
+						module-name-data="{{x.id}}">
 						<input class="form-check-input" type="checkbox" name="{{x.id}}" id="{{x.id}}"
 							ng-model="DYNAMIC['MODULES'][x.id]" model-scope-name="DYNAMIC.MODULES.{{x.id}}" config-file="module">
-							<div class="lib_deps" hidden>{{x.lib_deps}}</div>
-							<div class="build_flags" hidden>{{x.build_flags}}</div>
+						<div class="lib_deps" hidden>{{x.lib_deps}}</div>
+						<div class="build_flags" hidden>{{x.build_flags}}</div>
 						<label class="form-check-label" for="{{x.id}}" ng-bind="x.name"></label>
 						<div ng-if="DYNAMIC['MODULES'][x.id]" ng-include="'./modules/'+x.id+'.html'"></div>
 					</div>
@@ -1533,7 +1537,12 @@
 								you are using modules you need to download them
 								place each used module directory inside
 								uCNC/src/modules/ directory</small></li>
-						<li class="list-group-item"><a name="boardmap_reset" id="boardmap_reset" class="btn btn-primary" href="#"
+						<li class="list-group-item"><a name="config_files" id="config_files" class="btn btn-primary" href="#"
+								role="button">Download your configuration files</a>
+							<small id="helpId" class="form-text text-muted">And place the file inside
+								uCNC root directory</small>
+						</li>
+						<!-- <li class="list-group-item"><a name="boardmap_reset" id="boardmap_reset" class="btn btn-primary" href="#"
 								role="button">Download boardmap_reset.h</a>
 							<small id="helpId" class="form-text text-muted">And place the file inside
 								uCNC root directory</small>
@@ -1553,10 +1562,11 @@
 							<small id="helpId" class="form-text text-muted">And replace the existing file inside
 								uCNC root directory</small>
 						</li>
-						<li class="list-group-item" ng-if="VERSION>11000"><a name="pio_overrides" id="pio_overrides" class="btn btn-primary"
-								href="#" role="button">Download PlatformIO custom ini</a>
-							<small id="helpId" class="form-text text-muted">And replace webconfig.ini file in uCNC root directory (only on version 1.10.1+)</small>
-						</li>
+						<li class="list-group-item" ng-if="VERSION>11000"><a name="pio_overrides" id="pio_overrides"
+								class="btn btn-primary" href="#" role="button">Download PlatformIO custom ini</a>
+							<small id="helpId" class="form-text text-muted">And replace webconfig.ini file in uCNC root directory
+								(only on version 1.10.1+)</small>
+						</li> -->
 						<li class="list-group-item">Compile and upload the project either via Platform IO (recommended)
 							or Arduino IDE.</li>
 						<li class="list-group-item"><a name="store_settings" id="store_settings" class="btn btn-success" href="#"

@@ -1858,14 +1858,7 @@ ready(function () {
 		return gentext;
 	}
 
-	document.getElementById('boardmap_overrides').addEventListener('click', function () {
-		var exclude = [...document.querySelectorAll('.ng-hide [config-file="boardmap"]')].map(x => x.id);
-		var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'BOADMAP_OVERRIDES_H', "boardmap_reset", false);
-		overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value + '\n\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-		download('boardmap_overrides.h', overrides);
-	});
-
-	document.getElementById('boardmap_reset').addEventListener('click', function () {
+	function generateBoardmapReset() {
 		var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].map(x => x.id), 'BOADMAP_RESET_H', '', false);
 		var customs = document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value;
 		var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
@@ -1873,10 +1866,17 @@ ready(function () {
 			overrides += "#undef " + e[1] + "\n";
 		});
 		overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-		download('boardmap_reset.h', overrides);
-	});
+		return overrides;
+	}
 
-	document.getElementById('cnc_hal_reset').addEventListener('click', function () {
+	function generateBoardmapOverrides() {
+		var exclude = [...document.querySelectorAll('.ng-hide [config-file="boardmap"]')].map(x => x.id);
+		var overrides = generate_user_config([...document.querySelectorAll('[config-file="boardmap"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'BOADMAP_OVERRIDES_H', "boardmap_reset", false);
+		overrides += "//Custom configurations\n" + document.getElementById('CUSTOM_BOARDMAP_CONFIGS').value + '\n\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+		return overrides;
+	}
+
+	function generateHalReset() {
 		var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].map(x => x.id), 'CNC_HAL_RESET_H', '', false);
 		var customs = document.getElementById('CUSTOM_HAL_CONFIGS').value;
 		var defs = [...customs.matchAll(/#define[\s]+(?<def>[\w_]+)/gm)];
@@ -1884,10 +1884,10 @@ ready(function () {
 			overrides += "#undef " + e[1] + "\n";
 		});
 		overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
-		download('cnc_hal_reset.h', overrides);
-	});
+		return overrides;
+	}
 
-	document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
+	function generateHalOverrides() {
 		var exclude = [...document.querySelectorAll('.ng-hide [config-file="hal"]')].map(x => x.id);
 		var overrides = generate_user_config([...document.querySelectorAll('[config-file="hal"]')].filter(y => !exclude.includes(y.id)).map(x => x.id), 'CNC_HAL_OVERRIDES_H', "cnc_hal_reset", false);
 		var modules = [...document.querySelectorAll('[config-file=module]:checked')].map(x => x.id);
@@ -1903,11 +1903,10 @@ ready(function () {
 		}
 
 		overrides += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
+		return overrides;
+	}
 
-		download('cnc_hal_overrides.h', overrides);
-	});
-
-	document.getElementById('pio_overrides').addEventListener('click', function () {
+	function generatePIOOverrides() {
 		var modules = [...document.querySelectorAll('[module-name-data]')];
 		var lib_deps = "[webconfig]\r\nlib_deps = \r\n";
 		var build_flags = "build_flags = \r\n";
@@ -1922,8 +1921,65 @@ ready(function () {
 				}
 			}
 		}
+		var overrides = build_flags + "\r\n" + lib_deps;
+		return overrides;
+	}
 
-		download('webconfig.ini', build_flags + "\r\n" + lib_deps);
+	document.getElementById('boardmap_overrides').addEventListener('click', function () {
+		download('boardmap_overrides.h', generateBoardmapOverrides());
+	});
+
+	document.getElementById('boardmap_reset').addEventListener('click', function () {
+		download('boardmap_reset.h', generateBoardmapReset());
+	});
+
+	document.getElementById('cnc_hal_reset').addEventListener('click', function () {
+		download('cnc_hal_reset.h', generateHalReset());
+	});
+
+	document.getElementById('cnc_hal_overrides').addEventListener('click', function () {
+		download('cnc_hal_overrides.h', generateHalOverrides());
+	});
+
+	document.getElementById('pio_overrides').addEventListener('click', function () {
+		download('webconfig.ini', generatePIOOverrides());
+	});
+
+	document.getElementById('config_files').addEventListener('click', function () {
+		const zip = new JSZip();
+
+    // Create multiple files and add them to the ZIP file
+    zip.file('boardmap_overrides.h', generateBoardmapOverrides());
+    zip.file('boardmap_reset.h', generateBoardmapReset());
+    zip.file('cnc_hal_overrides.h', generateHalOverrides());
+		zip.file('cnc_hal_reset.h', generateHalReset());
+		zip.file('webconfig.ini', generatePIOOverrides());
+
+		// config file
+		var key_values = {};
+		document.querySelectorAll('[config-file]').forEach((e, i, p) => {
+			key_values[e.id] = getScope(e);
+		});
+
+		zip.file('ucnc_build.json', JSON.stringify(key_values));
+
+    // Generate the zip file asynchronously
+    zip.generateAsync({ type: "blob" }).then(function(content) {
+			const a = document.createElement('a');
+			const url = URL.createObjectURL(content);
+			
+			// Set the download attribute and href for the anchor
+			a.href = url;
+			a.download = 'uCNC config.zip';
+	
+			// Programmatically click the anchor to trigger the download
+			a.click();
+	
+			// Clean up
+			URL.revokeObjectURL(url);
+			document.removeChild(a);
+    });
+		
 	});
 
 	document.getElementById('store_settings').addEventListener('click', function () {
