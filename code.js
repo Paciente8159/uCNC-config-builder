@@ -351,6 +351,9 @@ function updateBoardmap(scope = null) {
 			case 'BOARD_MKS_ROBIN_NANO_V1_2':
 				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
 				break;
+			case 'BOARD_MKS_ROBIN_NANO_V3_1':
+				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v3_1.h";
+				break;
 			case 'BOARD_SKR_PRO_V1_2':
 				boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
 				break;
@@ -518,6 +521,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'BOARD_BLUEPILL', name: 'Bluepill STM32F103', mcu: 'MCU_STM32F1X' },
 		{ id: 'BOARD_BLACKPILL', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },
 		{ id: 'BOARD_MKS_ROBIN_NANO_V1_2', name: 'MKS Robin Nano v1.2', mcu: 'MCU_STM32F1X' },
+		{ id: 'BOARD_MKS_ROBIN_NANO_V3_1', name: 'MKS Robin Nano v3.1', mcu: 'MCU_STM32F4X' },
 		{ id: 'BOARD_SKR_PRO_V1_2', name: 'SKR Pro v1.2', mcu: 'MCU_STM32F4X' },
 		{ id: 'BOARD_NUCLEO_F411RE_SHIELD_V3', name: 'STM32 Nucleo F411RE', mcu: 'MCU_STM32F4X' },
 		{ id: 'BOARD_MZERO', name: 'Arduino M0', mcu: 'MCU_SAMD21' },
@@ -1948,10 +1952,10 @@ ready(function () {
 	document.getElementById('config_files').addEventListener('click', function () {
 		const zip = new JSZip();
 
-    // Create multiple files and add them to the ZIP file
-    zip.file('boardmap_overrides.h', generateBoardmapOverrides());
-    zip.file('boardmap_reset.h', generateBoardmapReset());
-    zip.file('cnc_hal_overrides.h', generateHalOverrides());
+		// Create multiple files and add them to the ZIP file
+		zip.file('boardmap_overrides.h', generateBoardmapOverrides());
+		zip.file('boardmap_reset.h', generateBoardmapReset());
+		zip.file('cnc_hal_overrides.h', generateHalOverrides());
 		zip.file('cnc_hal_reset.h', generateHalReset());
 		zip.file('webconfig.ini', generatePIOOverrides());
 
@@ -1963,23 +1967,23 @@ ready(function () {
 
 		zip.file('ucnc_build.json', JSON.stringify(key_values));
 
-    // Generate the zip file asynchronously
-    zip.generateAsync({ type: "blob" }).then(function(content) {
+		// Generate the zip file asynchronously
+		zip.generateAsync({ type: "blob" }).then(function (content) {
 			const a = document.createElement('a');
 			const url = URL.createObjectURL(content);
-			
+
 			// Set the download attribute and href for the anchor
 			a.href = url;
 			a.download = 'uCNC config.zip';
-	
+
 			// Programmatically click the anchor to trigger the download
 			a.click();
-	
+
 			// Clean up
 			URL.revokeObjectURL(url);
 			document.removeChild(a);
-    });
-		
+		});
+
 	});
 
 	document.getElementById('store_settings').addEventListener('click', function () {
