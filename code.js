@@ -2071,7 +2071,7 @@ ready(function () {
 
 	async function loadZipFromUrl(url) {
 		debugger;
-		const response = await fetch(url);
+		const response = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
 		if (!response.ok) {
 			throw new Error('Failed to fetch the zip file from ' + url);
 		}
