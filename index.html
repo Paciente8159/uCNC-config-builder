@@ -189,6 +189,11 @@
 							it)</label>
 					</div>
 					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_STEPPERS_DISABLE_TIMEOUT" ng-model="DYNAMIC['ENABLE_STEPPERS_DISABLE_TIMEOUT']"
+							model-scope-name="DYNAMIC.ENABLE_STEPPERS_DISABLE_TIMEOUT" config-file="boardmap">
+						<label class="form-check-label" for="ENABLE_STEPPERS_DISABLE_TIMEOUT">Enable stepper idle timeout ($1)</label>
+					</div>
+					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_SKEW_COMPENSATION"
 							ng-model="DYNAMIC['ENABLE_SKEW_COMPENSATION']" model-scope-name="DYNAMIC.ENABLE_SKEW_COMPENSATION"
 							config-file="hal">
