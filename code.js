@@ -342,6 +342,9 @@ function updateBoardmap(scope = null) {
 			case 'BOARD_RAMPS14':
 				boardurl = boardurl + "avr/boardmap_ramps14.h";
 				break;
+			case 'BOARD_MELZI_V114':
+				boardurl = boardurl + "avr/boardmap_melzi_v114.h";
+				break;
 			case 'BOARD_BLUEPILL':
 				boardurl = boardurl + "stm32/boardmap_bluepill.h";
 				break;
