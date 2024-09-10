@@ -1861,15 +1861,6 @@ ready(function () {
 			gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
 		}
 
-		// replace the board for a custom board for backward compatibility
-		var scope = angular.element(document.getElementById("uCNCapp")).scope();
-		if (scope.VERSION < 11000) {
-			gentext = gentext.replace(/#define[\s]+BOARD [^\s]+/g, '#define BOARD -1');
-		}
-		else {
-			gentext = gentext.replace(/#define[\s]+BOARD [^\s]+/g, '#define BOARD "boardmap_overrides.h"');
-		}
-
 		return gentext;
 	}
 
