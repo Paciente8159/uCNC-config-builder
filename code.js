@@ -150,9 +150,10 @@ function updateScope(node = null, val = null, apply = true) {
 	}
 }
 
-function updateFields(settings = [], loadedevent = null) {
+function updateFields(settings = [], loadedevent = null, include_missing_settings = false) {
 	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
 	document.getElementById('reloading').style.display = "block";
+	if (include_missing_settings) { document.querySelector("#CUSTOM_BOARDMAP_CONFIGS").text = ""; }
 	for (var s in settings) {
 		if (settings.hasOwnProperty(s)) {
 			var node = document.querySelector("#" + s);
@@ -171,6 +172,11 @@ function updateFields(settings = [], loadedevent = null) {
 						updateScope(node, settings[s]);
 						break;
 				}
+			}
+			else if (include_missing_settings && !s.startsWith("BOARDMAP")) {
+				var node = document.querySelector("#CUSTOM_BOARDMAP_CONFIGS");
+				var val = getScope(node);
+				updateScope(node, ((val !== null) ? val : "") + "#define " + s + " " + ((settings[s] != undefined) ? settings[s] : "") + "\n");
 			}
 		}
 	}
@@ -286,144 +292,18 @@ async function updateBoardmap(scope = null) {
 	}
 
 	settings = await parsePreprocessor(mcuurl, settings);
+	updateFields(settings, boardloaded);
+	if (scope) {
+		scope.$apply();
+	}
+
 	document.getElementById('loadingtext').innerText = "Fetching board...";
 	document.getElementById('reloading').style.display = "block";
-	var boardurl = coreurl + "/uCNC/" + scope.BOARD;
-	// switch (scope.BOARD) {
-	// 	case 'BOARD_UNO':
-	// 		boardurl = boardurl + "avr/boardmap_uno.h";
-	// 		break;
-	// 	case 'BOARD_MKS_DLC':
-	// 		settings = await parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-	// 			parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
-	// 				updateFields(newsettings, boardloaded);
-	// 				if (scope) {
-	// 					scope.$apply();
-	// 				}
-	// 			});
-	// 		});
-	// 		return;
-	// 	case 'BOARD_X_CONTROLLER':
-	// 		parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-	// 			settings = newsettings;
-	// 			parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
-	// 				updateFields(newsettings, boardloaded);
-	// 				if (scope) {
-	// 					scope.$apply();
-	// 				}
-	// 			});
-	// 		});
-	// 		return;
-	// 	case 'BOARD_UNO_SHIELD_V3':
-	// 		parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-	// 			settings = newsettings;
-	// 			parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
-	// 				updateFields(newsettings, boardloaded);
-	// 				if (scope) {
-	// 					scope.$apply();
-	// 				}
-	// 			});
-	// 		});
-	// 		return;
-	// 	case 'BOARD_RAMBO14':
-	// 		boardurl = boardurl + "avr/boardmap_rambo14.h";
-	// 		break;
-	// 	case 'BOARD_MKS_GEN_L_V1':
-	// 		parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
-	// 			settings = newsettings;
-	// 			parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
-	// 				updateFields(newsettings, boardloaded);
-	// 				if (scope) {
-	// 					scope.$apply();
-	// 				}
-	// 			});
-	// 		});
-	// 		return;
-	// 	case 'BOARD_RAMPS14':
-	// 		boardurl = boardurl + "avr/boardmap_ramps14.h";
-	// 		break;
-	// 	case 'BOARD_MELZI_V114':
-	// 		boardurl = boardurl + "avr/boardmap_melzi_v114.h";
-	// 		break;
-	// 	case 'BOARD_BLUEPILL':
-	// 		boardurl = boardurl + "stm32/boardmap_bluepill.h";
-	// 		break;
-	// 	case 'BOARD_BLACKPILL':
-	// 		boardurl = boardurl + "stm32/boardmap_blackpill.h";
-	// 		break;
-	// 	case 'BOARD_MKS_ROBIN_NANO_V1_2':
-	// 		boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
-	// 		break;
-	// 	case 'BOARD_MKS_ROBIN_NANO_V3_1':
-	// 		boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v3_1.h";
-	// 		break;
-	// 	case 'BOARD_SKR_PRO_V1_2':
-	// 		boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
-	// 		break;
-	// 	case 'BOARD_NUCLEO_F411RE_SHIELD_V3':
-	// 		boardurl = boardurl + "stm32/boardmap_nucleo_f411re_shield_v3.h";
-	// 		break;
-	// 	case 'BOARD_MZERO':
-	// 		boardurl = boardurl + "samd21/boardmap_mzero.h";
-	// 		break;
-	// 	case 'BOARD_ZERO':
-	// 		parsePreprocessor(boardurl + "samd21/boardmap_mzero.h", settings, function (newsettings) {
-	// 			settings = newsettings;
-	// 			parsePreprocessor(boardurl + "samd21/boardmap_zero.h", settings, function (newsettings) {
-	// 				updateFields(newsettings, boardloaded);
-	// 				if (scope) {
-	// 					scope.$apply();
-	// 				}
-	// 			});
-	// 		});
-	// 		return;
-	// 	case 'BOARD_RE_ARM':
-	// 		boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
-	// 		break;
-	// 	case 'BOARD_MKS_BASE13':
-	// 		boardurl = boardurl + "lpc176x/boardmap_mks_base13.h";
-	// 		break;
-	// 	case 'BOARD_SKR_V14_TURBO':
-	// 		boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
-	// 		break;
-	// 	case 'BOARD_WEMOS_D1':
-	// 		boardurl = boardurl + "esp8266/boardmap_wemos_d1.h";
-	// 		break;
-	// 	case 'BOARD_WEMOS_D1_R32':
-	// 		boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
-	// 		break;
-	// 	case 'BOARD_MKS_TINYBEE':
-	// 		boardurl = boardurl + "esp32/boardmap_mks_tinybee.h";
-	// 		break;
-	// 	case 'BOARD_MKS_DLC32':
-	// 		boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
-	// 		break;
-	// 	case 'BOARD_RPI_PICO':
-	// 		boardurl = boardurl + "rp2040/boardmap_rpi_pico.h";
-	// 		break;
-	// 	case 'BOARD_RPI_PICO_W':
-	// 		parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico.h", settings, function (newsettings) {
-	// 			settings = newsettings;
-	// 			parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico_w.h", settings, function (newsettings) {
-	// 				updateFields(newsettings, boardloaded);
-	// 				if (scope) {
-	// 					scope.$apply();
-	// 				}
-	// 			});
-	// 		});
-	// 		return;
-	// 	case 'BOARD_CUSTOM':
-	// 	default:
-	// 		updateFields(newsettings, boardloaded);
-	// 		if (scope) {
-	// 			scope.$apply();
-	// 		}
-	// 		document.getElementById('reloading').style.display = "none";
-	// 		return;
-	// }
 
-	settings = await parsePreprocessor(boardurl, settings, true);
-	updateFields(settings, boardloaded);
+	var boardurl = coreurl + "/uCNC/" + scope.BOARD;
+
+	settings = await parsePreprocessor(boardurl, [], true);
+	updateFields(settings, boardloaded, true);
 	if (scope) {
 		scope.$apply();
 	}
@@ -1609,7 +1489,6 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 			}
 		});
-
 	};
 
 	$scope.toolChanged = function (tool, contents) {
@@ -1719,16 +1598,28 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		});
 	};
 
-	$scope.prebuildSelected = function () {
+	$scope.prebuildSelected = async function () {
 		document.getElementById('loadingtext').innerText = "Fetching configuration...";
 		document.getElementById('reloading').style.display = "block";
-		var txtFile = new XMLHttpRequest();
-		txtFile.open("GET", document.getElementById('PRE_BUILD_FILE').value, true);
-		txtFile.onreadystatechange = function () {
-			if (txtFile.readyState === 4 && txtFile.status === 200) {  // Makes sure it's found the file.
-				$scope.JSON_BUILD = txtFile.responseText;
-				var build = JSON.parse($scope.JSON_BUILD);
-				loadingfile = true;
+		var response = await fetch(document.getElementById('PRE_BUILD_FILE').value);
+		if (response.ok) {
+			var allText = await response.text();
+			$scope.JSON_BUILD = allText;
+			var build = JSON.parse($scope.JSON_BUILD);
+			loadingfile = true;
+			for (const [k, v] of Object.entries(build)) {
+				updateScope(document.getElementById(k), v);
+			}
+			$scope.definedPins();
+			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+				updateScope(e, getScope(e).toString());
+			});
+
+			document.getElementById('reloading').style.display = "none";
+			document.getElementById('loadingtext').innerText = "Reloading values...";
+			document.getElementById('reloading').style.display = "block";
+
+			setTimeout(function () {
 				for (const [k, v] of Object.entries(build)) {
 					updateScope(document.getElementById(k), v);
 				}
@@ -1736,24 +1627,13 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
 					updateScope(e, getScope(e).toString());
 				});
-
-				setTimeout(function () {
-					for (const [k, v] of Object.entries(build)) {
-						updateScope(document.getElementById(k), v);
-					}
-					$scope.definedPins();
-					document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-						updateScope(e, getScope(e).toString());
-					});
-					loadingfile = false;
-					document.getElementById('reloading').style.display = "none";
-				}, 5000);
-			}
+				loadingfile = false;
+				document.getElementById('reloading').style.display = "none";
+			}.bind(build), 1000);
 		}
-		txtFile.onerror = function () {
+		else {
 			document.getElementById('reloading').style.display = "none";
 		}
-		txtFile.send(null);
 	};
 }]);
 
