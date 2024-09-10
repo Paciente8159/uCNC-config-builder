@@ -12,32 +12,32 @@ function ready(fn) {
 	}
 }
 
-function parsePreprocessor(file, settings = [], callback) {
+async function parsePreprocessor(file, settings = [], recursive = false) {
 	if (loadingfile) {
 		return;
 	}
 	document.getElementById('reloading').style.display = "block";
-	const defineregex = /^[\s]*#define[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm
-	var txtFile = new XMLHttpRequest();
-	txtFile.open("GET", file, true);
-	txtFile.onreadystatechange = function () {
-		if (txtFile.readyState === 4 && txtFile.status === 200) {  // Makes sure it's found the file.
-			allText = txtFile.responseText;
-			const matches = [...allText.matchAll(defineregex)];
-			for (var i = 0; i < matches.length; i++) {
-				settings[matches[i][1]] = matches[i][2];
-			}
-			if (callback) {
-				setTimeout(function () {
-					callback(settings)
-				}.bind(settings), 10);
+
+	var response = await fetch(file);
+	if (response.ok) {
+		var allText = await response.text();
+		// not correctly recursive but works well enough to get the base boards
+		if (recursive) {
+			const includeregex = /^[\s]*#include[^'"]*(?<inc>[\-\w\d\.]+|"[^"]+")?/gm
+			const includefiles = [...allText.matchAll(includeregex)];
+			for (var i = 0; i < includefiles.length; i++) {
+				var basefile = file.substring(0, file.lastIndexOf('/') + 1) + includefiles[i][1].replace(/['"]+/g, '');
+				settings = await parsePreprocessor(basefile, settings, recursive);
 			}
 		}
+		const defineregex = (!recursive) ? /^[\s]*#(define)[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm : /^[\s]*#(define|undef)[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm;
+		const matches = [...allText.matchAll(defineregex)];
+		for (var i = 0; i < matches.length; i++) {
+			settings[matches[i][2]] = (matches[i][1] == "define") ? matches[i][3] : undefined;
+		}
+	}
 
-	}
-	txtFile.onerror = function () {
-	}
-	txtFile.send(null);
+	return settings;
 }
 
 function getScope(node = null, final = true) {
@@ -77,7 +77,7 @@ function getScope(node = null, final = true) {
 	return (final && (typeof val !== 'object')) ? val : null;
 }
 
-function updateScope(node = null, val = null) {
+function updateScope(node = null, val = null, apply = true) {
 	if (!node) {
 		return;
 	}
@@ -102,50 +102,52 @@ function updateScope(node = null, val = null) {
 			break;
 	}
 
-	scope.safeApply(function () {
+	if (apply) {
+		scope.safeApply(function () {
 
-		if (node.hasAttribute('model-scope-name')) {
-			var arr = node.getAttribute('model-scope-name').split('.');
+			if (node.hasAttribute('model-scope-name')) {
+				var arr = node.getAttribute('model-scope-name').split('.');
 
-			if (arr.length > 0 && !scope[arr[0]]) {
-				scope[arr[0]] = (arr.length == 1) ? v : {};
+				if (arr.length > 0 && !scope[arr[0]]) {
+					scope[arr[0]] = (arr.length == 1) ? v : {};
+				}
+				else if (arr.length == 1) {
+					scope[arr[0]] = (arr.length == 1) ? v : {};
+				}
+
+				if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
+					scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+				}
+				else if (arr.length == 2) {
+					scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+				}
+
+				if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
+					scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+				}
+				else if (arr.length == 3) {
+					scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+				}
+
+				if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+					scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+				}
+				else if (arr.length == 4) {
+					scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+				}
 			}
-			else if (arr.length == 1) {
-				scope[arr[0]] = (arr.length == 1) ? v : {};
+			else {
+				scope[node.id] = v;
 			}
 
-			if (arr.length > 1 && !scope[arr[0]][arr[1]]) {
-				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-			}
-			else if (arr.length == 2) {
-				scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
-			}
-
-			if (arr.length > 2 && !scope[arr[0]][arr[1]][arr[2]]) {
-				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-			}
-			else if (arr.length == 3) {
-				scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
-			}
-
-			if (arr.length > 3 && !scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
-				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-			}
-			else if (arr.length == 4) {
-				scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
-			}
-		}
-		else {
-			scope[node.id] = v;
-		}
-
-		// try {
-		// 	scope.$apply();
-		// }
-		// catch (error) {
-		// }
-		// console.log('apply in progress var:' + node.id);
-	});
+			// try {
+			// 	scope.$apply();
+			// }
+			// catch (error) {
+			// }
+			// console.log('apply in progress var:' + node.id);
+		});
+	}
 }
 
 function updateFields(settings = [], loadedevent = null) {
@@ -186,12 +188,14 @@ function resetBoardPins() {
 	document.getElementById('loadingtext').innerText = "Reseting board pins...";
 	document.querySelectorAll('[config-file="boardmap"]').forEach((e, i, p) => {
 		if (!excludeids.includes(e.id)) {
-			updateScope(e, null);
+			updateScope(e, null, false);
 		}
 	});
+	angular.element(document.getElementById("uCNCapp")).scope().DEFINED_PINS = [];
+	angular.element(document.getElementById("uCNCapp")).scope().DYNAMIC = [];
 }
 
-function updateHAL(scope = null) {
+async function updateHAL(scope = null) {
 	document.getElementById('loadingtext').innerText = "Fetching HAL...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
@@ -199,16 +203,15 @@ function updateHAL(scope = null) {
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 	var hal = coreurl + "/uCNC/cnc_hal_config.h";
 
-	parsePreprocessor(hal, settings, function (newsettings) {
-		updateFields(newsettings, halloaded);
-		if (scope) {
-			scope.$apply();
-		}
-	});
+	settings = await parsePreprocessor(hal, settings);
+	updateFields(settings, halloaded);
+	if (scope) {
+		scope.$apply();
+	}
 }
 
 
-function updateTool(scope = null, tool = null) {
+async function updateTool(scope = null, tool = null) {
 	document.getElementById('loadingtext').innerText = "Fetching tools...";
 	document.getElementById('reloading').style.display = "block";
 	var settings = [];
@@ -222,15 +225,14 @@ function updateTool(scope = null, tool = null) {
 		return;
 	}
 
-	parsePreprocessor(tool, settings, function (newsettings) {
-		updateFields(newsettings, toolloaded);
-		if (scope) {
-			scope.$apply();
-		}
-	});
+	settings = await parsePreprocessor(tool, settings);
+	updateFields(settings, toolloaded);
+	if (scope) {
+		scope.$apply();
+	}
 }
 
-function updateBoardmap(scope = null) {
+async function updateBoardmap(scope = null) {
 	var settings = [];
 	var version_name = angular.element(document.getElementById('VERSION')).scope()['VERSIONS'].filter(obj => { return obj.tag === getScope(document.getElementById('VERSION')); })[0].id;
 
@@ -283,152 +285,148 @@ function updateBoardmap(scope = null) {
 			return;
 	}
 
-	parsePreprocessor(mcuurl, settings, function (newsettings) {
-		document.getElementById('loadingtext').innerText = "Fetching board...";
-		document.getElementById('reloading').style.display = "block";
-		settings = newsettings;
-		var boardurl = coreurl + "/uCNC/src/hal/boards/";
-		switch (scope.BOARD) {
-			case 'BOARD_UNO':
-				boardurl = boardurl + "avr/boardmap_uno.h";
-				break;
-			case 'BOARD_MKS_DLC':
-				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_X_CONTROLLER':
-				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_UNO_SHIELD_V3':
-				parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_RAMBO14':
-				boardurl = boardurl + "avr/boardmap_rambo14.h";
-				break;
-			case 'BOARD_MKS_GEN_L_V1':
-				parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_RAMPS14':
-				boardurl = boardurl + "avr/boardmap_ramps14.h";
-				break;
-			case 'BOARD_MELZI_V114':
-				boardurl = boardurl + "avr/boardmap_melzi_v114.h";
-				break;
-			case 'BOARD_BLUEPILL':
-				boardurl = boardurl + "stm32/boardmap_bluepill.h";
-				break;
-			case 'BOARD_BLACKPILL':
-				boardurl = boardurl + "stm32/boardmap_blackpill.h";
-				break;
-			case 'BOARD_MKS_ROBIN_NANO_V1_2':
-				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
-				break;
-			case 'BOARD_MKS_ROBIN_NANO_V3_1':
-				boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v3_1.h";
-				break;
-			case 'BOARD_SKR_PRO_V1_2':
-				boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
-				break;
-			case 'BOARD_NUCLEO_F411RE_SHIELD_V3':
-				boardurl = boardurl + "stm32/boardmap_nucleo_f411re_shield_v3.h";
-				break;
-			case 'BOARD_MZERO':
-				boardurl = boardurl + "samd21/boardmap_mzero.h";
-				break;
-			case 'BOARD_ZERO':
-				parsePreprocessor(boardurl + "samd21/boardmap_mzero.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "samd21/boardmap_zero.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_RE_ARM':
-				boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
-				break;
-			case 'BOARD_MKS_BASE13':
-				boardurl = boardurl + "lpc176x/boardmap_mks_base13.h";
-				break;
-			case 'BOARD_SKR_V14_TURBO':
-				boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
-				break;
-			case 'BOARD_WEMOS_D1':
-				boardurl = boardurl + "esp8266/boardmap_wemos_d1.h";
-				break;
-			case 'BOARD_WEMOS_D1_R32':
-				boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
-				break;
-			case 'BOARD_MKS_TINYBEE':
-				boardurl = boardurl + "esp32/boardmap_mks_tinybee.h";
-				break;
-			case 'BOARD_MKS_DLC32':
-				boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
-				break;
-			case 'BOARD_RPI_PICO':
-				boardurl = boardurl + "rp2040/boardmap_rpi_pico.h";
-				break;
-			case 'BOARD_RPI_PICO_W':
-				parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico.h", settings, function (newsettings) {
-					settings = newsettings;
-					parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico_w.h", settings, function (newsettings) {
-						updateFields(newsettings, boardloaded);
-						if (scope) {
-							scope.$apply();
-						}
-					});
-				});
-				return;
-			case 'BOARD_CUSTOM':
-			default:
-				updateFields(newsettings, boardloaded);
-				if (scope) {
-					scope.$apply();
-				}
-				document.getElementById('reloading').style.display = "none";
-				return;
-		}
+	settings = await parsePreprocessor(mcuurl, settings);
+	document.getElementById('loadingtext').innerText = "Fetching board...";
+	document.getElementById('reloading').style.display = "block";
+	var boardurl = coreurl + "/uCNC/" + scope.BOARD;
+	// switch (scope.BOARD) {
+	// 	case 'BOARD_UNO':
+	// 		boardurl = boardurl + "avr/boardmap_uno.h";
+	// 		break;
+	// 	case 'BOARD_MKS_DLC':
+	// 		settings = await parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+	// 			parsePreprocessor(boardurl + "avr/boardmap_mks_dlc.h", settings, function (newsettings) {
+	// 				updateFields(newsettings, boardloaded);
+	// 				if (scope) {
+	// 					scope.$apply();
+	// 				}
+	// 			});
+	// 		});
+	// 		return;
+	// 	case 'BOARD_X_CONTROLLER':
+	// 		parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+	// 			settings = newsettings;
+	// 			parsePreprocessor(boardurl + "avr/boardmap_x_controller.h", settings, function (newsettings) {
+	// 				updateFields(newsettings, boardloaded);
+	// 				if (scope) {
+	// 					scope.$apply();
+	// 				}
+	// 			});
+	// 		});
+	// 		return;
+	// 	case 'BOARD_UNO_SHIELD_V3':
+	// 		parsePreprocessor(boardurl + "avr/boardmap_uno.h", settings, function (newsettings) {
+	// 			settings = newsettings;
+	// 			parsePreprocessor(boardurl + "avr/boardmap_uno_shield_v3.h", settings, function (newsettings) {
+	// 				updateFields(newsettings, boardloaded);
+	// 				if (scope) {
+	// 					scope.$apply();
+	// 				}
+	// 			});
+	// 		});
+	// 		return;
+	// 	case 'BOARD_RAMBO14':
+	// 		boardurl = boardurl + "avr/boardmap_rambo14.h";
+	// 		break;
+	// 	case 'BOARD_MKS_GEN_L_V1':
+	// 		parsePreprocessor(boardurl + "avr/boardmap_ramps14.h", settings, function (newsettings) {
+	// 			settings = newsettings;
+	// 			parsePreprocessor(boardurl + "avr/boardmap_mks_gen_l_v1.h", settings, function (newsettings) {
+	// 				updateFields(newsettings, boardloaded);
+	// 				if (scope) {
+	// 					scope.$apply();
+	// 				}
+	// 			});
+	// 		});
+	// 		return;
+	// 	case 'BOARD_RAMPS14':
+	// 		boardurl = boardurl + "avr/boardmap_ramps14.h";
+	// 		break;
+	// 	case 'BOARD_MELZI_V114':
+	// 		boardurl = boardurl + "avr/boardmap_melzi_v114.h";
+	// 		break;
+	// 	case 'BOARD_BLUEPILL':
+	// 		boardurl = boardurl + "stm32/boardmap_bluepill.h";
+	// 		break;
+	// 	case 'BOARD_BLACKPILL':
+	// 		boardurl = boardurl + "stm32/boardmap_blackpill.h";
+	// 		break;
+	// 	case 'BOARD_MKS_ROBIN_NANO_V1_2':
+	// 		boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v1_2.h";
+	// 		break;
+	// 	case 'BOARD_MKS_ROBIN_NANO_V3_1':
+	// 		boardurl = boardurl + "stm32/boardmap_mks_robin_nano_v3_1.h";
+	// 		break;
+	// 	case 'BOARD_SKR_PRO_V1_2':
+	// 		boardurl = boardurl + "stm32/boardmap_srk_pro_v1_2.h";
+	// 		break;
+	// 	case 'BOARD_NUCLEO_F411RE_SHIELD_V3':
+	// 		boardurl = boardurl + "stm32/boardmap_nucleo_f411re_shield_v3.h";
+	// 		break;
+	// 	case 'BOARD_MZERO':
+	// 		boardurl = boardurl + "samd21/boardmap_mzero.h";
+	// 		break;
+	// 	case 'BOARD_ZERO':
+	// 		parsePreprocessor(boardurl + "samd21/boardmap_mzero.h", settings, function (newsettings) {
+	// 			settings = newsettings;
+	// 			parsePreprocessor(boardurl + "samd21/boardmap_zero.h", settings, function (newsettings) {
+	// 				updateFields(newsettings, boardloaded);
+	// 				if (scope) {
+	// 					scope.$apply();
+	// 				}
+	// 			});
+	// 		});
+	// 		return;
+	// 	case 'BOARD_RE_ARM':
+	// 		boardurl = boardurl + "lpc176x/boardmap_re_arm.h";
+	// 		break;
+	// 	case 'BOARD_MKS_BASE13':
+	// 		boardurl = boardurl + "lpc176x/boardmap_mks_base13.h";
+	// 		break;
+	// 	case 'BOARD_SKR_V14_TURBO':
+	// 		boardurl = boardurl + "lpc176x/boardmap_skr_v14_turbo.h";
+	// 		break;
+	// 	case 'BOARD_WEMOS_D1':
+	// 		boardurl = boardurl + "esp8266/boardmap_wemos_d1.h";
+	// 		break;
+	// 	case 'BOARD_WEMOS_D1_R32':
+	// 		boardurl = boardurl + "esp32/boardmap_wemos_d1_r32.h";
+	// 		break;
+	// 	case 'BOARD_MKS_TINYBEE':
+	// 		boardurl = boardurl + "esp32/boardmap_mks_tinybee.h";
+	// 		break;
+	// 	case 'BOARD_MKS_DLC32':
+	// 		boardurl = boardurl + "esp32/boardmap_mks_dlc32.h";
+	// 		break;
+	// 	case 'BOARD_RPI_PICO':
+	// 		boardurl = boardurl + "rp2040/boardmap_rpi_pico.h";
+	// 		break;
+	// 	case 'BOARD_RPI_PICO_W':
+	// 		parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico.h", settings, function (newsettings) {
+	// 			settings = newsettings;
+	// 			parsePreprocessor(boardurl + "rp2040/boardmap_rpi_pico_w.h", settings, function (newsettings) {
+	// 				updateFields(newsettings, boardloaded);
+	// 				if (scope) {
+	// 					scope.$apply();
+	// 				}
+	// 			});
+	// 		});
+	// 		return;
+	// 	case 'BOARD_CUSTOM':
+	// 	default:
+	// 		updateFields(newsettings, boardloaded);
+	// 		if (scope) {
+	// 			scope.$apply();
+	// 		}
+	// 		document.getElementById('reloading').style.display = "none";
+	// 		return;
+	// }
 
-		parsePreprocessor(boardurl, settings, function (newsettings) {
-			updateFields(newsettings, boardloaded);
-			if (scope) {
-				scope.$apply();
-			}
-		});
-	});
+	settings = await parsePreprocessor(boardurl, settings, true);
+	updateFields(settings, boardloaded);
+	if (scope) {
+		scope.$apply();
+	}
 }
 
 var app = angular.module("uCNCapp", []);
@@ -514,31 +512,31 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.S_CURVE_ACCELERATION_LEVEL = 0;
 
 	$scope.BOARDS = [
-		{ id: 'BOARD_UNO', name: 'Arduino UNO', mcu: 'MCU_AVR' },
-		{ id: 'BOARD_RAMBO14', name: 'Rambo v1.4', mcu: 'MCU_AVR' },
-		{ id: 'BOARD_RAMPS14', name: 'Arduino MEGA/RAMPS v1.4', mcu: 'MCU_AVR' },
-		{ id: 'BOARD_MKS_DLC', name: 'MKS DLC', mcu: 'MCU_AVR' },
-		{ id: 'BOARD_X_CONTROLLER', name: 'X-Controller', mcu: 'MCU_AVR' },
-		{ id: 'BOARD_UNO_SHIELD_V3', name: 'Arduino UNO Shield v3', mcu: 'MCU_AVR' },
-		{ id: 'BOARD_MKS_GEN_L_V1', name: 'MKS Gen L v1', mcu: 'MCU_AVR' },
-		{ id: 'BOARD_BLUEPILL', name: 'Bluepill STM32F103', mcu: 'MCU_STM32F1X' },
-		{ id: 'BOARD_BLACKPILL', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },
-		{ id: 'BOARD_MKS_ROBIN_NANO_V1_2', name: 'MKS Robin Nano v1.2', mcu: 'MCU_STM32F1X' },
-		{ id: 'BOARD_MKS_ROBIN_NANO_V3_1', name: 'MKS Robin Nano v3.1', mcu: 'MCU_STM32F4X' },
-		{ id: 'BOARD_SKR_PRO_V1_2', name: 'SKR Pro v1.2', mcu: 'MCU_STM32F4X' },
-		{ id: 'BOARD_NUCLEO_F411RE_SHIELD_V3', name: 'STM32 Nucleo F411RE', mcu: 'MCU_STM32F4X' },
-		{ id: 'BOARD_MZERO', name: 'Arduino M0', mcu: 'MCU_SAMD21' },
-		{ id: 'BOARD_ZERO', name: 'Arduino Zero', mcu: 'MCU_SAMD21' },
-		{ id: 'BOARD_RE_ARM', name: 'Panukatt RE-ARM', mcu: 'MCU_LPC176X' },
-		{ id: 'BOARD_MKS_BASE13', name: 'MKS Base v1.3', mcu: 'MCU_LPC176X' },
-		{ id: 'BOARD_SKR_V14_TURBO', name: 'SKR v1.4 Turbo', mcu: 'MCU_LPC176X' },
-		{ id: 'BOARD_WEMOS_D1', name: 'Wemos D1', mcu: 'MCU_ESP8266' },
-		{ id: 'BOARD_WEMOS_D1_R32', name: 'Wemos D1 R32', mcu: 'MCU_ESP32' },
-		{ id: 'BOARD_MKS_TINYBEE', name: 'MKS Tinybee', mcu: 'MCU_ESP32' },
-		{ id: 'BOARD_MKS_DLC32', name: 'MKS DLC32', mcu: 'MCU_ESP32' },
-		{ id: 'BOARD_RPI_PICO', name: 'RPi Pico', mcu: 'MCU_RP2040' },
-		{ id: 'BOARD_RPI_PICO_W', name: 'RPi Pico W', mcu: 'MCU_RP2040' },
-		{ id: 'BOARD_CUSTOM', name: 'Custom board', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' }
+		{ id: 'src/hal/boards/avr/boardmap_uno.h', name: 'Arduino UNO', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/avr/boardmap_rambo14.h', name: 'Rambo v1.4', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/avr/boardmap_ramps14.h', name: 'Arduino MEGA/RAMPS v1.4', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/avr/boardmap_mks_dlc.h', name: 'MKS DLC', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/avr/boardmap_x_controller.h', name: 'X-Controller', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/avr/boardmap_uno_shield_v3.h', name: 'Arduino UNO Shield v3', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/avr/boardmap_mks_gen_l_v1.h', name: 'MKS Gen L v1', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/stm32/boardmap_bluepill.h', name: 'Bluepill STM32F103', mcu: 'MCU_STM32F1X' },
+		{ id: 'src/hal/boards/stm32/boardmap_blackpill.h', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },
+		{ id: 'src/hal/boards/stm32/boardmap_mks_robin_nano_v1_2.h', name: 'MKS Robin Nano v1.2', mcu: 'MCU_STM32F1X' },
+		{ id: 'src/hal/boards/stm32/boardmap_mks_robin_nano_v3_1.h', name: 'MKS Robin Nano v3.1', mcu: 'MCU_STM32F4X' },
+		{ id: 'src/hal/boards/stm32/boardmap_mks_gen_l_v1.h', name: 'SKR Pro v1.2', mcu: 'MCU_STM32F4X' },
+		{ id: 'src/hal/boards/stm32/boardmap_nucleo_f411re_shield_v3.h', name: 'STM32 Nucleo F411RE', mcu: 'MCU_STM32F4X' },
+		{ id: 'src/hal/boards/samd21/boardmap_mzero.h', name: 'Arduino M0', mcu: 'MCU_SAMD21' },
+		{ id: 'src/hal/boards/samd21/boardmap_zero.h', name: 'Arduino Zero', mcu: 'MCU_SAMD21' },
+		{ id: 'src/hal/boards/lpc176x/boardmap_re_arm.h', name: 'Panukatt RE-ARM', mcu: 'MCU_LPC176X' },
+		{ id: 'src/hal/boards/lpc176x/boardmap_mks_base13.h', name: 'MKS Base v1.3', mcu: 'MCU_LPC176X' },
+		{ id: 'src/hal/boards/lpc176x/boardmap_skr_v14_turbo.h', name: 'SKR v1.4 Turbo', mcu: 'MCU_LPC176X' },
+		{ id: 'src/hal/boards/esp8266/boardmap_wemos_d1.h', name: 'Wemos D1', mcu: 'MCU_ESP8266' },
+		{ id: 'src/hal/boards/esp32/boardmap_wemos_d1_r32.h', name: 'Wemos D1 R32', mcu: 'MCU_ESP32' },
+		{ id: 'src/hal/boards/esp32/boardmap_mks_tinybee.h', name: 'MKS Tinybee', mcu: 'MCU_ESP32' },
+		{ id: 'src/hal/boards/esp32/boardmap_mks_dlc32.h', name: 'MKS DLC32', mcu: 'MCU_ESP32' },
+		{ id: 'src/hal/boards/rp2040/boardmap_rpi_pico.h', name: 'RPi Pico', mcu: 'MCU_RP2040' },
+		{ id: 'src/hal/boards/rp2040/boardmap_rpi_pico_w.h', name: 'RPi Pico W', mcu: 'MCU_RP2040' },
+		{ id: 'boardmap_overrides.h', name: 'Custom board', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' }
 	];
 
 	$scope.UCNCPINS = [
@@ -1140,8 +1138,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.PREV_MCU = "";
 	$scope.MCU = "MCU_AVR";
-	$scope.PREV_BOARD = "";
-	$scope.BOARD = "BOARD_UNO";
+	$scope.PREV_BOARD = '';
+	$scope.BOARD = 'src/hal/boards/avr/boardmap_uno.h';
 	$scope.KINEMATIC = "KINEMATIC_CARTESIAN";
 	$scope.AXIS_COUNT = 3;
 	$scope.TOOL_COUNT = 1;
@@ -1862,6 +1860,7 @@ ready(function () {
 		if (close) {
 			gentext += '\n#ifdef __cplusplus\n}\n#endif\n#endif\n';
 		}
+
 		return gentext;
 	}
 
