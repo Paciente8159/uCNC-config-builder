@@ -199,6 +199,7 @@ function resetBoardPins() {
 	});
 	angular.element(document.getElementById("uCNCapp")).scope().DEFINED_PINS = [];
 	angular.element(document.getElementById("uCNCapp")).scope().DYNAMIC = [];
+	document.querySelector("#CUSTOM_BOARDMAP_CONFIGS").value = "";
 }
 
 async function updateHAL(scope = null) {
@@ -244,8 +245,6 @@ async function updateBoardmap(scope = null) {
 
 	var coreurl = "https://raw.githubusercontent.com/Paciente8159/uCNC/" + version_name;
 
-	var mcuurl = coreurl + "/uCNC/src/hal/mcus/";
-
 	if (!scope) {
 		document.getElementById('reloading').style.display = "none";
 		return;
@@ -256,45 +255,17 @@ async function updateBoardmap(scope = null) {
 		return;
 	}
 
-	scope.PREV_MCU = scope.MCU;
-	scope.PREV_BOARD = scope.BOARD;
-
 	resetBoardPins();
 
-	switch (scope.MCU) {
-		case 'MCU_AVR':
-			mcuurl = mcuurl + "avr/mcumap_avr.h";
-			break;
-		case 'MCU_STM32F1X':
-			mcuurl = mcuurl + "stm32f1x/mcumap_stm32f1x.h";
-			break;
-		case 'MCU_STM32F4X':
-			mcuurl = mcuurl + "stm32f4x/mcumap_stm32f4x.h";
-			break;
-		case 'MCU_SAMD21':
-			mcuurl = mcuurl + "samd21/mcumap_samd21.h";
-			break;
-		case 'MCU_LPC176X':
-			mcuurl = mcuurl + "lpc176x/mcumap_lpc176x.h";
-			break;
-		case 'MCU_ESP8266':
-			mcuurl = mcuurl + "esp8266/mcumap_esp8266.h";
-			break;
-		case 'MCU_ESP32':
-			mcuurl = mcuurl + "esp32/mcumap_esp32.h";
-			break;
-		case 'MCU_RP2040':
-			mcuurl = mcuurl + "rp2040/mcumap_rp2040.h";
-			break;
-		default:
-			document.getElementById('reloading').style.display = "none";
-			return;
-	}
+	var mcuurl = coreurl + "/uCNC/" + scope['MCUS'].filter(obj => { return obj.id === scope['MCU']; })[0].url;
 
 	settings = await parsePreprocessor(mcuurl, settings);
-	updateFields(settings, boardloaded);
-	if (scope) {
-		scope.$apply();
+	updateFields(settings, null);
+
+	if(scope.MCU !== scope.PREV_MCU)
+	{
+		scope['BOARD'] = scope['BOARDS'].filter(obj => { return obj.mcu === scope['MCU']; })[0].id;
+		//updateScope(document.getElementById('#BOARD'), scope['BOARDS'].filter(obj => { return obj.mcu === scope['MCU']; })[0].id);
 	}
 
 	document.getElementById('loadingtext').innerText = "Fetching board...";
@@ -307,6 +278,9 @@ async function updateBoardmap(scope = null) {
 	if (scope) {
 		scope.$apply();
 	}
+
+	scope.PREV_MCU = scope.MCU;
+	scope.PREV_BOARD = scope.BOARD;
 }
 
 var app = angular.module("uCNCapp", []);
@@ -362,14 +336,15 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	]
 
 	$scope.MCUS = [
-		{ id: 'MCU_AVR', name: 'Atmel AVR' },
-		{ id: 'MCU_SAMD21', name: 'Atmel SAMD21' },
-		{ id: 'MCU_STM32F1X', name: 'STM32F1x' },
-		{ id: 'MCU_STM32F4X', name: 'STM32F4X' },
-		{ id: 'MCU_LPC176X', name: 'LPC176X' },
-		{ id: 'MCU_ESP8266', name: 'ESP8266' },
-		{ id: 'MCU_ESP32', name: 'ESP32' },
-		{ id: 'MCU_RP2040', name: 'RPi RP2040' }
+		{ id: 'MCU_AVR', name: 'Atmel AVR', url: 'src/hal/mcus/avr/mcumap_avr.h' },
+		{ id: 'MCU_SAMD21', name: 'Atmel SAMD21', url: 'src/hal/mcus/samd21/mcumap_samd21.h' },
+		{ id: 'MCU_STM32F0X', name: 'STM32F0x', url: 'src/hal/mcus/stm32f0x/mcumap_stm32f0x.h' },
+		{ id: 'MCU_STM32F1X', name: 'STM32F1x', url: 'src/hal/mcus/stm32f1x/mcumap_stm32f1x.h' },
+		{ id: 'MCU_STM32F4X', name: 'STM32F4X', url: 'src/hal/mcus/stm32f4x/mcumap_stm32f4x.h' },
+		{ id: 'MCU_LPC176X', name: 'LPC176X', url: 'src/hal/mcus/lpc176x/mcumap_lpc176x.h' },
+		{ id: 'MCU_ESP8266', name: 'ESP8266', url: 'src/hal/mcus/esp8266/mcumap_esp8266.h' },
+		{ id: 'MCU_ESP32', name: 'ESP32', url: 'src/hal/mcus/esp32/mcumap_esp32.h' },
+		{ id: 'MCU_RP2040', name: 'RPi RP2040', url: 'src/hal/mcus/rp2040/mcumap_rp2040.h' }
 	];
 	$scope.KINEMATICS = [
 		{ id: 'KINEMATIC_CARTESIAN', name: 'Cartesian', version: 0 },
@@ -399,11 +374,12 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'src/hal/boards/avr/boardmap_x_controller.h', name: 'X-Controller', mcu: 'MCU_AVR' },
 		{ id: 'src/hal/boards/avr/boardmap_uno_shield_v3.h', name: 'Arduino UNO Shield v3', mcu: 'MCU_AVR' },
 		{ id: 'src/hal/boards/avr/boardmap_mks_gen_l_v1.h', name: 'MKS Gen L v1', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/stm32/boardmap_bluepill_f0.h', name: 'Bluepill STM32F030', mcu: 'MCU_STM32F0X' },
 		{ id: 'src/hal/boards/stm32/boardmap_bluepill.h', name: 'Bluepill STM32F103', mcu: 'MCU_STM32F1X' },
 		{ id: 'src/hal/boards/stm32/boardmap_blackpill.h', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },
 		{ id: 'src/hal/boards/stm32/boardmap_mks_robin_nano_v1_2.h', name: 'MKS Robin Nano v1.2', mcu: 'MCU_STM32F1X' },
 		{ id: 'src/hal/boards/stm32/boardmap_mks_robin_nano_v3_1.h', name: 'MKS Robin Nano v3.1', mcu: 'MCU_STM32F4X' },
-		{ id: 'src/hal/boards/stm32/boardmap_mks_gen_l_v1.h', name: 'SKR Pro v1.2', mcu: 'MCU_STM32F4X' },
+		{ id: 'src/hal/boards/stm32/boardmap_srk_pro_v1_2.h', name: 'SKR Pro v1.2', mcu: 'MCU_STM32F4X' },
 		{ id: 'src/hal/boards/stm32/boardmap_nucleo_f411re_shield_v3.h', name: 'STM32 Nucleo F411RE', mcu: 'MCU_STM32F4X' },
 		{ id: 'src/hal/boards/samd21/boardmap_mzero.h', name: 'Arduino M0', mcu: 'MCU_SAMD21' },
 		{ id: 'src/hal/boards/samd21/boardmap_zero.h', name: 'Arduino Zero', mcu: 'MCU_SAMD21' },
@@ -416,7 +392,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'src/hal/boards/esp32/boardmap_mks_dlc32.h', name: 'MKS DLC32', mcu: 'MCU_ESP32' },
 		{ id: 'src/hal/boards/rp2040/boardmap_rpi_pico.h', name: 'RPi Pico', mcu: 'MCU_RP2040' },
 		{ id: 'src/hal/boards/rp2040/boardmap_rpi_pico_w.h', name: 'RPi Pico W', mcu: 'MCU_RP2040' },
-		{ id: 'boardmap_overrides.h', name: 'Custom board', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' }
+		{ id: 'boardmap_overrides.h', name: 'Custom board', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' }
 	];
 
 	$scope.UCNCPINS = [
@@ -615,22 +591,22 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.PINS = [
-		{ pin: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 6, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 7, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 10, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 11, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 12, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 13, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 14, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
-		{ pin: 15, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 6, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 7, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 8, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 9, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 10, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 11, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 12, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 13, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 14, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
+		{ pin: 15, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
 		{ pin: 16, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
 		{ pin: 17, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
 		{ pin: 18, mcu: 'MCU_SAMD21,MCU_LPC176X,MCU_ESP8266,MCU_ESP32,MCU_RP2040' },
@@ -658,20 +634,20 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.PORTS = [
-		{ port: 'A', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'B', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'C', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'D', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'E', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'F', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'G', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'H', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'I', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'J', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'K', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'L', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'M', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 'N', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'A', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'B', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'C', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'D', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'E', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'F', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'G', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'H', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'I', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'J', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'K', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'L', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'M', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 'N', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
 		{ port: '0', mcu: 'MCU_LPC176X' },
 		{ port: '1', mcu: 'MCU_LPC176X' },
 		{ port: '2', mcu: 'MCU_LPC176X' },
@@ -694,22 +670,22 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.CHANNELS = [
-		{ channel: 0, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
-		{ channel: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
-		{ channel: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
-		{ channel: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
-		{ channel: 4, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 5, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 6, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 7, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 10, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 11, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 12, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 13, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 14, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ channel: 15, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 0, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ channel: 1, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ channel: 2, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ channel: 3, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ channel: 4, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 5, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 6, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 7, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 8, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 9, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 10, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 11, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 12, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 13, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 14, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ channel: 15, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
 		{ channel: 'A', mcu: 'MCU_AVR' },
 		{ channel: 'B', mcu: 'MCU_AVR' },
 		{ channel: 'C', mcu: 'MCU_AVR' },
@@ -717,53 +693,53 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.TIMERS = [
-		{ timer: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
-		{ timer: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
-		{ timer: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
-		{ timer: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
-		{ timer: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 6, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 7, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 8, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 9, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 10, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 11, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 12, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 13, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 14, mcu: 'MCU_STM32F1X,MCU_STM32F4X' },
-		{ timer: 15, mcu: 'MCU_STM32F1X,MCU_STM32F4X' }
+		{ timer: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
+		{ timer: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
+		{ timer: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
+		{ timer: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_RP2040,MCU_ESP32' },
+		{ timer: 4, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 5, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 6, mcu: 'MCU_SAMD21,MCU_STM32F0XMCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 7, mcu: 'MCU_SAMD21,MCU_STM32F0XMCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 8, mcu: 'MCU_SAMD21,MCU_STM32F0XMCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 9, mcu: 'MCU_SAMD21,MCU_STM32F0XMCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 10, mcu: 'MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 11, mcu: 'MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 12, mcu: 'MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 13, mcu: 'MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 14, mcu: 'MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ timer: 15, mcu: 'MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' }
 	];
 
 	$scope.UCNCTIMERS = [
-		{ timer: 'ITP', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
+		{ timer: 'ITP', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
 		{ timer: 'RTC', mcu: 'MCU_AVR,MCU_RP2040' },
-		{ timer: 'SERVO', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
-		{ timer: 'ONESHOT', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' }
+		{ timer: 'SERVO', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
+		{ timer: 'ONESHOT', mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' }
 	];
 
 	$scope.UCNCUARTS = [
 		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_LPC176X,MCU_ESP32,MCU_RP2040,MCU_ESP8266' },
-		{ port: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
-		{ port: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
-		{ port: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
-		{ port: 4, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
-		{ port: 5, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' }
+		{ port: 1, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
+		{ port: 2, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
+		{ port: 3, mcu: 'MCU_AVR,MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X' },
+		{ port: 4, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 5, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' }
 	];
 
 	$scope.UCNCSPI = [
 		{ port: 0, mcu: 'MCU_AVR,MCU_LPC176X,MCU_ESP32,MCU_RP2040,MCU_ESP8266' },
-		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
-		{ port: 2, mcu: 'MCU_STM32F1X,MCU_STM32F4X,MCU_ESP32' },
-		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' }
+		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
+		{ port: 2, mcu: 'MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_ESP32' },
+		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' }
 	];
 
 
 	$scope.UCNCI2C = [
 		{ port: 0, mcu: 'MCU_AVR,MCU_SAMD21,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
-		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
-		{ port: 2, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
-		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F1X,MCU_STM32F4X' },
+		{ port: 1, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32,MCU_RP2040' },
+		{ port: 2, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X,MCU_LPC176X,MCU_ESP32' },
+		{ port: 3, mcu: 'MCU_SAMD21,MCU_STM32F0X,MCU_STM32F1X,MCU_STM32F4X' },
 		{ port: 4, mcu: 'MCU_SAMD21' },
 		{ port: 5, mcu: 'MCU_SAMD21' }
 	];
