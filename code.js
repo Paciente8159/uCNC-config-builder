@@ -1799,8 +1799,8 @@ ready(function () {
 			customboard = "board = " + customboard + "\r\n";
 		}
 		customparams = getScope(document.getElementById('CUSTOM_PIO_CONFIGS'));
-		customparams = customboard + ((customparams) ? customparams : "");
-		var overrides = "[webconfig]\r\n" + build_flags + "\r\n" + lib_deps + "\r\n" + customparams;
+		customparams = ((customboard) ? customboard : "board = \r\n") + ((customparams) ? customparams : "");
+		var overrides = "[webconfig]\r\n" + build_flags + lib_deps + customparams;
 		return overrides;
 	}
 
