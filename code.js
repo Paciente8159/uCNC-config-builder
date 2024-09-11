@@ -379,6 +379,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'src/hal/boards/avr/boardmap_x_controller.h', name: 'X-Controller', mcu: 'MCU_AVR' },
 		{ id: 'src/hal/boards/avr/boardmap_uno_shield_v3.h', name: 'Arduino UNO Shield v3', mcu: 'MCU_AVR' },
 		{ id: 'src/hal/boards/avr/boardmap_mks_gen_l_v1.h', name: 'MKS Gen L v1', mcu: 'MCU_AVR' },
+		{ id: 'src/hal/boards/avr/boardmap_melzi_v114.h', name: 'Melzi v1.1.4', mcu: 'MCU_AVR' },
 		{ id: 'src/hal/boards/stm32/boardmap_bluepill_f0.h', name: 'Bluepill STM32F030', mcu: 'MCU_STM32F0X' },
 		{ id: 'src/hal/boards/stm32/boardmap_bluepill.h', name: 'Bluepill STM32F103', mcu: 'MCU_STM32F1X' },
 		{ id: 'src/hal/boards/stm32/boardmap_blackpill.h', name: 'Blackpill STM32F401', mcu: 'MCU_STM32F4X' },
