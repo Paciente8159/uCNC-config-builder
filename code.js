@@ -262,8 +262,7 @@ async function updateBoardmap(scope = null) {
 	settings = await parsePreprocessor(mcuurl, settings);
 	updateFields(settings, null);
 
-	if(scope.MCU !== scope.PREV_MCU)
-	{
+	if (scope.MCU !== scope.PREV_MCU) {
 		scope['BOARD'] = scope['BOARDS'].filter(obj => { return obj.mcu === scope['MCU']; })[0].id;
 		//updateScope(document.getElementById('#BOARD'), scope['BOARDS'].filter(obj => { return obj.mcu === scope['MCU']; })[0].id);
 	}
@@ -1772,6 +1771,10 @@ ready(function () {
 		var modules = [...document.querySelectorAll('[module-name-data]')];
 		var lib_deps = "lib_deps = \r\n";
 		var build_flags = "build_flags = \r\n";
+		var customflags = getScope(document.getElementById('CUSTOM_PIO_BUILDFLAGS'));
+		if (customflags.length) {
+			build_flags += "\t" + customflags;
+		}
 		if (modules.length) {
 			for (var i = 0; i < modules.length; i++) {
 				var sel = modules[i].querySelector('[config-file=module]:checked');
@@ -1783,7 +1786,14 @@ ready(function () {
 				}
 			}
 		}
-		var overrides = "[webconfig]\r\n" + build_flags + "\r\n" + lib_deps;
+
+		var customboard = getScope(document.getElementById('CUSTOM_PIO_BOARD'));
+		if(customboard.length) {
+			customboard = "board = " + customboard + "\r\n";
+		}
+		customparams = getScope(document.getElementById('CUSTOM_PIO_CONFIGS'));
+		customparams = customboard + ((customparams) ? customparams : "");
+		var overrides = "[webconfig]\r\n" + build_flags + "\r\n" + lib_deps + "\r\n" + customparams;
 		return overrides;
 	}
 
@@ -1886,7 +1896,7 @@ ready(function () {
 				});
 				loadingfile = false;
 				document.getElementById('reloading').style.display = "none";
-			}, 5000);
+			}, 1000);
 		};
 		reader.readAsText(file);
 

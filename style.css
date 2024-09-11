@@ -141,7 +141,7 @@ div.tab-content {
 
   textarea.form-control{
 	width: 100%;
-	min-height: 400px !important;
+	min-height: 250px !important;
   }
 
 	.d-gap-10{

@@ -322,10 +322,10 @@
 							config-file="none"></select>
 						<!-- <option value="{{x.id}}" ng-repeat="x in BOARDS | filter: {'mcu': MCU}">{{x.name}}</option> -->
 						</select>
-						<div class="info alert alert-info left-align" role="alert" ng-if="(BOARD=='BOARD_CUSTOM')">
+						<div class="info alert alert-info left-align" role="alert" ng-if="(BOARD=='BOARD_CUSTOM'||BOARD=='boardmap_overrides.h')">
 							<h2 style="color: var(--bs-alert-color)">Advanced configurations</h2>
-							<p>Custom boards might require aditional settings that are not available in this
-								tool.<br>Also might require either a different base board selection on the ini file
+							<p>Custom boards might require aditional settings that may not be available in this
+								tool.<br><strong>Check the Custom configurations tab</strong><br>Also might require either a different base board selection on the ini file
 								(PlatformIO) or a board type (Arduino IDE).<br>Please refer to the architecture
 								documentation or submit a question on Github
 								about custom boards.</p>
@@ -342,7 +342,7 @@
 						<small id="helpId" class="form-text text-muted">Name must be between quotation marks
 							(string)</small>
 					</div>
-					<div class="mb-3" ng-if='MCU=="MCU_AVR" && BOARD=="BOARD_CUSTOM"'>
+					<div class="mb-3" ng-if='MCU=="MCU_AVR" && (BOARD=="BOARD_CUSTOM"||BOARD=="boardmap_overrides.h")'>
 						<label for="" class="form-label">In which port are PCINT pins 0 to 7?</label>
 						<select class='form-select form-select-sm' name='PCINT0_PORT' id='PCINT0_PORT'
 							ng-model="DYNAMIC['PCINT0_PORT']" model-scope-name="DYNAMIC.PCINT0_PORT"
@@ -1515,6 +1515,25 @@
 					<label class="form-check-label" for="CUSTOM_HAL_CONFIGS">Custom hal configs</label>
 					<textarea class="form-control" id="CUSTOM_HAL_CONFIGS" ng-model="DYNAMIC['CUSTOM_HAL_CONFIGS']"
 						model-scope-name="DYNAMIC.CUSTOM_HAL_CONFIGS" config-file="none"></textarea>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Custom PIO configs</legend>
+				<div class="mb-3">
+					<label class="form-check-label" for="CUSTOM_PIO_BOARD">Custom PIO board</label>
+					<small id="piohelp1" class="form-text text-muted">Set the PIO base board</small>
+					<input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" name="CUSTOM_PIO_BOARD" id="CUSTOM_PIO_BOARD" ng-model="DYNAMIC['CUSTOM_PIO_BOARD']" model-scope-name="DYNAMIC.CUSTOM_PIO_BOARD" aria-describedby="piohelp1" placeholder="PIO base board" config-file="none">
+					
+					<label class="form-check-label" for="CUSTOM_PIO_BUILDFLAGS">Custom PIO additional build flags</label>
+					<small id="piohelp2" class="form-text text-muted">Set the PIO additional build flags Example: -D myextraflag=1</small>
+					<textarea class="form-control" id="CUSTOM_PIO_BUILDFLAGS" ng-model="DYNAMIC['CUSTOM_PIO_BUILDFLAGS']"
+						model-scope-name="DYNAMIC.CUSTOM_PIO_BUILDFLAGS" config-file="none" aria-describedby="piohelp2" placeholder="-D myextraflag=1"></textarea>
+						
+					<label class="form-check-label" for="CUSTOM_PIO_CONFIGS">Custom PIO additional options.</label>
+					<small id="piohelp3" class="form-text text-muted">Set the PIO additional environment conditions. Example: board_build.offset  = 0x2000</small>
+					<textarea class="form-control" id="CUSTOM_PIO_CONFIGS" ng-model="DYNAMIC['CUSTOM_PIO_CONFIGS']"
+						model-scope-name="DYNAMIC.CUSTOM_PIO_CONFIGS" config-file="none" aria-describedby="piohelp3" placeholder="board_build.offset  = 0x2000"></textarea>
+						
 				</div>
 			</fieldset>
 		</div>
