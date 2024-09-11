@@ -1,5 +1,5 @@
 <?php
-$directories = ['AVR', 'SAMD21', 'STM32F1', 'STM32F4', 'ESP8266', 'ESP32', 'RP2040'];
+$directories = ['AVR', 'SAMD21', 'STM32F0', 'STM32F1', 'STM32F4', 'ESP8266', 'ESP32', 'RP2040'];
 
 // Print the list of files and directories
 $output = "<div class=\"mb-3 load-config\">\n";
