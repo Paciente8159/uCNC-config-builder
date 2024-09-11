@@ -33,7 +33,7 @@ async function parsePreprocessor(file, settings = [], recursive = false) {
 		const defineregex = (!recursive) ? /^[\s]*#(define)[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm : /^[\s]*#(define|undef)[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm;
 		const matches = [...allText.matchAll(defineregex)];
 		for (var i = 0; i < matches.length; i++) {
-			settings[matches[i][2]] = (matches[i][1] == "define") ? matches[i][3] : undefined;
+			settings[matches[i][2]] = (matches[i][1] == "define") ? matches[i][3] : '<undef>';
 		}
 	}
 
@@ -176,7 +176,13 @@ function updateFields(settings = [], loadedevent = null, include_missing_setting
 			else if (include_missing_settings && !s.startsWith("BOARDMAP")) {
 				var node = document.querySelector("#CUSTOM_BOARDMAP_CONFIGS");
 				var val = getScope(node);
-				updateScope(node, ((val !== null) ? val : "") + "#define " + s + " " + ((settings[s] != undefined) ? settings[s] : "") + "\n");
+				if(settings[s] !== '<undef>'){
+					updateScope(node, ((val !== null) ? val : "") + "#define " + s + " " + ((settings[s] != undefined) ? settings[s] : "") + "\n");
+				}
+				else{
+					updateScope(node, ((val !== null) ? val : "") + "#undef " + s + "\n");
+				}
+				
 			}
 		}
 	}
