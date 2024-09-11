@@ -1778,10 +1778,10 @@ ready(function () {
 		var lib_deps = "lib_deps = \r\n";
 		var build_flags = "build_flags = \r\n";
 		var customflags = getScope(document.getElementById('CUSTOM_PIO_BUILDFLAGS'));
-		if (customflags.length) {
+		if (customflags && customflags.length) {
 			build_flags += "\t" + customflags;
 		}
-		if (modules.length) {
+		if (modules && modules.length) {
 			for (var i = 0; i < modules.length; i++) {
 				var sel = modules[i].querySelector('[config-file=module]:checked');
 				if (sel) {
@@ -1794,7 +1794,7 @@ ready(function () {
 		}
 
 		var customboard = getScope(document.getElementById('CUSTOM_PIO_BOARD'));
-		if(customboard.length) {
+		if(customboard && customboard.length) {
 			customboard = "board = " + customboard + "\r\n";
 		}
 		customparams = getScope(document.getElementById('CUSTOM_PIO_CONFIGS'));
