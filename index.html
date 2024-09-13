@@ -1304,7 +1304,7 @@
 					</div>
 					<div ng-if="!IC74HC595_CUSTOM_SHIFT_IO">
 						<label for="IC74HC595_COUNT" class="form-label">Number of chained IC74HC595's: <span
-								ng-bind="DYNAMIC['IC74HC595']['IC74HC595_COUNT']"></label>
+								ng-bind="IC74HC595_COUNT"></label>
 						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT" id="IC74HC595_COUNT"
 							ng-model="IC74HC595_COUNT" model-scope-name="IC74HC595_COUNT" var-type="int" config-file="hal"
 							ng-init="IC74HC595_COUNT=0">
