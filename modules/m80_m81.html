@@ -1,4 +1,6 @@
 <div>
+	<div ng-hide="DYNAMIC['ENABLE_PARSER_MODULES']"><button type="button" class="btn btn-outline-warning"
+		ng-click="DYNAMIC['ENABLE_PARSER_MODULES']=true;">Enable required extension options</button></div>
 	<label for="PSU_PIN" class="form-label">Define PSU_PIN</label>
 	<select class="form-select form-select-md" name="PSU_PIN" id="PSU_PIN" ng-model="PSU_PIN"
 		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"

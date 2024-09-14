@@ -176,13 +176,13 @@ function updateFields(settings = [], loadedevent = null, include_missing_setting
 			else if (include_missing_settings && !s.startsWith("BOARDMAP")) {
 				var node = document.querySelector("#CUSTOM_BOARDMAP_CONFIGS");
 				var val = getScope(node);
-				if(settings[s] !== '<undef>'){
+				if (settings[s] !== '<undef>') {
 					updateScope(node, ((val !== null) ? val : "") + "#define " + s + " " + ((settings[s] != undefined) ? settings[s] : "") + "\n");
 				}
-				else{
+				else {
 					updateScope(node, ((val !== null) ? val : "") + "#undef " + s + "\n");
 				}
-				
+
 			}
 		}
 	}
@@ -904,12 +904,13 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	];
 
 	$scope.MODULES_OPTIONS = [
-		{ id: 'g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points', },
+		{ id: 'g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
 		{ id: 'g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
 		{ id: 'g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
 		{ id: 'm17_m18', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
 		{ id: 'm42', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
 		{ id: 'm62_m65', name: 'LinuxCNC M62-M65 and allows to turn on and off any generic digital pin (synched or immediately)' },
+		{ id: 'm66', name: 'LinuxCNC M66 and allows to wait on digital or analog input pin of the µCNC' },
 		{ id: 'm67_m68', name: 'LinuxCNC M67-M68 and allows to turn on and off any analog pin (synched or immediately)' },
 		{ id: 'm80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
 		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
@@ -923,9 +924,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'web_pendant', name: 'Adds an improved web pendant for WiFi capable devices. (requires at least v1.9.0 to work)', condition: 'VERSION>010879' },
 		{ id: 'tmc_driver', name: 'Support for TMC drivers. (requires at least v1.8.7 to work)', condition: 'VERSION>010806' },
 		{ id: 'tone_speaker', name: 'Plays sounds and tunes using a PWM output.' },
-		{ id: 'mks_display', name: 'Adds support for MKS TS35-R display and similar ones.', condition: 'VERSION>019090', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/mks_display/lv_conf.h"' },
-		{ id: 'tft_display', name: 'Adds support for TFT displays like the ILI9341 and others.', condition: 'VERSION>019090' },
-		{ id: 'lvgl_support', name: 'LVGL system menu emulating Win95 for the tft_display module.', condition: 'VERSION>019090', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/lvgl_support/lv_conf.h"' },
+		{ id: 'mks_display', name: 'Adds support for MKS TS35-R display and similar ones.', condition: 'VERSION>019090', requires: 'touch_screen', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/mks_display/lv_conf.h"' },
+		{ id: 'tft_display', name: 'Adds support for TFT displays like the ILI9341 and others. Uses lvgl_support to display a Win95 style menu', condition: 'VERSION>019090', requires: 'lvgl_support', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/lvgl_support/lv_conf.h"' },
+		// { id: 'lvgl_support', name: 'LVGL system menu emulating Win95 for the tft_display module.', condition: 'VERSION>019090', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/lvgl_support/lv_conf.h"' },
 	];
 
 	$scope.STEPPERS = [
@@ -1775,27 +1776,44 @@ ready(function () {
 	}
 
 	function generatePIOOverrides() {
+		var scope = angular.element(document.getElementById("uCNCapp")).scope();
 		var modules = [...document.querySelectorAll('[module-name-data]')];
 		var lib_deps = "lib_deps = \r\n";
 		var build_flags = "build_flags = \r\n";
 		var customflags = getScope(document.getElementById('CUSTOM_PIO_BUILDFLAGS'));
 		if (customflags && customflags.length) {
-			build_flags += "\t" + customflags;
+			var flags = [...customflags.split(/\n/)];
+			for (var i = 0; i < flags.length; i++) {
+				build_flags += "\t" + flags;
+			}
 		}
 		if (modules && modules.length) {
+			var includes = ""
 			for (var i = 0; i < modules.length; i++) {
 				var sel = modules[i].querySelector('[config-file=module]:checked');
 				if (sel) {
-					var ld = modules[i].querySelector(".lib_deps");
-					var bf = modules[i].querySelector(".build_flags");
-					if (ld) { lib_deps += "\t" + ld.innerHTML + "\r\n"; }
-					if (bf) { build_flags += "\t" + bf.innerHTML + "\r\n"; }
+					var mod = scope.MODULES_OPTIONS.find((x) => { return x.id == sel.id });
+					if (mod.pre_requires && mod.pre_requires.length) {
+						includes += mod.pre_requires.replace(/,\s*$/, "") + ", ";
+					}
+					includes += sel.id + ", ";
+					if (mod.requires && mod.requires.length) {
+						includes += mod.requires.replace(/,\s*$/, "") + ", ";
+					}
+
+					if (mod.lib_deps && mod.lib_deps.length) { lib_deps += "\t" + mod.lib_deps + "\r\n"; }
+					if (mod.build_flags && mod.build_flags.length) { build_flags += "\t" + mod.build_flags + "\r\n"; }
 				}
 			}
+			lib_deps = "custom_ucnc_modules = " + includes.replace(/,\s*$/, "") + "\r\n" + lib_deps;
+			lib_deps = "custom_ucnc_modules_url = " + document.getElementById("ucnc-modules-download").href + "\r\n" + lib_deps;
+		}
+		else {
+			lib_deps = "custom_ucnc_modules =\r\ncustom_ucnc_modules_url =\r\n" + lib_deps;
 		}
 
 		var customboard = getScope(document.getElementById('CUSTOM_PIO_BOARD'));
-		if(customboard && customboard.length) {
+		if (customboard && customboard.length) {
 			customboard = "board = " + customboard + "\r\n";
 		}
 		customparams = getScope(document.getElementById('CUSTOM_PIO_CONFIGS'));
