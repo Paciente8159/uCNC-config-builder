@@ -927,6 +927,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'mks_display', name: 'Adds support for MKS TS35-R display and similar ones.', condition: 'VERSION>019090', requires: 'touch_screen', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/mks_display/lv_conf.h"' },
 		{ id: 'tft_display', name: 'Adds support for TFT displays like the ILI9341 and others. Uses lvgl_support to display a Win95 style menu', condition: 'VERSION>019090', requires: 'lvgl_support', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/lvgl_support/lv_conf.h"' },
 		{ id: 'joystick', name: 'Adds support for an analog joystick to control up to 6 axis', condition: 'VERSION>019090' },
+		{ id: 'grblhal_keypad', name: 'Adds support for GrblHAL keypad consoles', condition: 'VERSION>010800' },
 		// { id: 'lvgl_support', name: 'LVGL system menu emulating Win95 for the tft_display module.', condition: 'VERSION>019090', lib_deps: 'lvgl/lvgl@^9.1.0', build_flags: '-DLV_CONF_PATH="${platformio.include_dir}/src/modules/lvgl_support/lv_conf.h"' },
 	];
 
