@@ -868,6 +868,15 @@
 					</div>
 				</fieldset>
 				<fieldset>
+					<legend>Generic IO</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="DISABLE_HAL_CONFIG_PROTECTION"
+							ng-model="DYNAMIC['DISABLE_HAL_CONFIG_PROTECTION']" model-scope-name="DYNAMIC.DISABLE_HAL_CONFIG_PROTECTION" config-file="hal">
+						<label class="form-check-label" for="DISABLE_HAL_CONFIG_PROTECTION">Allow generic inputs to be configurable as outputs</label>
+						<br><small class="form-text text-muted">this may be needed if using generic input pins for communication with peripherals using software emulated protocol</small>
+					</div>
+				</fieldset>
+				<fieldset>
 					<legend>Probe</legend>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="DISABLE_PROBE" ng-model="DYNAMIC['DISABLE_PROBE']"
@@ -1644,7 +1653,7 @@
 		</div>
 	</div>
 
-	<script src="code.js?version=202409141847"></script>
+	<script src="code.js?version=202409151030"></script>
 </body>
 
 </html>

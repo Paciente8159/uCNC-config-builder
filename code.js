@@ -1623,10 +1623,16 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 }]);
 
 var orfilter = app.filter("orTypeFilter", function () {
+	var scope = angular.element(document.getElementById("uCNCapp")).scope();
 	return function (items, arg) {
 		var filtered = [];
 		angular.forEach((items), function (value, key) {
 			arg.forEach((tag) => {
+				if(tag.startsWith("unsafe_")){
+					if(scope.DYNAMIC['DISABLE_HAL_CONFIG_PROTECTION']){
+						tag = tag.substring("unsafe_".length);
+					}
+				}
 				if (value.type.includes(tag)) {
 					this.push(value);
 				}
