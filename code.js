@@ -915,6 +915,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'm80_m81', name: 'Marlin M80-M81 and allows to turn on and off a pin controling the PSU' },
 		{ id: 'i2c_lcd', name: 'Support for an I2C LCD that display the current machine position and limits state' },
 		{ id: 'smoothie_clustering', name: 'Smoothieware S Cluster support' },
+		{ id: 'i2c_eeprom', name: 'Adds support for external I2C EEPROMs to store settings' },
 		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display', lib_deps: 'olikraus/U8g2' },
 		/*{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI (DEPRECATED)' },*/
 		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS (requires up to v1.8.x to work)', condition: 'VERSION<010880' },

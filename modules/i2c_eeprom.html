@@ -1,0 +1,30 @@
+<div>
+	<div ng-hide="!DYNAMIC['DISABLE_SETTINGS_MODULES']"><button type="button" class="btn btn-outline-warning"
+			ng-click="DYNAMIC['DISABLE_SETTINGS_MODULES']=false;">Enable required extension options</button></div>
+	<label for="I2C_EEPROM_INTERFACE" class="form-label">Define I2C_EEPROM_INTERFACE</label>
+	<select class="form-select form-select-md" name="I2C_EEPROM_INTERFACE" id="I2C_EEPROM_INTERFACE"
+		ng-model="I2C_EEPROM_INTERFACE" config-file="hal" ng-init="I2C_EEPROM_INTERFACE='HW_I2C'">
+		<option value="SW_I2C">SW_I2C</option>
+		<option value="HW_I2C">HW_I2C</option>
+	</select>
+	<div ng-if="I2C_EEPROM_INTERFACE=='SW_I2C'">
+		<label for="I2C_EEPROM_I2C_CLOCK" class="form-label">Define I2C_EEPROM_I2C_CLOCK</label>
+		<select class="form-select form-select-md" name="I2C_EEPROM_I2C_CLOCK" id="I2C_EEPROM_I2C_CLOCK" ng-model="I2C_EEPROM_I2C_CLOCK"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | orTypeFilter: ['unsafe_generic_input','generic_output']"
+			config-file="hal" ng-init="I2C_EEPROM_I2C_CLOCK='DIN30'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(I2C_EEPROM_I2C_CLOCK)">
+			{{I2C_EEPROM_I2C_CLOCK}} pin is not defined for
+			your board!
+		</div>
+		<label for="I2C_EEPROM_I2C_DATA" class="form-label">Define I2C_EEPROM_I2C_DATA</label>
+		<select class="form-select form-select-md" name="I2C_EEPROM_I2C_DATA" id="I2C_EEPROM_I2C_DATA" ng-model="I2C_EEPROM_I2C_DATA"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | orTypeFilter: ['unsafe_generic_input','generic_output']"
+			config-file="hal" ng-init="I2C_EEPROM_I2C_DATA='DIN31'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(I2C_EEPROM_I2C_DATA)">
+			{{I2C_EEPROM_I2C_DATA}} pin is not defined for
+			your board!
+		</div>
+	</div>
+</div>
