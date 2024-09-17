@@ -31,7 +31,7 @@
 						ng-options="y.id as y.name for y in TMCS_COM" config-file="hal">
 					</select>
 				</div>
-				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_UART'">
+				<div ng-if="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_UART'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_UART_TX" class="form-label">Stepper{{x}} TMC UART TX
 							pin</label>
@@ -88,7 +88,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_SPI'">
+				<div ng-if="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_SPI'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_SPI_CS" class="form-label">Stepper{{x}} TMC SPI CS
 							pin</label>
@@ -163,7 +163,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_ONEWIRE'">
+				<div ng-if="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_ONEWIRE'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_UART_RX" class="form-label">Stepper{{x}} TMC UART RX
 							pin</label>
@@ -206,7 +206,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_UART2_HW'">
+				<div ng-if="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_UART2_HW'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_UART_CS" class="form-label">Stepper{{x}} TMC UART CS
 							pin</label>
@@ -235,7 +235,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-show="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_SPI_HW'">
+				<div ng-if="DYNAMIC['STEPPERS'][x]['STEPPER_TMC_INTERFACE']=='TMC_SPI_HW'">
 					<div class="mb-3">
 						<label for="STEPPER{{x}}_SPI_CS" class="form-label">Stepper{{x}} TMC SPI CS
 							pin</label>
