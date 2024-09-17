@@ -30,10 +30,11 @@ async function parsePreprocessor(file, settings = [], recursive = false) {
 				settings = await parsePreprocessor(basefile, settings, recursive);
 			}
 		}
-		const defineregex = (!recursive) ? /^[\s]*#(define)[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm : /^[\s]*#(define|undef)[\s]+(?<def>[\w\d]+)[\s]+(?<val>[\-\w\d\.]+|"[^"]+")?/gm;
+		const defineregex = (!recursive) ? /^[\s]*#(define)[\s]+(?<def>[\w\d]+)(?<val>[^\n]*)$/gm : /^[\s]*#(define|undef)[\s]+(?<def>[\w\d]+)(?<val>[^\n]*)$/gm;
 		const matches = [...allText.matchAll(defineregex)];
+		debugger;
 		for (var i = 0; i < matches.length; i++) {
-			settings[matches[i][2]] = (matches[i][1] == "define") ? matches[i][3] : '<undef>';
+			settings[matches[i][2]] = (matches[i][1] == "define") ? matches[i][3].replace(/[\s]*\/\/.*/gm, '').replace(/\/\*.*?\*\//gsm, '').trim() : '<undef>';
 		}
 	}
 
