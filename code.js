@@ -32,7 +32,6 @@ async function parsePreprocessor(file, settings = [], recursive = false) {
 		}
 		const defineregex = (!recursive) ? /^[\s]*#(define)[\s]+(?<def>[\w\d]+)(?<val>[^\n]*)$/gm : /^[\s]*#(define|undef)[\s]+(?<def>[\w\d]+)(?<val>[^\n]*)$/gm;
 		const matches = [...allText.matchAll(defineregex)];
-		debugger;
 		for (var i = 0; i < matches.length; i++) {
 			settings[matches[i][2]] = (matches[i][1] == "define") ? matches[i][3].replace(/[\s]*\/\/.*/gm, '').replace(/\/\*.*?\*\//gsm, '').trim() : '<undef>';
 		}
@@ -41,7 +40,7 @@ async function parsePreprocessor(file, settings = [], recursive = false) {
 	return settings;
 }
 
-function getScope(node = null, final = true) {
+function getScope(node = null, final = true, nullundef = true) {
 	if (!node) {
 		return null;
 	}
@@ -73,6 +72,10 @@ function getScope(node = null, final = true) {
 	}
 	else {
 		val = (notempty) ? scope[node.id] : null;
+	}
+
+	if (!nullundef && val === '<undef>') {
+		val = null;
 	}
 
 	return (final && (typeof val !== 'object')) ? val : null;
@@ -1630,8 +1633,8 @@ var orfilter = app.filter("orTypeFilter", function () {
 		var filtered = [];
 		angular.forEach((items), function (value, key) {
 			arg.forEach((tag) => {
-				if(tag.startsWith("unsafe_")){
-					if(scope.DYNAMIC['DISABLE_HAL_CONFIG_PROTECTION']){
+				if (tag.startsWith("unsafe_")) {
+					if (scope.DYNAMIC['DISABLE_HAL_CONFIG_PROTECTION']) {
 						tag = tag.substring("unsafe_".length);
 					}
 				}
@@ -1705,9 +1708,9 @@ ready(function () {
 				else {
 					switch (node.type) {
 						case 'select-one':
-							if (getScope(node) != null) {
+							if (getScope(node, true, false) != null) {
 								// gentext += "//apply new definition of " + options[i] + "\n";
-								gentext += "#define " + options[i] + " " + getScope(node) + "\n";
+								gentext += "#define " + options[i] + " " + getScope(node, true, false) + "\n";
 							}
 							break;
 						case 'checkbox':
@@ -1722,7 +1725,7 @@ ready(function () {
 							break;
 						default:
 							// gentext += "//apply new definition of " + options[i] + "\n";
-							gentext += "#define " + options[i] + " " + getScope(node) + "\n";
+							gentext += "#define " + options[i] + " " + getScope(node, true, false) + "\n";
 							break;
 					}
 				}
