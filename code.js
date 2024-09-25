@@ -1583,7 +1583,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 							e.checked = true;
 						}
 					});
-				}.bind(e), 500);
+				}.bind(e), 1000);
 			}
 		});
 	};
