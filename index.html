@@ -1588,18 +1588,33 @@
 					</div>
 					<ul class="list-group list-group-flush">
 
-						<li class="list-group-item"><a class="btn btn-secondary" href="{{getSrc(VERSION)}}" target="_blank">Download
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a class="btn btn-secondary" href="{{getSrc(VERSION)}}" target="_blank">Download
 								µCNC ({{getVersion(VERSION)}})</a><small id="helpId" class="form-text text-muted">If setting the build
 								environment manually unzip this file.</small></li>
-						<li class="list-group-item"><a class="btn btn-secondary" id="ucnc-modules-download"
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a class="btn btn-secondary" id="ucnc-modules-download"
 								href="{{getModules(VERSION)}}" target="_blank">Download µCNC
 								addon modules</a><small id="helpId" class="form-text text-muted">If setting the build environment
 								manually, unzip this file and place each module directory used in the modules directory inside
 								uCNC/src/modules/ directory</small></li>
-						<li class="list-group-item"><a name="config_files" id="config_files" class="btn btn-primary" href="#"
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a name="config_files" id="config_files" class="btn btn-primary" href="#"
 								role="button">Download your configuration files</a>
 							<small id="helpId" class="form-text text-muted">If setting the build environment manually, and place the
 								file inside uCNC root directory</small>
+						</li>
+						<li class="list-group-item d-flex flex-column align-items-start">
+							<small id="helpId" class="form-text text-muted">If want to update your existing files you can copy them to
+								the clipboard here</small>
+							<div class="d-flex flex-column justify-content-start d-gap-10"><button class="btn btn-light copyclipboard" data-clipboard-call="generateBoardmapReset();">Copy
+									boardmap_reset.h</button>
+								<button class="btn btn-light copyclipboard" data-clipboard-call="generateBoardmapOverrides();">Copy
+									boardmap_overrides.h</button>
+								<button class="btn btn-light copyclipboard" data-clipboard-call="generateHalReset();">Copy
+									cnc_hal_reset.h</button>
+								<button class="btn btn-light copyclipboard" data-clipboard-call="generateHalOverrides();">Copy
+									cnc_hal_overrides.h</button>
+								<button class="btn btn-light copyclipboard" data-clipboard-call="generatePIOOverrides();">Copy
+									webconfig.ini</button>
+							</div>
 						</li>
 						<!-- 
 						<li class="list-group-item">
@@ -1635,9 +1650,9 @@
 							<small id="helpId" class="form-text text-muted">And replace webconfig.ini file in uCNC root directory
 								(only on version 1.10.1+)</small>
 						</li> -->
-						<li class="list-group-item">Compile and upload the project either via Platform IO (recommended)
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start">Compile and upload the project either via Platform IO (recommended)
 							or Arduino IDE.</li>
-						<li class="list-group-item"><a name="store_settings" id="store_settings" class="btn btn-success" href="#"
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a name="store_settings" id="store_settings" class="btn btn-success" href="#"
 								role="button">Download config settings</a>
 							<small id="helpId" class="form-text text-muted">These can be later used to reload your
 								settings</small>
@@ -1666,7 +1681,10 @@
 		integrity="sha512-klc+qN5PPscoGxSzFpetVsCr9sryi2e2vHwZKq43FdFyhSAa7vAqog/Ifl8tzg/8mBZiG2MAKhyjH5oPJp65EA=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-
+	<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"
+		integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<!-- The Modal -->
 	<div id="reloading" class="modal">
 		<!-- Modal content -->

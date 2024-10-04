@@ -1939,4 +1939,10 @@ ready(function () {
 		reader.readAsText(file);
 
 	}, false);
+
+	new ClipboardJS('.copyclipboard', {
+		text: function (trigger) {
+			return eval(trigger.getAttribute('data-clipboard-call'));
+		},
+	});
 });
