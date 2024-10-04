@@ -1708,15 +1708,21 @@ ready(function () {
 				else {
 					switch (node.type) {
 						case 'select-one':
+							if(node.id == "PSU_ON"){
+								console.log("PSU");
+							}
 							if (getScope(node, true, false) != null) {
 								// gentext += "//apply new definition of " + options[i] + "\n";
 								gentext += "#define " + options[i] + " " + getScope(node, true, false) + "\n";
 							}
 							break;
 						case 'checkbox':
+							if(node.id == "PSU_ON"){
+								console.log("PSU");
+							}
 							if (node.checked) {
 								// gentext += "//apply new definition of " + options[i] + "\n";
-								gentext += "#define " + options[i] + "\n";
+								gentext += "#define " + options[i] + ((node.getAttribute("var-type") === "bool") ? " true" : "") + "\n";
 							}
 							else if (node.getAttribute("var-type") === "bool") {
 								// gentext += "//apply new definition of " + options[i] + "\n";
