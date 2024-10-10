@@ -1,55 +1,51 @@
 <div>
 	<div
-	ng-hide="DYNAMIC['ENABLE_PARSER_MODULES'] && !DYNAMIC['DISABLE_SETTINGS_MODULES'] && DYNAMIC['ENABLE_MAIN_LOOP_MODULES']">
-	<button type="button" class="btn btn-outline-warning"
-		ng-click="DYNAMIC['ENABLE_PARSER_MODULES']=true;DYNAMIC['ENABLE_MAIN_LOOP_MODULES']=true;DYNAMIC['DISABLE_SETTINGS_MODULES']=false;">Enable
-		required extension options</button></div>
+		ng-hide="DYNAMIC['ENABLE_PARSER_MODULES'] && !DYNAMIC['DISABLE_SETTINGS_MODULES'] && DYNAMIC['ENABLE_MAIN_LOOP_MODULES']">
+		<button type="button" class="btn btn-outline-warning"
+			ng-click="DYNAMIC['ENABLE_PARSER_MODULES']=true;DYNAMIC['ENABLE_MAIN_LOOP_MODULES']=true;DYNAMIC['DISABLE_SETTINGS_MODULES']=false;">Enable
+			required extension options</button>
+	</div>
 	<label for="SD_SPI_CS" class="form-label">Define SD_CARD_INTERFACE</label>
 	<select class="form-select form-select-md" name="SD_CARD_INTERFACE" id="SD_CARD_INTERFACE"
-		ng-model="SD_CARD_INTERFACE"
-		config-file="hal" ng-init="SD_CARD_INTERFACE='SD_CARD_HW_SPI'">
+		ng-model="SD_CARD_INTERFACE" config-file="hal" ng-init="SD_CARD_INTERFACE='SD_CARD_HW_SPI'">
 		<option value="SD_CARD_HW_SPI">SD_CARD_HW_SPI</option>
 		<option value="SD_CARD_HW_SPI2">SD_CARD_HW_SPI2</option>
 		<option value="SD_CARD_SW_SPI">SD_CARD_SW_SPI</option>
 	</select>
-	
+
 	<div ng-if="SD_CARD_INTERFACE=='SD_CARD_SW_SPI'">
 		<label for="SD_SPI_CLK" class="form-label">Define SD_SPI_CLK</label>
-	<select class="form-select form-select-md" name="SD_SPI_CLK" id="SD_SPI_CLK"
-		ng-model="SD_SPI_CLK"
-		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
-		config-file="hal" ng-init="SD_SPI_CLK='DOUT30'">
-	</select>
-	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_CLK)">
-		{{SD_SPI_CLK}} pin is not defined for
-		your board!
-	</div>
-	<label for="SD_SPI_SDO" class="form-label">Define SD_SPI_SDO</label>
-	<select class="form-select form-select-md" name="SD_SPI_SDO" id="SD_SPI_SDO"
-		ng-model="SD_SPI_SDO"
-		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
-		config-file="hal" ng-init="SD_SPI_SDO='DOUT29'">
-	</select>
-	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_SDO)">
-		{{SD_SPI_SDO}} pin is not defined for
-		your board!
-	</div>
-	<label for="SD_SPI_SDI" class="form-label">Define SD_SPI_SDI</label>
-	<select class="form-select form-select-md" name="SD_SPI_SDI" id="SD_SPI_SDI"
-		ng-model="SD_SPI_SDI"
-		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
-		config-file="hal" ng-init="SD_SPI_SDI='DIN29'">
-	</select>
-	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_SDI)">
-		{{SD_SPI_SDI}} pin is not defined for
-		your board!
-	</div>
+		<select class="form-select form-select-md" name="SD_SPI_CLK" id="SD_SPI_CLK" ng-model="SD_SPI_CLK"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+			config-file="hal" ng-init="SD_SPI_CLK='DOUT30'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_CLK)">
+			{{SD_SPI_CLK}} pin is not defined for
+			your board!
+		</div>
+		<label for="SD_SPI_SDO" class="form-label">Define SD_SPI_SDO</label>
+		<select class="form-select form-select-md" name="SD_SPI_SDO" id="SD_SPI_SDO" ng-model="SD_SPI_SDO"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+			config-file="hal" ng-init="SD_SPI_SDO='DOUT29'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_SDO)">
+			{{SD_SPI_SDO}} pin is not defined for
+			your board!
+		</div>
+		<label for="SD_SPI_SDI" class="form-label">Define SD_SPI_SDI</label>
+		<select class="form-select form-select-md" name="SD_SPI_SDI" id="SD_SPI_SDI" ng-model="SD_SPI_SDI"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+			config-file="hal" ng-init="SD_SPI_SDI='DIN29'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_SDI)">
+			{{SD_SPI_SDI}} pin is not defined for
+			your board!
+		</div>
 	</div>
 	<label for="SD_SPI_CS" class="form-label">Define SD_SPI_CS</label>
-	<select class="form-select form-select-md" name="SD_SPI_CS" id="SD_SPI_CS"
-		ng-model="SD_SPI_CS"
-		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
-		config-file="hal" ng-init="SD_SPI_CS='SPI_CS'">
+	<select class="form-select form-select-md" name="SD_SPI_CS" id="SD_SPI_CS" ng-model="SD_SPI_CS"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}" config-file="hal"
+		ng-init="SD_SPI_CS='SPI_CS'">
 	</select>
 	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_SPI_CS)">
 		{{SD_SPI_CS}} pin is not defined for
@@ -59,8 +55,8 @@
 	<label for="SD_CARD_DETECT_PIN" class="form-label">Define SD_CARD_DETECT_PIN</label>
 	<select class="form-select form-select-md" name="SD_CARD_DETECT_PIN" id="SD_CARD_DETECT_PIN"
 		ng-model="SD_CARD_DETECT_PIN"
-		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
-		config-file="hal" ng-init="SD_CARD_DETECT_PIN='DIN19'">
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}" config-file="hal"
+		ng-init="SD_CARD_DETECT_PIN='DIN19'">
 	</select>
 	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(SD_CARD_DETECT_PIN)">
 		{{SD_CARD_DETECT_PIN}} pin is not defined for
@@ -75,11 +71,25 @@
 	</select> -->
 
 	<!-- <div ng-show="SD_FAT_FS==2"> -->
-		<label for="FF_USE_LFN" class="form-label">Enable Long File Names</label>
-		<select class="form-select form-select-md" name="FF_USE_LFN" id="FF_USE_LFN" ng-model="FF_USE_LFN"
-			config-file="hal" ng-init="FF_USE_LFN=1">
-			<option value="0">Disable</option>
-			<option value="1">Enable</option>
-		</select>
+	<label for="FF_USE_LFN" class="form-label">Enable Long File Names</label>
+	<select class="form-select form-select-md" name="FF_USE_LFN" id="FF_USE_LFN" ng-model="FF_USE_LFN" config-file="hal"
+		ng-init="FF_USE_LFN=1">
+		<option value="0">Disable</option>
+		<option value="1">Enable</option>
+	</select>
+
+	<div class="form-check form-switch" ng-if="VERSION>11099">
+		<input class="form-check-input" type="checkbox" id="ENABLE_SETTINGS_ON_SD_SDCARD"
+			ng-model="ENABLE_SETTINGS_ON_SD_SDCARD" config-file="hal">
+		<label class="form-check-label" for="ENABLE_SETTINGS_ON_SD_SDCARD">Store settings on the SD card</label>
+	</div>
+	<div ng-if="VERSION>11099">
+		<div class="mb-3 alert alert-warning" ng-show="$parent.$parent.DYNAMIC['RAM_ONLY_SETTINGS']">
+			Settings storing on SD card will not work with NVM storage disabled!
+		</div>
+		<div class="mb-3 alert alert-danger" ng-show="$parent.$parent.DYNAMIC['MODULES']['i2c_eeprom']">
+			Settings storing on SD card is not compatible with the I2C EEPROM module!!
+		</div>
+	</div>
 	<!-- </div> -->
 </div>

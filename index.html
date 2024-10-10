@@ -251,17 +251,30 @@
 						<label class="form-check-label" for="BRESENHAM_16BIT">Use 16-bit Bresenham step generation (for
 							machines that run very short segments like deltas or laser engravers)</label>
 					</div>
-					<div class="form-check form-switch">
+					<div class="form-check form-switch" ng-if="VERSION<11100">
 						<input class="form-check-input" type="checkbox" id="ENABLE_EXTRA_SYSTEM_CMDS"
 							ng-model="DYNAMIC['ENABLE_EXTRA_SYSTEM_CMDS']" model-scope-name="DYNAMIC.ENABLE_EXTRA_SYSTEM_CMDS"
 							config-file="hal">
 						<label class="form-check-label" for="ENABLE_EXTRA_SYSTEM_CMDS">Enable extra settings store
 							commands ($SS, $SL, $SR) and pin state print commands ($P)</label>
 					</div>
+					<div class="form-check form-switch" ng-if="VERSION>11099">
+						<input class="form-check-input" type="checkbox" id="ENABLE_PIN_DEBUG_EXTRA_CMD"
+							ng-model="DYNAMIC['ENABLE_PIN_DEBUG_EXTRA_CMD']" model-scope-name="DYNAMIC.ENABLE_PIN_DEBUG_EXTRA_CMD"
+							config-file="hal">
+						<label class="form-check-label" for="ENABLE_PIN_DEBUG_EXTRA_CMD">Enable extra pin state print commands ($P)</label>
+					</div>
+					<div class="form-check form-switch" ng-if="VERSION>11099">
+						<input class="form-check-input" type="checkbox" id="ENABLE_EXTRA_SETTINGS_CMDS"
+							ng-model="DYNAMIC['ENABLE_EXTRA_SETTINGS_CMDS']" model-scope-name="DYNAMIC.ENABLE_EXTRA_SETTINGS_CMDS"
+							config-file="hal">
+						<label class="form-check-label" for="ENABLE_EXTRA_SETTINGS_CMDS">Enable extra settings store
+							commands ($SS, $SL, $SR)</label>
+					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="RAM_ONLY_SETTINGS"
 							ng-model="DYNAMIC['RAM_ONLY_SETTINGS']" model-scope-name="DYNAMIC.RAM_ONLY_SETTINGS" config-file="hal">
-						<label class="form-check-label" for="RAM_ONLY_SETTINGS">Disable EEPROM storing</label>
+						<label class="form-check-label" for="RAM_ONLY_SETTINGS">Disable NVM (non volatile memory) storing</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="STATUS_AUTOMATIC_REPORT_INTERVAL_ENABLE"

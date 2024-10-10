@@ -27,4 +27,9 @@
 			your board!
 		</div>
 	</div>
+	<div ng-if="VERSION>11099">
+		<div class="mb-3 alert alert-warning" ng-show="$parent.$parent.DYNAMIC['RAM_ONLY_SETTINGS']">
+			Settings storing on I2C EEPROM will not work with NVM storage disabled!
+		</div>
+	</div>
 </div>
