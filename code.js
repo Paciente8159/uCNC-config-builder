@@ -1798,7 +1798,7 @@ ready(function () {
 					if (mod.build_flags && mod.build_flags.length) { build_flags += "\t" + mod.build_flags + "\r\n"; }
 				}
 			}
-			lib_deps = "\r\ncustom_ucnc_modules = " + includes.replace(/,\s*$/, "") + "\r\n" + lib_deps;
+			lib_deps = "custom_ucnc_modules = " + includes.replace(/,\s*$/, "") + "\r\n" + lib_deps;
 			lib_deps = "\r\ncustom_ucnc_modules_url = " + document.getElementById("ucnc-modules-download").href + "\r\n" + lib_deps;
 		}
 		else {
