@@ -1635,6 +1635,17 @@ var rangefilter = app.filter("range", function () {
 	};
 });
 
+var pioinicontent = "";
+function getPIOContent() {
+	var response = fetch("https://raw.githubusercontent.com/Paciente8159/uCNC/refs/heads/master/platformio.ini").then((response) => {
+		if (response.ok) {
+			return response.text();
+		}
+	}).then(text => pioinicontent = text);
+}
+
+getPIOContent();
+
 ready(function () {
 	var scope = angular.element(document.querySelector('#MCU')).scope();
 	document.addEventListener('boardloaded', function (e) {
@@ -1682,7 +1693,7 @@ ready(function () {
 				else {
 					switch (node.type) {
 						case 'select-one':
-							if(node.id == "PSU_ON"){
+							if (node.id == "PSU_ON") {
 								console.log("PSU");
 							}
 							if (getScope(node, true, false) != null) {
@@ -1691,7 +1702,7 @@ ready(function () {
 							}
 							break;
 						case 'checkbox':
-							if(node.id == "PSU_ON"){
+							if (node.id == "PSU_ON") {
 								console.log("PSU");
 							}
 							if (node.checked) {
@@ -1771,8 +1782,9 @@ ready(function () {
 	function generatePIOOverrides() {
 		var scope = angular.element(document.getElementById("uCNCapp")).scope();
 		var modules = [...document.querySelectorAll('[module-name-data]')];
-		var lib_deps = "lib_deps = \r\n";
-		var build_flags = "build_flags = \r\n";
+
+		var lib_deps = "lib_deps = \n";
+		var build_flags = "build_flags = \n";
 		var customflags = getScope(document.getElementById('CUSTOM_PIO_BUILDFLAGS'));
 		if (customflags && customflags.length) {
 			var flags = [...customflags.split(/\n/)];
@@ -1794,24 +1806,24 @@ ready(function () {
 						includes += mod.requires.replace(/,\s*$/, "") + ", ";
 					}
 
-					if (mod.lib_deps && mod.lib_deps.length) { lib_deps += "\t" + mod.lib_deps + "\r\n"; }
-					if (mod.build_flags && mod.build_flags.length) { build_flags += "\t" + mod.build_flags + "\r\n"; }
+					if (mod.lib_deps && mod.lib_deps.length) { lib_deps += "\t" + mod.lib_deps + "\n"; }
+					if (mod.build_flags && mod.build_flags.length) { build_flags += "\t" + mod.build_flags + "\n"; }
 				}
 			}
-			lib_deps = "custom_ucnc_modules = " + includes.replace(/,\s*$/, "") + "\r\n" + lib_deps;
-			lib_deps = "\r\ncustom_ucnc_modules_url = " + document.getElementById("ucnc-modules-download").href + "\r\n" + lib_deps;
+			lib_deps = "custom_ucnc_modules = " + includes.replace(/,\s*$/, "") + "\n" + lib_deps;
+			lib_deps = "custom_ucnc_modules_url = " + document.getElementById("ucnc-modules-download").href + "\n" + lib_deps;
 		}
 		else {
-			lib_deps = "custom_ucnc_modules =\r\ncustom_ucnc_modules_url =\r\n" + lib_deps;
+			lib_deps = "custom_ucnc_modules_url =\ncustom_ucnc_modules =\n" + lib_deps;
 		}
 
 		var customboard = getScope(document.getElementById('CUSTOM_PIO_BOARD'));
 		if (customboard && customboard.length) {
-			customboard = "board = " + customboard + "\r\n";
+			customboard = "board = " + customboard + "\n";
 		}
 		customparams = getScope(document.getElementById('CUSTOM_PIO_CONFIGS'));
-		customparams = ((customboard) ? customboard : "board = \r\n") + ((customparams) ? customparams : "");
-		var overrides = "[webconfig]\r\n" + build_flags + lib_deps + customparams;
+		customparams = ((customboard) ? customboard : "board = \n") + ((customparams) ? customparams : "");
+		var overrides = pioinicontent.trimEnd().substring(0, pioinicontent.indexOf(";user config")) + build_flags + lib_deps + customparams;
 		return overrides;
 	}
 
@@ -1832,18 +1844,18 @@ ready(function () {
 	// });
 
 	// document.getElementById('pio_overrides').addEventListener('click', function () {
-	// 	download('webconfig.ini', generatePIOOverrides());
+	// 	download('platformio.ini', generatePIOOverrides());
 	// });
 
-	document.getElementById('config_files').addEventListener('click', function () {
+	document.getElementById('config_files').addEventListener('click', async function () {
 		const zip = new JSZip();
 
 		// Create multiple files and add them to the ZIP file
-		zip.file('boardmap_overrides.h', generateBoardmapOverrides());
-		zip.file('boardmap_reset.h', generateBoardmapReset());
-		zip.file('cnc_hal_overrides.h', generateHalOverrides());
-		zip.file('cnc_hal_reset.h', generateHalReset());
-		zip.file('webconfig.ini', generatePIOOverrides());
+		zip.file('uCNC/boardmap_overrides.h', generateBoardmapOverrides());
+		zip.file('uCNC/boardmap_reset.h', generateBoardmapReset());
+		zip.file('uCNC/cnc_hal_overrides.h', generateHalOverrides());
+		zip.file('uCNC/cnc_hal_reset.h', generateHalReset());
+		zip.file('platformio.ini', generatePIOOverrides());
 
 		// config file
 		var key_values = {};
