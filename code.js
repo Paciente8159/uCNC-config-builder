@@ -1823,7 +1823,9 @@ ready(function () {
 		}
 		customparams = getScope(document.getElementById('CUSTOM_PIO_CONFIGS'));
 		customparams = ((customboard) ? customboard : "board = \n") + ((customparams) ? customparams : "");
-		var overrides = pioinicontent.trimEnd().substring(0, pioinicontent.indexOf(";user config")) + build_flags + lib_deps + customparams;
+		var overrides = pioinicontent.trimEnd().substring(0, pioinicontent.indexOf(";user config"));
+		overrides += ";µCNC web builder generated config\n";
+		overrides += build_flags.trimEnd()+"\n" + lib_deps.trimEnd()+"\n" + customparams.trimEnd()+"\n";
 		return overrides;
 	}
 
