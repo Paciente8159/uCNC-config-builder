@@ -299,10 +299,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
-		{ id: 'v1.10.2', tag: 11002, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.10.2.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v11000.zip' },
-		{ id: 'v1.10.1', tag: 11001, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.10.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v11000.zip' },
-		{ id: 'v1.10.0', tag: 11000, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.10.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v11000.zip' },
-		{ id: 'v1.9.x-bugfix', tag: 10979, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.9.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10880.zip' },
+		{ id: 'v1.11.0-rc', tag: 11090, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.11.0-rc.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.10.x-bugfix', tag: 11079, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.10.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v11000.zip' },
+    { id: 'v1.9.x-bugfix', tag: 10979, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.9.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10880.zip' },
 		{ id: 'v1.8.x-bugfix', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10800.zip' },
 		{ id: 'v1.7.x-bugfix', tag: 10779, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.7.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 	]
