@@ -171,7 +171,7 @@
 							id="STEPPER{{x}}_UART_RX"
 							ng-model="DYNAMIC['STEPPERS'][x]['STEPPER_UART_RX']"
 							model-scope-name="DYNAMIC.STEPPERS.{{x}}.STEPPER_UART_RX"
-							ng-options="y.pin as y.pin for y in UCNCPINS | filter: {'type': 'generic_input'}"
+							ng-options="y.pin as y.pin for y in UCNCPINS | orTypeFilter: ['unsafe_generic_input','generic_output']"
 							config-file="hal">
 						</select>
 						<div class="alert alert-warning" role="alert"
