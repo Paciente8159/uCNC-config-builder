@@ -699,14 +699,14 @@
 										<div ng-if='x.type=="pwm" || x.type=="analog"'>
 											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
 												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+												ng-options="y.channel as y.channel for y in ANALOG_CHANNELS | filter: {'mcu': MCU}"
 												var-type="int-nullable" ng-if='MCU!="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
 												config-file="boardmap">
 												<option value=""></option>
 											</select>
 											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
 												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
-												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+												ng-options="y.channel as y.channel for y in ANALOG_CHANNELS | filter: {'mcu': MCU}"
 												ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
 												<option value=""></option>
 											</select>
