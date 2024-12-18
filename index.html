@@ -827,7 +827,7 @@
 						<input class="form-check-input" type="checkbox" id="FORCE_SOFT_POLLING"
 							ng-model="DYNAMIC['FORCE_SOFT_POLLING']" model-scope-name="DYNAMIC.FORCE_SOFT_POLLING" config-file="hal">
 						<label class="form-check-label" for="FORCE_SOFT_POLLING">Force interruptable inputs software
-							polling (this disables control, limits, probe and generic inputs interrputs)</label>
+							polling (this disables control, limits, probe and generic inputs interrupts)</label>
 					</div>
 					<fieldset>
 						<legend>Controls</legend>
@@ -1523,6 +1523,14 @@
 						<label class="form-check-label" for="DISABLE_SETTINGS_MODULES"><b>Disable</b> settings storage
 							extension
 							callbacks</label>
+					</div>
+
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_ITP_FEED_TASK"
+							ng-model="DYNAMIC['ENABLE_ITP_FEED_TASK']" model-scope-name="DYNAMIC.ENABLE_ITP_FEED_TASK"
+							config-file="hal">
+						<label class="form-check-label" for="ENABLE_ITP_FEED_TASK">Run the interpolator in the RTC task</label>
+						<small id="piohelp1" class="form-text text-muted">When running extra modules and functionalities this increases the computation time required for a whole internal cycle to be computed. This can lead to step interpolation starving and hickups in the motion. To prevent this you can enable this feature to isolate the stepper interpolator from the main loop and be regulary called from the RTC task.</small>
 					</div>
 				</fieldset>
 
