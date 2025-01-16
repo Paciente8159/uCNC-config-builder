@@ -885,7 +885,7 @@
 								<label class="form-check-label" for="ENABLE_RT_LIMITS_CHECKING">Check limits on the stepper ISR (high
 									precision homing)</label>
 							</div>
-							<div class="form-check form-switch" ng-show="AXIS_COUNT > 3">
+							<div class="form-check form-switch" ng-show="AXIS_COUNT>3 && VERSION>11101">
 								<input class="form-check-input" type="checkbox" id="DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING"
 									ng-model="DYNAMIC['DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING']" model-scope-name="DYNAMIC.DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING"
 									config-file="hal">
