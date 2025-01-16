@@ -299,9 +299,9 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
-		{ id: 'v1.11.1', tag: 11101, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.11.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
-		{ id: 'v1.11.0', tag: 11100, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.11.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
-		{ id: 'v1.11.0-rc', tag: 11090, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.11.0-rc.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.11.1', tag: 11101, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.11.1.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.11.0', tag: 11100, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.11.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
+		{ id: 'v1.11.0-rc', tag: 11090, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.11.0-rc.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.10.x-bugfix', tag: 11079, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.10.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v11000.zip' },
     { id: 'v1.9.x-bugfix', tag: 10979, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.9.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10880.zip' },
 		{ id: 'v1.8.x-bugfix', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10800.zip' },
