@@ -262,7 +262,8 @@
 						<input class="form-check-input" type="checkbox" id="ENABLE_PIN_DEBUG_EXTRA_CMD"
 							ng-model="DYNAMIC['ENABLE_PIN_DEBUG_EXTRA_CMD']" model-scope-name="DYNAMIC.ENABLE_PIN_DEBUG_EXTRA_CMD"
 							config-file="hal">
-						<label class="form-check-label" for="ENABLE_PIN_DEBUG_EXTRA_CMD">Enable extra pin state print commands ($P)</label>
+						<label class="form-check-label" for="ENABLE_PIN_DEBUG_EXTRA_CMD">Enable extra pin state print commands
+							($P)</label>
 					</div>
 					<div class="form-check form-switch" ng-if="VERSION>11099">
 						<input class="form-check-input" type="checkbox" id="ENABLE_EXTRA_SETTINGS_CMDS"
@@ -527,10 +528,17 @@
 											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
 												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
 												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
-												var-type="int-nullable" model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL"
-												config-file="boardmap">
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap" ng-if='MCU=="MCU_AVR"'>
 												<option value=""></option>
 											</select>
+											<select class='form-select form-select-sm' name='{{x.pin}}_CHANNEL' id='{{x.pin}}_CHANNEL'
+												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
+												ng-options="y.channel as y.channel for y in CHANNELS | filter: {'mcu': MCU}"
+												var-type="int-nullable" model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap"
+												ng-if='MCU!="MCU_AVR"'>
+												<option value=""></option>
+											</select>
+
 										</div>
 									</td>
 									<td>
@@ -887,9 +895,10 @@
 							</div>
 							<div class="form-check form-switch" ng-show="AXIS_COUNT>3 && VERSION>11101">
 								<input class="form-check-input" type="checkbox" id="DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING"
-									ng-model="DYNAMIC['DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING']" model-scope-name="DYNAMIC.DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING"
-									config-file="hal">
-								<label class="form-check-label" for="ENABLE_RT_LIMITS_CHECKING">Disable limit alarm for rotational axis after homing</label>
+									ng-model="DYNAMIC['DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING']"
+									model-scope-name="DYNAMIC.DISABLE_ROTATIONAL_AXIS_LIMITS_AFTER_HOMING" config-file="hal">
+								<label class="form-check-label" for="ENABLE_RT_LIMITS_CHECKING">Disable limit alarm for rotational axis
+									after homing</label>
 							</div>
 						</div>
 					</fieldset>
@@ -1536,7 +1545,10 @@
 							ng-model="DYNAMIC['ENABLE_ITP_FEED_TASK']" model-scope-name="DYNAMIC.ENABLE_ITP_FEED_TASK"
 							config-file="hal">
 						<label class="form-check-label" for="ENABLE_ITP_FEED_TASK">Run the interpolator in the RTC task</label>
-						<small id="piohelp1" class="form-text text-muted">When running extra modules and functionalities this increases the computation time required for a whole internal cycle to be computed. This can lead to step interpolation starving and hickups in the motion. To prevent this you can enable this feature to isolate the stepper interpolator from the main loop and be regulary called from the RTC task.</small>
+						<small id="piohelp1" class="form-text text-muted">When running extra modules and functionalities this
+							increases the computation time required for a whole internal cycle to be computed. This can lead to step
+							interpolation starving and hickups in the motion. To prevent this you can enable this feature to isolate
+							the stepper interpolator from the main loop and be regulary called from the RTC task.</small>
 					</div>
 				</fieldset>
 
@@ -1609,23 +1621,27 @@
 					</div>
 					<ul class="list-group list-group-flush">
 
-						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a class="btn btn-secondary" href="{{getSrc(VERSION)}}" target="_blank">Download
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a
+								class="btn btn-secondary" href="{{getSrc(VERSION)}}" target="_blank">Download
 								µCNC ({{getVersion(VERSION)}})</a><small id="helpId" class="form-text text-muted">If setting the build
 								environment manually unzip this file.</small></li>
-						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a class="btn btn-secondary" id="ucnc-modules-download"
-								href="{{getModules(VERSION)}}" target="_blank">Download µCNC
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a
+								class="btn btn-secondary" id="ucnc-modules-download" href="{{getModules(VERSION)}}"
+								target="_blank">Download µCNC
 								addon modules</a><small id="helpId" class="form-text text-muted">If setting the build environment
 								manually, unzip this file and place each module directory used in the modules directory inside
 								uCNC/src/modules/ directory</small></li>
-						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a name="config_files" id="config_files" class="btn btn-primary" href="#"
-								role="button">Download your configuration files</a>
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a
+								name="config_files" id="config_files" class="btn btn-primary" href="#" role="button">Download your
+								configuration files</a>
 							<small id="helpId" class="form-text text-muted">If setting the build environment manually, and place the
 								file inside uCNC root directory.</small>
 						</li>
 						<li class="list-group-item d-flex flex-column align-items-start">
 							<small id="helpId" class="form-text text-muted">If want to update your existing files you can copy them to
 								the clipboard here</small>
-							<div class="d-flex flex-column justify-content-start d-gap-10"><button class="btn btn-light copyclipboard" data-clipboard-call="generateBoardmapReset();">Copy
+							<div class="d-flex flex-column justify-content-start d-gap-10"><button class="btn btn-light copyclipboard"
+									data-clipboard-call="generateBoardmapReset();">Copy
 									boardmap_reset.h</button>
 								<button class="btn btn-light copyclipboard" data-clipboard-call="generateBoardmapOverrides();">Copy
 									boardmap_overrides.h</button>
@@ -1671,10 +1687,12 @@
 							<small id="helpId" class="form-text text-muted">And replace platformio.ini file in uCNC root directory
 								(only on version 1.10.1+)</small>
 						</li> -->
-						<li class="list-group-item d-flex flex-column justify-content-start align-items-start">Compile and upload the project either via Platform IO (recommended)
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start">Compile and upload
+							the project either via Platform IO (recommended)
 							or Arduino IDE.</li>
-						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a name="store_settings" id="store_settings" class="btn btn-success" href="#"
-								role="button">Download config settings</a>
+						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a
+								name="store_settings" id="store_settings" class="btn btn-success" href="#" role="button">Download config
+								settings</a>
 							<small id="helpId" class="form-text text-muted">These can be later used to reload your
 								settings</small>
 						</li>
