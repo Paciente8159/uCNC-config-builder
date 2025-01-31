@@ -145,7 +145,7 @@ function updateScope(node = null, val = null, apply = true) {
 			}
 
 			// try {
-			// 	scope.$apply();
+			// 	scope.$applyAsync();
 			// }
 			// catch (error) {
 			// }
@@ -223,7 +223,7 @@ async function updateHAL(scope = null) {
 	settings = await parsePreprocessor(hal, settings);
 	updateFields(settings, halloaded);
 	if (scope) {
-		scope.$apply();
+		scope.$applyAsync();
 	}
 }
 
@@ -245,7 +245,7 @@ async function updateTool(scope = null, tool = null) {
 	settings = await parsePreprocessor(tool, settings);
 	updateFields(settings, toolloaded);
 	if (scope) {
-		scope.$apply();
+		scope.$applyAsync();
 	}
 }
 
@@ -285,7 +285,7 @@ async function updateBoardmap(scope = null) {
 	settings = await parsePreprocessor(boardurl, [], true);
 	updateFields(settings, boardloaded, true);
 	if (scope) {
-		scope.$apply();
+		scope.$applyAsync();
 	}
 
 	scope.PREV_MCU = scope.MCU;
@@ -1023,7 +1023,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 				fn();
 			}
 		} else {
-			this.$apply(fn);
+			this.$applyAsync(fn);
 		}
 	};
 
@@ -1684,7 +1684,7 @@ ready(function () {
 	// 	resp.json().then((data) => {
 	// 		debugger;
 	// 		scope.PREBUILD_CONFIGS = data;
-	// 		scope.$apply();
+	// 		scope.$applyAsync();
 	// 	});
 	// });
 
