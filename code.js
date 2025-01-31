@@ -1,8 +1,8 @@
 const boardloaded = new Event('boardloaded');
 const halloaded = new Event('halloaded');
 const toolloaded = new Event('toolloaded');
-
-var loadingfile = false;
+let worker = new Worker('worker.js');
+let loadingfile = false;
 
 function ready(fn) {
 	if (document.readyState !== 'loading') {
@@ -145,7 +145,7 @@ function updateScope(node = null, val = null, apply = true) {
 			}
 
 			// try {
-			// 	scope.$apply();
+			// 	scope.$applyAsync();
 			// }
 			// catch (error) {
 			// }
@@ -223,7 +223,7 @@ async function updateHAL(scope = null) {
 	settings = await parsePreprocessor(hal, settings);
 	updateFields(settings, halloaded);
 	if (scope) {
-		scope.$apply();
+		scope.$applyAsync();
 	}
 }
 
@@ -245,7 +245,7 @@ async function updateTool(scope = null, tool = null) {
 	settings = await parsePreprocessor(tool, settings);
 	updateFields(settings, toolloaded);
 	if (scope) {
-		scope.$apply();
+		scope.$applyAsync();
 	}
 }
 
@@ -285,7 +285,7 @@ async function updateBoardmap(scope = null) {
 	settings = await parsePreprocessor(boardurl, [], true);
 	updateFields(settings, boardloaded, true);
 	if (scope) {
-		scope.$apply();
+		scope.$applyAsync();
 	}
 
 	scope.PREV_MCU = scope.MCU;
@@ -295,6 +295,7 @@ async function updateBoardmap(scope = null) {
 var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
+	let angular_worker = new Worker('worker.js');
 	$scope.JSON_BUILD = null;
 
 	$scope.VERSIONS = [
@@ -304,7 +305,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'v1.11.0', tag: 11100, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.11.0.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.11.0-rc', tag: 11090, src: 'https://github.com/Paciente8159/uCNC/archive/refs/tags/v1.11.0-rc.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
 		{ id: 'v1.10.x-bugfix', tag: 11079, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.10.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v11000.zip' },
-    { id: 'v1.9.x-bugfix', tag: 10979, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.9.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10880.zip' },
+		{ id: 'v1.9.x-bugfix', tag: 10979, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.9.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10880.zip' },
 		{ id: 'v1.8.x-bugfix', tag: 10879, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.8.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/tags/v10800.zip' },
 		{ id: 'v1.7.x-bugfix', tag: 10779, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/v1.7.x-bugfix.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/v1.7.x.zip' },
 	]
@@ -1023,7 +1024,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 				fn();
 			}
 		} else {
-			this.$apply(fn);
+			this.$applyAsync(fn);
 		}
 	};
 
@@ -1587,15 +1588,25 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		});
 	};
 
-	$scope.prebuildSelected = async function () {
-		document.getElementById('loadingtext').innerText = "Fetching configuration...";
+	$scope.prebuildLoad = async function (build = null) {
+		if (!build) {
+			return;
+		}
+
+		loadingfile = true;
+		for (const [k, v] of Object.entries(build)) {
+			updateScope(document.getElementById(k), v);
+		}
+		$scope.definedPins();
+		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+			updateScope(e, getScope(e).toString());
+		});
+
+		document.getElementById('reloading').style.display = "none";
+		document.getElementById('loadingtext').innerText = "Reloading values...";
 		document.getElementById('reloading').style.display = "block";
-		var response = await fetch(document.getElementById('PRE_BUILD_FILE').value);
-		if (response.ok) {
-			var allText = await response.text();
-			$scope.JSON_BUILD = allText;
-			var build = JSON.parse($scope.JSON_BUILD);
-			loadingfile = true;
+
+		setTimeout(function () {
 			for (const [k, v] of Object.entries(build)) {
 				updateScope(document.getElementById(k), v);
 			}
@@ -1603,25 +1614,42 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
 				updateScope(e, getScope(e).toString());
 			});
-
+			loadingfile = false;
 			document.getElementById('reloading').style.display = "none";
-			document.getElementById('loadingtext').innerText = "Reloading values...";
-			document.getElementById('reloading').style.display = "block";
+		}.bind(build), 1000);
+	}
 
-			setTimeout(function () {
-				for (const [k, v] of Object.entries(build)) {
-					updateScope(document.getElementById(k), v);
+	$scope.prebuildSelected = async function () {
+		if (loadingfile) {
+			return;
+		}
+
+		document.getElementById('loadingtext').innerText = "Fetching configuration...";
+		document.getElementById('reloading').style.display = "block";
+		if (angular_worker) {
+			angular_worker.onmessage = function (event) {
+				switch (event.data.action) {
+					case 'update_prebuild':
+						var build = event.data.result;
+						$scope.prebuildLoad(build);
+						break;
+
 				}
-				$scope.definedPins();
-				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-					updateScope(e, getScope(e).toString());
-				});
-				loadingfile = false;
 				document.getElementById('reloading').style.display = "none";
-			}.bind(build), 1000);
+			};
+			angular_worker.postMessage({ action: 'parse_prebuild', data: document.getElementById('PRE_BUILD_FILE').value });
 		}
 		else {
-			document.getElementById('reloading').style.display = "none";
+			var response = await fetch(document.getElementById('PRE_BUILD_FILE').value);
+			if (response.ok) {
+				var allText = await response.text();
+				$scope.JSON_BUILD = allText;
+				var build = JSON.parse($scope.JSON_BUILD);
+				$scope.prebuildLoad(build);
+			}
+			else {
+				document.getElementById('reloading').style.display = "none";
+			}
 		}
 	};
 }]);
@@ -1684,7 +1712,7 @@ ready(function () {
 	// 	resp.json().then((data) => {
 	// 		debugger;
 	// 		scope.PREBUILD_CONFIGS = data;
-	// 		scope.$apply();
+	// 		scope.$applyAsync();
 	// 	});
 	// });
 
@@ -1850,7 +1878,7 @@ ready(function () {
 		customparams = ((customboard) ? customboard : "board = \n") + ((customparams) ? customparams : "");
 		var overrides = pioinicontent.trimEnd().substring(0, pioinicontent.indexOf(";user config"));
 		overrides += ";µCNC web builder generated config\n";
-		overrides += build_flags.trimEnd()+"\n" + lib_deps.trimEnd()+"\n" + customparams.trimEnd()+"\n";
+		overrides += build_flags.trimEnd() + "\n" + lib_deps.trimEnd() + "\n" + customparams.trimEnd() + "\n";
 		return overrides;
 	}
 
@@ -1920,44 +1948,133 @@ ready(function () {
 		download('ucnc_build.json', JSON.stringify(key_values));
 	});
 
+	// document.getElementById('load_settings').addEventListener('change', function (e) {
+	// 	var file = e.target.files[0];
+	// 	if (!file) {
+	// 		return;
+	// 	}
+	// 	var scope = angular.element(document.getElementById("uCNCapp")).scope();
+	// 	scope.PREV_MCU = scope.MCU;
+	// 	scope.PREV_BOARD = scope.BOARD;
+	// 	var reader = new FileReader();
+	// 	document.getElementById('loadingtext').innerText = "Synchronizing fields...";
+	// 	document.getElementById('reloading').style.display = "block";
+	// 	reader.onload = function (e) {
+	// 		scope.JSON_BUILD = e.target.result;
+	// 		var build = JSON.parse(scope.JSON_BUILD);
+	// 		loadingfile = true;
+	// 		for (const [k, v] of Object.entries(build)) {
+	// 			updateScope(document.getElementById(k), v);
+	// 		}
+	// 		scope.definedPins();
+	// 		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+	// 			updateScope(e, getScope(e).toString());
+	// 		});
+
+	// 		setTimeout(function () {
+	// 			for (const [k, v] of Object.entries(build)) {
+	// 				updateScope(document.getElementById(k), v);
+	// 			}
+	// 			scope.definedPins();
+	// 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+	// 				updateScope(e, getScope(e).toString());
+	// 			});
+	// 			loadingfile = false;
+	// 			document.getElementById('reloading').style.display = "none";
+	// 		}, 1000);
+	// 	};
+	// 	reader.readAsText(file);
+
+	// }, false);
+	// main.js
+
+	// function initWorker() {
+	// 	if (typeof Worker !== 'undefined') {
+	// 		const workerScript = document.createElement('script');
+	// 		workerScript.src = 'worker.js';
+	// 		document.body.appendChild(workerScript);
+
+	// 		worker = new Worker('worker.js');
+	// 	} else {
+	// 		console.log('Web Workers are not supported in this browser.');
+	// 	}
+	// }
+
+	// initWorker();
+
 	document.getElementById('load_settings').addEventListener('change', function (e) {
 		var file = e.target.files[0];
-		if (!file) {
-			return;
-		}
-		var scope = angular.element(document.getElementById("uCNCapp")).scope();
-		scope.PREV_MCU = scope.MCU;
-		scope.PREV_BOARD = scope.BOARD;
-		var reader = new FileReader();
+		if (!file) return;
+
+		const reader = new FileReader();
 		document.getElementById('loadingtext').innerText = "Synchronizing fields...";
 		document.getElementById('reloading').style.display = "block";
-		reader.onload = function (e) {
-			scope.JSON_BUILD = e.target.result;
-			var build = JSON.parse(scope.JSON_BUILD);
-			loadingfile = true;
-			for (const [k, v] of Object.entries(build)) {
-				updateScope(document.getElementById(k), v);
-			}
-			scope.definedPins();
-			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-				updateScope(e, getScope(e).toString());
-			});
 
-			setTimeout(function () {
-				for (const [k, v] of Object.entries(build)) {
-					updateScope(document.getElementById(k), v);
-				}
-				scope.definedPins();
-				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-					updateScope(e, getScope(e).toString());
+		reader.onload = function (e) {
+			if (worker) {
+				loadingfile = true;
+				worker.postMessage({
+					action: 'parse_json',
+					data: e.target.result
 				});
+
+				worker.onmessage = function (event) {
+					if (event.data.action === 'update_scope') {
+						const scope = angular.element(document.getElementById("uCNCapp")).scope();
+
+						// Update scopes and DOM elements
+						Object.entries(event.data.result).forEach(([k, v]) => {
+							updateScope(document.getElementById(k), v);
+						});
+
+						scope.definedPins();
+						document.querySelectorAll('input[type=radio]').forEach(e => {
+							updateScope(e, getScope(e).toString());
+						});
+
+						loadingfile = false;
+						document.getElementById('reloading').style.display = "none";
+					} else if (event.data.action === 'error') {
+						console.error(event.data.message);
+						document.getElementById('reloading').style.display = "none";
+					}
+				};
+			} else {
+				// Fallback for browsers without Web Workers
+				parseJSONFallback(e.target.result);
+			}
+		};
+
+		reader.readAsText(file);
+	});
+
+	function parseJSONFallback(jsonStr) {
+		if (!loadingfile) {
+			loadingfile = true;
+			document.getElementById('reloading').style.display = "block";
+
+			try {
+				const build = JSON.parse(jsonStr);
+
+				angular.element(document.getElementById("uCNCapp")).scope().then(scope => {
+					Object.entries(build).forEach(([k, v]) => {
+						updateScope(document.getElementById(k), v);
+					});
+
+					scope.definedPins();
+					document.querySelectorAll('input[type=radio]').forEach(e => {
+						updateScope(e, getScope(e).toString());
+					});
+				});
+
 				loadingfile = false;
 				document.getElementById('reloading').style.display = "none";
-			}, 1000);
-		};
-		reader.readAsText(file);
-
-	}, false);
+			} catch (error) {
+				console.error('JSON parsing error:', error);
+				document.getElementById('reloading').style.display = "none";
+			}
+		}
+	}
 
 	new ClipboardJS('.copyclipboard', {
 		text: function (trigger) {
