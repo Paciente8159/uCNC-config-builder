@@ -1,8 +1,8 @@
 const boardloaded = new Event('boardloaded');
 const halloaded = new Event('halloaded');
 const toolloaded = new Event('toolloaded');
-
-var loadingfile = false;
+let worker = new Worker('worker.js');
+let loadingfile = false;
 
 function ready(fn) {
 	if (document.readyState !== 'loading') {
@@ -295,6 +295,7 @@ async function updateBoardmap(scope = null) {
 var app = angular.module("uCNCapp", []);
 var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
+	let angular_worker = new Worker('worker.js');
 	$scope.JSON_BUILD = null;
 
 	$scope.VERSIONS = [
@@ -1587,15 +1588,25 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		});
 	};
 
-	$scope.prebuildSelected = async function () {
-		document.getElementById('loadingtext').innerText = "Fetching configuration...";
+	$scope.prebuildLoad = async function (build = null) {
+		if (!build) {
+			return;
+		}
+
+		loadingfile = true;
+		for (const [k, v] of Object.entries(build)) {
+			updateScope(document.getElementById(k), v);
+		}
+		$scope.definedPins();
+		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+			updateScope(e, getScope(e).toString());
+		});
+
+		document.getElementById('reloading').style.display = "none";
+		document.getElementById('loadingtext').innerText = "Reloading values...";
 		document.getElementById('reloading').style.display = "block";
-		var response = await fetch(document.getElementById('PRE_BUILD_FILE').value);
-		if (response.ok) {
-			var allText = await response.text();
-			$scope.JSON_BUILD = allText;
-			var build = JSON.parse($scope.JSON_BUILD);
-			loadingfile = true;
+
+		setTimeout(function () {
 			for (const [k, v] of Object.entries(build)) {
 				updateScope(document.getElementById(k), v);
 			}
@@ -1603,25 +1614,42 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
 				updateScope(e, getScope(e).toString());
 			});
-
+			loadingfile = false;
 			document.getElementById('reloading').style.display = "none";
-			document.getElementById('loadingtext').innerText = "Reloading values...";
-			document.getElementById('reloading').style.display = "block";
+		}.bind(build), 1000);
+	}
 
-			setTimeout(function () {
-				for (const [k, v] of Object.entries(build)) {
-					updateScope(document.getElementById(k), v);
+	$scope.prebuildSelected = async function () {
+		if (loadingfile) {
+			return;
+		}
+
+		document.getElementById('loadingtext').innerText = "Fetching configuration...";
+		document.getElementById('reloading').style.display = "block";
+		if (angular_worker) {
+			angular_worker.onmessage = function (event) {
+				switch (event.data.action) {
+					case 'update_prebuild':
+						var build = event.data.result;
+						$scope.prebuildLoad(build);
+						break;
+
 				}
-				$scope.definedPins();
-				document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-					updateScope(e, getScope(e).toString());
-				});
-				loadingfile = false;
 				document.getElementById('reloading').style.display = "none";
-			}.bind(build), 1000);
+			};
+			angular_worker.postMessage({ action: 'parse_prebuild', data: document.getElementById('PRE_BUILD_FILE').value });
 		}
 		else {
-			document.getElementById('reloading').style.display = "none";
+			var response = await fetch(document.getElementById('PRE_BUILD_FILE').value);
+			if (response.ok) {
+				var allText = await response.text();
+				$scope.JSON_BUILD = allText;
+				var build = JSON.parse($scope.JSON_BUILD);
+				$scope.prebuildLoad(build);
+			}
+			else {
+				document.getElementById('reloading').style.display = "none";
+			}
 		}
 	};
 }]);
@@ -1960,45 +1988,19 @@ ready(function () {
 	// }, false);
 	// main.js
 
-	let worker;
-	let loadingfile = false;
+	// function initWorker() {
+	// 	if (typeof Worker !== 'undefined') {
+	// 		const workerScript = document.createElement('script');
+	// 		workerScript.src = 'worker.js';
+	// 		document.body.appendChild(workerScript);
 
-	function initWorker() {
-		if (typeof Worker !== 'undefined') {
-			const workerScript = document.createElement('script');
-			workerScript.src = 'worker.js';
-			document.body.appendChild(workerScript);
+	// 		worker = new Worker('worker.js');
+	// 	} else {
+	// 		console.log('Web Workers are not supported in this browser.');
+	// 	}
+	// }
 
-			worker = new Worker(URL.createObjectURL(new Blob([`
-					// worker.js
-					onmessage = function(e) {
-							const { action, data } = e.data;
-							
-							switch(action) {
-									case 'parse_json':
-											try {
-													const build = JSON.parse(data);
-													self.postMessage({ 
-															action: 'update_scope', 
-															result: build 
-													});
-											} catch (error) {
-													console.error('JSON parsing error:', error);
-													self.postMessage({
-															action: 'error',
-															message: 'Error parsing JSON file'
-													});
-											}
-											break;
-							}
-					}
-			`])));
-		} else {
-			console.log('Web Workers are not supported in this browser.');
-		}
-	}
-
-	initWorker();
+	// initWorker();
 
 	document.getElementById('load_settings').addEventListener('change', function (e) {
 		var file = e.target.files[0];
@@ -2009,7 +2011,6 @@ ready(function () {
 		document.getElementById('reloading').style.display = "block";
 
 		reader.onload = function (e) {
-			debugger;
 			if (worker) {
 				loadingfile = true;
 				worker.postMessage({
