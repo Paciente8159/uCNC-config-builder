@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset ng-if="DYNAMIC['ENABLE_PLASMA_THC']">
 	<legend>Plasma THC settings</legend>
 
 	<div class="mb-3">
@@ -50,3 +50,6 @@
 	</div>
 
 </fieldset>
+<div ng-if="!DYNAMIC['ENABLE_PLASMA_THC']" class="alert alert-danger">
+	ENABLE_PLASMA_THC is not enabled!
+</div>
