@@ -1101,7 +1101,7 @@
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="ENABLE_LASER_PPI" ng-model="DYNAMIC['ENABLE_LASER_PPI']"
 							model-scope-name="DYNAMIC.ENABLE_LASER_PPI" config-file="hal">
-						<label class="form-check-label" for="ENABLE_LASER_PPI">Enable Laser PPI</label>
+						<label class="form-check-label" for="ENABLE_LASER_PPI">Enable Laser PPI mode</label>
 					</div>
 					<div class="mb-3" ng-if="DYNAMIC['ENABLE_LASER_PPI']">
 						<label for="" class="form-label">Laser PPI output µCNC pin</label>
@@ -1120,6 +1120,14 @@
 							<label class="form-check-label" for="INVERT_LASER_PPI_LOGIC">Invert Laser PPI signal
 								logic</label>
 						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>THC options</legend>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="ENABLE_PLASMA_THC" ng-model="DYNAMIC['ENABLE_PLASMA_THC']"
+							model-scope-name="DYNAMIC.ENABLE_PLASMA_THC" config-file="hal">
+						<label class="form-check-label" for="ENABLE_PLASMA_THC">Enable Plasma THC mode</label>
 					</div>
 				</fieldset>
 				<fieldset>
