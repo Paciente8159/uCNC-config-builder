@@ -618,7 +618,15 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ pin: 36, mcu: 'MCU_ESP32' },
 		{ pin: 37, mcu: 'MCU_ESP32' },
 		{ pin: 38, mcu: 'MCU_ESP32' },
-		{ pin: 39, mcu: 'MCU_ESP32' }
+		{ pin: 39, mcu: 'MCU_ESP32' },
+		{ pin: 40, mcu: 'MCU_ESP32' },
+		{ pin: 41, mcu: 'MCU_ESP32' },
+		{ pin: 42, mcu: 'MCU_ESP32' },
+		{ pin: 43, mcu: 'MCU_ESP32' },
+		{ pin: 44, mcu: 'MCU_ESP32' },
+		{ pin: 45, mcu: 'MCU_ESP32' },
+		{ pin: 46, mcu: 'MCU_ESP32' },
+		{ pin: 47, mcu: 'MCU_ESP32' }
 	];
 
 	$scope.PORTS = [
