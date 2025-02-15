@@ -1497,6 +1497,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			var build = JSON.parse(contents['JSON_BUILD']);
 			$scope.USERCONFIG = Object.entries(build);
 			$scope.applyUserConfig();
+			setTimeout(function(){$scope.applyUserConfig(false);}, 200);
 			$scope.JSON_BUILD = null;
 		}
 		else {
@@ -1629,7 +1630,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		loadingfile = true;
 		$scope.USERCONFIG = Object.entries(build);
 		$scope.applyUserConfig();
-
+		setTimeout(function(){$scope.applyUserConfig(false);}, 200);
+		loadingfile = false;
 		document.getElementById('reloading').style.display = "none";
 		document.getElementById('loadingtext').innerText = "Reloading values...";
 		document.getElementById('reloading').style.display = "block";
@@ -2060,12 +2062,13 @@ ready(function () {
 						scope.USERCONFIG = Object.entries(event.data.result);
 						scope.applyUserConfig();
 
-						loadingfile = false;
 						document.getElementById('reloading').style.display = "none";
 					} else if (event.data.action === 'error') {
 						console.error(event.data.message);
 						document.getElementById('reloading').style.display = "none";
 					}
+
+					loadingfile = false;
 				};
 			} else {
 				// Fallback for browsers without Web Workers
@@ -2089,12 +2092,13 @@ ready(function () {
 					scope.applyUserConfig();
 				});
 
-				loadingfile = false;
 				document.getElementById('reloading').style.display = "none";
 			} catch (error) {
 				console.error('JSON parsing error:', error);
 				document.getElementById('reloading').style.display = "none";
 			}
+
+			loadingfile = false;
 		}
 	}
 
