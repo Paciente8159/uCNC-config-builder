@@ -298,6 +298,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	let angular_worker = new Worker('worker.js');
 	$scope.JSON_BUILD = null;
 	$scope.USERCONFIG = [];
+	$scope.NGIFS = [];
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -1592,15 +1593,16 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		});
 	};
 
-	$scope.ngIfInit = function(){
-		setTimeout(function(){$scope.applyUserConfig();}, 200);
+	$scope.ngIfInit = function (element) {
+		setTimeout(function () { $scope.applyUserConfig(false); }, 200);
 	}
 
-	$scope.applyUserConfig = function(){
+	$scope.applyUserConfig = function (remove = true) {
 		for (const [k, v] of $scope.USERCONFIG) {
 			if (document.getElementById(k)) {
 				updateScope(document.getElementById(k), v);
-				$scope.USERCONFIG = $scope.USERCONFIG.filter(pair => pair[0]!=k);
+				if (remove)
+					$scope.USERCONFIG = $scope.USERCONFIG.filter(pair => pair[0] != k);
 			}
 		}
 		$scope.definedPins();
@@ -1611,7 +1613,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 				if (pairvalue.length && e.getAttribute("value") === pairvalue[0][1]) {
 					e.checked = true;
 				}
-				else{
+				else {
 					e.checked = false;
 				}
 			}
@@ -1679,6 +1681,12 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		}
 	};
 }]);
+
+var directive1 = app.directive('ngIfInit', function ($compile) {
+	return function (scope, element, attrs) {
+		scope.ngIfInit(element);
+	}
+})
 
 var orfilter = app.filter("orTypeFilter", function () {
 	var scope = angular.element(document.getElementById("uCNCapp")).scope();
@@ -2075,7 +2083,7 @@ ready(function () {
 
 			try {
 				const build = JSON.parse(jsonStr);
-				
+
 				angular.element(document.getElementById("uCNCapp")).scope().then(scope => {
 					scope.USERCONFIG = Object.entries(build);
 					scope.applyUserConfig();
