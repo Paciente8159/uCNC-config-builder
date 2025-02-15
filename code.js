@@ -297,6 +297,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 	let angular_worker = new Worker('worker.js');
 	$scope.JSON_BUILD = null;
+	$scope.USERCONFIG = [];
 
 	$scope.VERSIONS = [
 		{ id: 'master', tag: 99999, src: 'https://github.com/Paciente8159/uCNC/archive/refs/heads/master.zip', mods: 'https://github.com/Paciente8159/uCNC-modules/archive/refs/heads/master.zip' },
@@ -1493,13 +1494,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 
 		if (contents['JSON_BUILD'] !== null) {
 			var build = JSON.parse(contents['JSON_BUILD']);
-			for (const [k, v] of Object.entries(build)) {
-				updateScope(document.getElementById(k), v);
-			}
-			$scope.definedPins();
-			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-				updateScope(e, getScope(e).toString());
-			});
+			$scope.USERCONFIG = Object.entries(build);
+			$scope.applyUserConfig();
 			$scope.JSON_BUILD = null;
 		}
 		else {
@@ -1596,35 +1592,57 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		});
 	};
 
+	$scope.ngIfInit = function(){
+		setTimeout(function(){$scope.applyUserConfig();}, 200);
+	}
+
+	$scope.applyUserConfig = function(){
+		for (const [k, v] of $scope.USERCONFIG) {
+			if (document.getElementById(k)) {
+				updateScope(document.getElementById(k), v);
+				$scope.USERCONFIG = $scope.USERCONFIG.filter(pair => pair[0]!=k);
+			}
+		}
+		$scope.definedPins();
+		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+			if (e.hasAttribute("model-scope-name")) {
+				let names = e.getAttribute("model-scope-name").split('.');
+				let pairvalue = $scope.USERCONFIG.filter(pair => pair[0] === names[names.length - 1]);
+				if (pairvalue.length && e.getAttribute("value") === pairvalue[0][1]) {
+					e.checked = true;
+				}
+				else{
+					e.checked = false;
+				}
+			}
+			updateScope(e, getScope(e).toString());
+		});
+	}
+
 	$scope.prebuildLoad = async function (build = null) {
 		if (!build) {
 			return;
 		}
 
 		loadingfile = true;
-		for (const [k, v] of Object.entries(build)) {
-			updateScope(document.getElementById(k), v);
-		}
-		$scope.definedPins();
-		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-			updateScope(e, getScope(e).toString());
-		});
+		$scope.USERCONFIG = Object.entries(build);
+		$scope.applyUserConfig();
 
 		document.getElementById('reloading').style.display = "none";
 		document.getElementById('loadingtext').innerText = "Reloading values...";
 		document.getElementById('reloading').style.display = "block";
 
-		setTimeout(function () {
-			for (const [k, v] of Object.entries(build)) {
-				updateScope(document.getElementById(k), v);
-			}
-			$scope.definedPins();
-			document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-				updateScope(e, getScope(e).toString());
-			});
-			loadingfile = false;
-			document.getElementById('reloading').style.display = "none";
-		}.bind(build), 1000);
+		// setTimeout(function () {
+		// 	for (const [k, v] of Object.entries(build)) {
+		// 		updateScope(document.getElementById(k), v);
+		// 	}
+		// 	$scope.definedPins();
+		// 	document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
+		// 		updateScope(e, getScope(e).toString());
+		// 	});
+		// 	loadingfile = false;
+		// 	document.getElementById('reloading').style.display = "none";
+		// }.bind(build), 1000);
 	}
 
 	$scope.prebuildSelected = async function () {
@@ -2031,14 +2049,8 @@ ready(function () {
 						const scope = angular.element(document.getElementById("uCNCapp")).scope();
 
 						// Update scopes and DOM elements
-						Object.entries(event.data.result).forEach(([k, v]) => {
-							updateScope(document.getElementById(k), v);
-						});
-
-						scope.definedPins();
-						document.querySelectorAll('input[type=radio]').forEach(e => {
-							updateScope(e, getScope(e).toString());
-						});
+						scope.USERCONFIG = Object.entries(event.data.result);
+						scope.applyUserConfig();
 
 						loadingfile = false;
 						document.getElementById('reloading').style.display = "none";
@@ -2063,16 +2075,10 @@ ready(function () {
 
 			try {
 				const build = JSON.parse(jsonStr);
-
+				
 				angular.element(document.getElementById("uCNCapp")).scope().then(scope => {
-					Object.entries(build).forEach(([k, v]) => {
-						updateScope(document.getElementById(k), v);
-					});
-
-					scope.definedPins();
-					document.querySelectorAll('input[type=radio]').forEach(e => {
-						updateScope(e, getScope(e).toString());
-					});
+					scope.USERCONFIG = Object.entries(build);
+					scope.applyUserConfig();
 				});
 
 				loadingfile = false;
