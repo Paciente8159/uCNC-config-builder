@@ -628,6 +628,7 @@
 										<th scope="col">Pin port</th>
 										<th scope="col">Pullup</th>
 										<th scope="col">ISR</th>
+										<th scope="col">IO OFFSET(74HC165)</th>
 									</tr>
 								</thead>
 								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['control','limit','probe']">
@@ -667,6 +668,17 @@
 														href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
 														target="_blank">wiki</a></small>
 											</div>
+										</div>
+									</td>
+									<td>
+										<div>
+											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
+												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
+												ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
+												ng-change="definedPins()">
+												<option value=""></option>
+											</select>
 										</div>
 									</td>
 								</tr>
@@ -730,6 +742,7 @@
 										<th scope="col">Pin port</th>
 										<th scope="col">Pullup</th>
 										<th scope="col">ISR</th>
+										<th scope="col">IO OFFSET(74HC165)</th>
 									</tr>
 								</thead>
 								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['din']">
@@ -769,6 +782,17 @@
 														href="https://github.com/Paciente8159/uCNC/wiki/AVR:-Customizing#interrupt-on-change-feature"
 														target="_blank">wiki</a></small>
 											</div>
+										</div>
+									</td>
+									<td>
+										<div>
+											<select class='form-select form-select-sm' name='{{x.pin}}_IO_OFFSET' id='{{x.pin}}_IO_OFFSET'
+												ng-model="DYNAMIC['PINS'][x.pin]['IO_OFFSET']"
+												model-scope-name="DYNAMIC.PINS.{{x.pin}}.IO_OFFSET" var-type="int-nullable"
+												ng-options="y.offset as y.offset for y in IO_OFFSETS" config-file="boardmap"
+												ng-change="definedPins()">
+												<option value=""></option>
+											</select>
 										</div>
 									</td>
 								</tr>
