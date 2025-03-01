@@ -1399,7 +1399,7 @@
 							<label class="form-check-label" for="SHIFT_REGISTER_USE_HW_SPI">Use the board SPI to send data to the shit
 								register</label>
 						</div>
-						<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI']">
+						<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI'] && !DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CUSTOM_CALLBACK']">
 							<label for="SHIFT_REGISTER_CLK" class="form-label">Shift registers clock pin</label>
 							<select class="form-select form-select-md" name="SHIFT_REGISTER_CLK" id="SHIFT_REGISTER_CLK"
 								ng-model="DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CLK']"
@@ -1418,13 +1418,14 @@
 								model-scope-name="DYNAMIC.SHIFT_REGISTER.SHIFT_REGISTER_DELAY_CYCLES" var-type="int"
 								config-file="boardmap" ng-init="DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_DELAY_CYCLES']=0">
 						</div>
+					</div>
 						<label for="IC74HC595_COUNT" class="form-label">Number of chained IC74HC595's: <span
 								ng-bind="IC74HC595_COUNT"></label>
 						<input type="range" class="form-range" min="0" max="7" name="IC74HC595_COUNT" id="IC74HC595_COUNT"
 							ng-model="IC74HC595_COUNT" model-scope-name="IC74HC595_COUNT" var-type="int" config-file="boardmap"
 							ng-init="IC74HC595_COUNT=0">
 						<div ng-if-init ng-if="IC74HC595_COUNT!=0">
-							<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI']">
+							<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI'] && !DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CUSTOM_CALLBACK']">
 								<label for="SHIFT_REGISTER_SDO" class="form-label">IC74HC595's data pin</label>
 								<select class="form-select form-select-md" name="SHIFT_REGISTER_SDO" id="SHIFT_REGISTER_SDO"
 									ng-model="DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_SDO']"
@@ -1455,7 +1456,7 @@
 							ng-model="IC74HC165_COUNT" model-scope-name="IC74HC165_COUNT" var-type="int" config-file="boardmap"
 							ng-init="IC74HC165_COUNT=0">
 						<div ng-if-init ng-if="IC74HC165_COUNT!=0">
-							<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI']">
+							<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI'] && !DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CUSTOM_CALLBACK']">
 								<label for="SHIFT_REGISTER_SDI" class="form-label">IC74HC165's data pin</label>
 								<select class="form-select form-select-md" name="SHIFT_REGISTER_SDI" id="SHIFT_REGISTER_SDI"
 									ng-model="DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_SDI']"
@@ -1480,7 +1481,7 @@
 								{{DYNAMIC['SHIFT_REGISTER']['IC74HC165_LOAD']}} pin is not defined for your board!
 							</div>
 						</div>
-					</div>
+					
 				</fieldset>
 				<fieldset ng-if="VERSION<11103">
 					<legend>74HC595 IO extender</legend>
