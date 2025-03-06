@@ -1497,7 +1497,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			var build = JSON.parse(contents['JSON_BUILD']);
 			$scope.USERCONFIG = Object.entries(build);
 			$scope.applyUserConfig();
-			setTimeout(function(){$scope.applyUserConfig(false);}, 200);
+			setTimeout(function () { $scope.applyUserConfig(false); }, 200);
 			$scope.JSON_BUILD = null;
 		}
 		else {
@@ -1538,11 +1538,73 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		updateScope(input, mask);
 	};
 
+	$scope.radioGroupClick = function (elem, model) {
+		var input = document.getElementById(elem);
+		if (input.checked) {
+			$scope.DYNAMIC[model] = parseInt(input.value);
+		}
+		else {
+			$scope.DYNAMIC[model] = 0;
+		}
+		setTimeout(function () {
+			input.checked = true;
+		}, 100);
+
+	};
+
 	$scope.checkGroupInit = function (node, mask, val) {
 		if (!node) {
 			return;
 		}
 
+		var v = (mask & val)/* ? 1 : 0*/;
+		var arr = node.split('.');
+
+		if (arr.length > 0 && !$scope[arr[0]]) {
+			$scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+		else if (arr.length == 1) {
+			$scope[arr[0]] = (arr.length == 1) ? v : {};
+		}
+
+		if (arr.length > 1 && !$scope[arr[0]][arr[1]]) {
+			$scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+		else if (arr.length == 2) {
+			$scope[arr[0]][arr[1]] = (arr.length == 2) ? v : {};
+		}
+
+		if (arr.length > 2 && !$scope[arr[0]][arr[1]][arr[2]]) {
+			$scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+		else if (arr.length == 3) {
+			$scope[arr[0]][arr[1]][arr[2]] = (arr.length == 3) ? v : {};
+		}
+
+		if (arr.length > 3 && !$scope[arr[0]][arr[1]][arr[2]][arr[3]]) {
+			$scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+		else if (arr.length == 4) {
+			$scope[arr[0]][arr[1]][arr[2]][arr[3]] = (arr.length == 4) ? v : {};
+		}
+	}
+
+	$scope.radioGroupInit = function (node, val) {
+		debugger;
+		if (!node) {
+			return;
+		}
+
+		setTimeout(function () {
+			document.querySelectorAll('[radiogroup="' + node + '"]').forEach((e, i, p) => {
+				if (val == e.value) {
+					e.checked = true;
+					var input = document.getElementById(node);
+					updateScope(input, val);
+				}
+			})
+		}, 200);
+		return;
 		var v = (mask & val)/* ? 1 : 0*/;
 		var arr = node.split('.');
 
@@ -1607,18 +1669,27 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 			}
 		}
 		$scope.definedPins();
-		document.querySelectorAll('input[type=radio]').forEach((e, i, p) => {
-			if (e.hasAttribute("model-scope-name")) {
-				let names = e.getAttribute("model-scope-name").split('.');
-				let pairvalue = $scope.USERCONFIG.filter(pair => pair[0] === names[names.length - 1]);
-				if (pairvalue.length && e.getAttribute("value") === pairvalue[0][1]) {
-					e.checked = true;
-				}
-				else {
-					e.checked = false;
-				}
+
+		document.querySelectorAll('input[radiogroup-val]').forEach((e, i, p) => {
+			var pair = $scope.USERCONFIG.filter(pair => pair[0] == e.getAttribute('id'));
+			if (pair.length) {
+				document.querySelectorAll('input[radiogroup="' + e.getAttribute('id') + '"]').forEach((e2, i2, p2) => {
+					if (e2.value == pair[0][1] || parseInt(e2.value) == pair[0][1]) {
+						e2.checked = true;
+					}
+					// if (e.hasAttribute("model-scope-name")) {
+					// 	let names = e.getAttribute("model-scope-name").split('.');
+					// 	let pairvalue = $scope.USERCONFIG.filter(pair => pair[0] === names[names.length - 1]);
+					// 	if (pairvalue.length && e.getAttribute("value") === pairvalue[0][1]) {
+					// 		e.checked = true;
+					// 	}
+					// 	else {
+					// 		e.checked = false;
+					// 	}
+					// }
+					// updateScope(e, getScope(e).toString());
+				});
 			}
-			updateScope(e, getScope(e).toString());
 		});
 	}
 
@@ -1630,7 +1701,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		loadingfile = true;
 		$scope.USERCONFIG = Object.entries(build);
 		$scope.applyUserConfig();
-		setTimeout(function(){$scope.applyUserConfig(false);}, 200);
+		setTimeout(function () { $scope.applyUserConfig(false); }, 200);
 		loadingfile = false;
 		document.getElementById('reloading').style.display = "none";
 		document.getElementById('loadingtext').innerText = "Reloading values...";
