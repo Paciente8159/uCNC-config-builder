@@ -1384,10 +1384,10 @@
 					<legend>Shift Register IO extender</legend>
 					<div>
 						<div class="form-check form-switch"></div>
-						<input class="form-check-input" type="checkbox" id="SHIFT_REGISTER_CUSTOM_CALLBACK"
-							ng-model="DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CUSTOM_CALLBACK']" model-scope-name="DYNAMIC.SHIFT_REGISTER.SHIFT_REGISTER_CUSTOM_CALLBACK"
+						<input class="form-check-input" type="checkbox" id="IC74HC595_CUSTOM_SHIFT_IO"
+							ng-model="DYNAMIC['SHIFT_REGISTER']['IC74HC595_CUSTOM_SHIFT_IO']" model-scope-name="DYNAMIC.SHIFT_REGISTER.IC74HC595_CUSTOM_SHIFT_IO"
 							config-file="boardmap">
-						<label class="form-check-label" for="SHIFT_REGISTER_CUSTOM_CALLBACK">Use board custom callback to drive data
+						<label class="form-check-label" for="IC74HC595_CUSTOM_SHIFT_IO">Use board custom callback to drive data
 							to the shift register</label>
 					</div>
 					<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CUSTOM_CALLBACK']">
@@ -1399,7 +1399,7 @@
 							<label class="form-check-label" for="SHIFT_REGISTER_USE_HW_SPI">Use the board SPI to send data to the shit
 								register</label>
 						</div>
-						<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI'] && !DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CUSTOM_CALLBACK']">
+						<div ng-if-init ng-if="!DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_USE_HW_SPI'] && !DYNAMIC['SHIFT_REGISTER']['IC74HC595_CUSTOM_SHIFT_IO']">
 							<label for="SHIFT_REGISTER_CLK" class="form-label">Shift registers clock pin</label>
 							<select class="form-select form-select-md" name="SHIFT_REGISTER_CLK" id="SHIFT_REGISTER_CLK"
 								ng-model="DYNAMIC['SHIFT_REGISTER']['SHIFT_REGISTER_CLK']"
