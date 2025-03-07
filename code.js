@@ -918,6 +918,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 	$scope.MODULES_OPTIONS = [
 		{ id: 'g5', name: 'Linux CNC G5 and G5.1 and allows to make motions based on splines via control points' },
 		{ id: 'g7_g8', name: 'Linux CNC G7/G8 to set radius mode for lathes' },
+		{ id: 'g28_1_g30_1', name: 'Linux CNC G28.1/G30.1 to set homing coordinates to the current machine position' },
 		{ id: 'g33', name: 'Linux CNC G33 and allows to make motions synched with the spindle' },
 		{ id: 'm17_m18', name: 'Marlin M17-M18 and allows enable/disable stepper motors' },
 		{ id: 'm42', name: 'Marlin M42 and allows to turn on and off any generic digital pin, PWM or servo pin' },
