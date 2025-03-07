@@ -340,7 +340,8 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'KINEMATIC_COREXY', name: 'Core XY', version: 0 },
 		{ id: 'KINEMATIC_LINEAR_DELTA', name: 'Linear delta', version: 0 },
 		{ id: 'KINEMATIC_DELTA', name: 'Delta robot', version: 0 },
-		{ id: 'KINEMATIC_SCARA', name: 'Scara', version: 10799 }
+		{ id: 'KINEMATIC_SCARA', name: 'Scara', version: 10799 },
+		{ id: 'KINEMATIC_RTHETA', name: 'RTheta', version: 11200 }
 	];
 
 	$scope.ACCELERATIONS = [
