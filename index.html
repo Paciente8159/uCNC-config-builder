@@ -694,6 +694,7 @@
 										<th scope="col">Pin number</th>
 										<th scope="col">Pin port</th>
 										<th scope="col">CHANNEL</th>
+										<th scope="col">ADC</th>
 									</tr>
 								</thead>
 								<tr ng-repeat="x in UCNCPINS | orTypeFilter: ['analog']">
@@ -723,6 +724,16 @@
 												ng-model="DYNAMIC['PINS'][x.pin]['CHANNEL']"
 												ng-options="y.channel as y.channel for y in ANALOG_CHANNELS | filter: {'mcu': MCU}" ng-if-init
 												ng-if='MCU=="MCU_AVR"' model-scope-name="DYNAMIC.PINS.{{x.pin}}.CHANNEL" config-file="boardmap">
+												<option value=""></option>
+											</select>
+										</div>
+									</td>
+									<td>
+										<div ng-if-init ng-if='x.type=="analog"'>
+											<select class='form-select form-select-sm' name='{{x.pin}}_ADC' id='{{x.pin}}_ADC'
+												ng-model="DYNAMIC['PINS'][x.pin]['ADC']"
+												ng-options="y.adc as y.adc for y in ANALOG_ADCS | filter: {'mcu': MCU}"
+												var-type="int-nullable"	model-scope-name="DYNAMIC.PINS.{{x.pin}}.ADC" config-file="boardmap">
 												<option value=""></option>
 											</select>
 										</div>
