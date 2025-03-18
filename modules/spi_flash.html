@@ -1,0 +1,54 @@
+<div ng-if-init>
+	<div
+		ng-hide="!DYNAMIC['DISABLE_SETTINGS_MODULES'] && DYNAMIC['ENABLE_MAIN_LOOP_MODULES']">
+		<button type="button" class="btn btn-outline-warning"
+			ng-click="DYNAMIC['ENABLE_MAIN_LOOP_MODULES']=true;DYNAMIC['DISABLE_SETTINGS_MODULES']=false;">Enable
+			required extension options</button>
+	</div>
+	<label for="FLASH_SPI_INTERFACE" class="form-label">Define FLASH_SPI_INTERFACE</label>
+	<select class="form-select form-select-md" name="FLASH_SPI_INTERFACE" id="FLASH_SPI_INTERFACE"
+		ng-model="FLASH_SPI_INTERFACE" config-file="hal" ng-init="FLASH_SPI_INTERFACE='FLASH_SPI_SW_SPI'">
+		<option value="FLASH_SPI_SW_SPI">FLASH_SPI_SW_SPI</option>
+		<option value="FLASH_SPI_HW_SPI">FLASH_SPI_HW_SPI</option>
+		<option value="FLASH_SPI_HW_SPI2">FLASH_SPI_HW_SPI2</option>
+	</select>
+
+	<div ng-if="FLASH_SPI_INTERFACE=='FLASH_SPI_SW_SPI'">
+		<label for="FLASH_SPI_CLK" class="form-label">Define FLASH_SPI_CLK</label>
+		<select class="form-select form-select-md" name="FLASH_SPI_CLK" id="FLASH_SPI_CLK" ng-model="FLASH_SPI_CLK"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+			config-file="hal" ng-init="FLASH_SPI_CLK='DOUT30'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(FLASH_SPI_CLK)">
+			{{FLASH_SPI_CLK}} pin is not defined for
+			your board!
+		</div>
+		<label for="FLASH_SPI_SDO" class="form-label">Define FLASH_SPI_SDO</label>
+		<select class="form-select form-select-md" name="FLASH_SPI_SDO" id="FLASH_SPI_SDO" ng-model="FLASH_SPI_SDO"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}"
+			config-file="hal" ng-init="FLASH_SPI_SDO='DOUT29'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(FLASH_SPI_SDO)">
+			{{FLASH_SPI_SDO}} pin is not defined for
+			your board!
+		</div>
+		<label for="FLASH_SPI_SDI" class="form-label">Define FLASH_SPI_SDI</label>
+		<select class="form-select form-select-md" name="FLASH_SPI_SDI" id="FLASH_SPI_SDI" ng-model="FLASH_SPI_SDI"
+			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_input'}"
+			config-file="hal" ng-init="FLASH_SPI_SDI='DIN29'">
+		</select>
+		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(FLASH_SPI_SDI)">
+			{{FLASH_SPI_SDI}} pin is not defined for
+			your board!
+		</div>
+	</div>
+	<label for="FLASH_SPI_CS" class="form-label">Define FLASH_SPI_CS</label>
+	<select class="form-select form-select-md" name="FLASH_SPI_CS" id="FLASH_SPI_CS" ng-model="FLASH_SPI_CS"
+		ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'generic_output'}" config-file="hal"
+		ng-init="FLASH_SPI_CS='SPI_CS'">
+	</select>
+	<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(FLASH_SPI_CS)">
+		{{FLASH_SPI_CS}} pin is not defined for
+		your board!
+	</div>
+</div>
