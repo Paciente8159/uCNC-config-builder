@@ -949,6 +949,7 @@ var controller = app.controller('uCNCcontroller', ['$scope', '$rootScope', funct
 		{ id: 'spi_flash', name: 'Adds support for external SPI W25Qxxx NOR Flash to store settings' },
 		{ id: 'graphic_display', name: 'Support for RepRap Full Graphic Display', lib_deps: 'olikraus/U8g2' },
 		/*{ id: 'sd_card', name: 'Support for SD/MMC card via hardware/software SPI (DEPRECATED)' },*/
+		{ id: 'stm32_sdio', name: 'Enables SDIO support for SD Card module. Requires SD Card module', requires: 'sd_card_v2' },
 		{ id: 'sd_card_pf', name: 'Support for SD/MMC card via hardware/software SPI and optional FS (requires up to v1.8.x to work)', condition: 'VERSION<010880' },
 		{ id: 'sd_card_v2', name: 'Support for SD/MMC card via hardware/software SPI (v2 requires at least v1.9.0 to work)', condition: 'VERSION>010879' },
 		{ id: 'bltouch', name: 'Support for BLTouch probe' },
