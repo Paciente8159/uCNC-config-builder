@@ -3,13 +3,29 @@
 		<button type="button" class="btn btn-outline-warning" ng-click="DYNAMIC['ENABLE_MAIN_LOOP_MODULES']=true;">Enable
 			required extension options</button>
 	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">How many axis does your joystick controls?</label>
+		<select class="form-select form-select-md" name="JOYSTICK_AXIS_COUNT" id="JOYSTICK_AXIS_COUNT" ng-model="JOYSTICK_AXIS_COUNT"
+			ng-options="x as x for x in AXIS" var-type="int" config-file="hal" ng-init="JOYSTICK_AXIS_COUNT = $parent.$parent.AXIS_COUNT">
+		</select>
+	</div>
 	<!-- 0 -->
-	<div ng-if="$parent.$parent.AXIS_COUNT>0">
-		<label for="JOYSTICK_INPUT_0" class="form-label">Define JOYSTICK_INPUT_0</label>
+	<div ng-if="JOYSTICK_AXIS_COUNT>0">
+		<label for="JOYSTICK_INPUT_0" class="form-label">Define JOYSTICK_INPUT_0 and JOYSTICK_INPUT_0_AXIS</label>
 		<select class="form-select form-select-md" name="JOYSTICK_INPUT_0" id="JOYSTICK_INPUT_0" ng-model="JOYSTICK_INPUT_0"
 			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'analog'}" config-file="hal"
 			ng-init="JOYSTICK_INPUT_0=null">
 			<option value=""></option>
+		</select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_0_AXIS" id="JOYSTICK_INPUT_0_AXIS" ng-model="JOYSTICK_INPUT_0_AXIS"
+			config-file="hal"
+			ng-init="JOYSTICK_INPUT_0_AXIS=0">
+			<option value="0">X</option>
+			<option value="1">Y</option>
+			<option value="2">Z</option>
+			<option value="3">A</option>
+			<option value="4">B</option>
+			<option value="5">C</option>
 		</select>
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_0)">
 			{{JOYSTICK_INPUT_0}} pin is not defined for
@@ -17,65 +33,74 @@
 		</div>
 	</div>
 	<!-- 1 -->
-	<div ng-if="$parent.$parent.AXIS_COUNT>1">
-		<label for="JOYSTICK_INPUT_1" class="form-label">Define JOYSTICK_INPUT_1</label>
+	<div ng-if="JOYSTICK_AXIS_COUNT>1">
+		<label for="JOYSTICK_INPUT_1" class="form-label">Define JOYSTICK_INPUT_1 and JOYSTICK_INPUT_1_AXIS</label>
 		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1" id="JOYSTICK_INPUT_1" ng-model="JOYSTICK_INPUT_1"
 			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'analog'}" config-file="hal"
 			ng-init="JOYSTICK_INPUT_1=null">
 			<option value=""></option>
 		</select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_1)">
 			{{JOYSTICK_INPUT_1}} pin is not defined for
 			your board!
 		</div>
 	</div>
 	<!-- 2 -->
-	<div ng-if="$parent.$parent.AXIS_COUNT>2">
-		<label for="JOYSTICK_INPUT_2" class="form-label">Define JOYSTICK_INPUT_2</label>
+	<div ng-if="JOYSTICK_AXIS_COUNT>2">
+		<label for="JOYSTICK_INPUT_2" class="form-label">Define JOYSTICK_INPUT_2 and JOYSTICK_INPUT_2_AXIS</label>
 		<select class="form-select form-select-md" name="JOYSTICK_INPUT_2" id="JOYSTICK_INPUT_2" ng-model="JOYSTICK_INPUT_2"
 			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'analog'}" config-file="hal"
 			ng-init="JOYSTICK_INPUT_2=null">
 			<option value=""></option>
 		</select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_2)">
 			{{JOYSTICK_INPUT_2}} pin is not defined for
 			your board!
 		</div>
 	</div>
 	<!-- 3 -->
-	<div ng-if="$parent.$parent.AXIS_COUNT>3">
-		<label for="JOYSTICK_INPUT_3" class="form-label">Define JOYSTICK_INPUT_3</label>
+	<div ng-if="JOYSTICK_AXIS_COUNT>3">
+		<label for="JOYSTICK_INPUT_3" class="form-label">Define JOYSTICK_INPUT_3 and JOYSTICK_INPUT_3_AXIS</label>
 		<select class="form-select form-select-md" name="JOYSTICK_INPUT_3" id="JOYSTICK_INPUT_3" ng-model="JOYSTICK_INPUT_3"
 			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'analog'}" config-file="hal"
 			ng-init="JOYSTICK_INPUT_3=null">
 			<option value=""></option>
 		</select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_3)">
 			{{JOYSTICK_INPUT_3}} pin is not defined for
 			your board!
 		</div>
 	</div>
 	<!-- 4 -->
-	<div ng-if="$parent.$parent.AXIS_COUNT>4">
-		<label for="JOYSTICK_INPUT_4" class="form-label">Define JOYSTICK_INPUT_4</label>
+	<div ng-if="JOYSTICK_AXIS_COUNT>4">
+		<label for="JOYSTICK_INPUT_4" class="form-label">Define JOYSTICK_INPUT_4 and JOYSTICK_INPUT_4_AXIS</label>
 		<select class="form-select form-select-md" name="JOYSTICK_INPUT_4" id="JOYSTICK_INPUT_4" ng-model="JOYSTICK_INPUT_4"
 			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'analog'}" config-file="hal"
 			ng-init="JOYSTICK_INPUT_4=null">
 			<option value=""></option>
 		</select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_4)">
 			{{JOYSTICK_INPUT_4}} pin is not defined for
 			your board!
 		</div>
 	</div>
 	<!-- 5 -->
-	<div ng-if="$parent.$parent.AXIS_COUNT>5">
-		<label for="JOYSTICK_INPUT_5" class="form-label">Define JOYSTICK_INPUT_5</label>
+	<div ng-if="JOYSTICK_AXIS_COUNT>5">
+		<label for="JOYSTICK_INPUT_5" class="form-label">Define JOYSTICK_INPUT_5 and JOYSTICK_INPUT_5_AXIS</label>
 		<select class="form-select form-select-md" name="JOYSTICK_INPUT_5" id="JOYSTICK_INPUT_5" ng-model="JOYSTICK_INPUT_5"
 			ng-options="y.pin as y.pin for y in $parent.$parent.UCNCPINS | filter: {'type': 'analog'}" config-file="hal"
 			ng-init="JOYSTICK_INPUT_5=null">
 			<option value=""></option>
 		</select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_5_AXIS" id="JOYSTICK_INPUT_5_AXIS" ng-model="JOYSTICK_INPUT_5_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_5_AXIS=5"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_5)">
 			{{JOYSTICK_INPUT_5}} pin is not defined for
 			your board!
