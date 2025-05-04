@@ -79,6 +79,12 @@
 	</select>
 
 	<div class="form-check form-switch" ng-if="VERSION>11099">
+		<input class="form-check-input" type="checkbox" id="SD_CARD_SPI_DMA"
+			ng-model="SD_CARD_SPI_DMA" config-file="hal" var-type="bool">
+		<label class="form-check-label" for="SD_CARD_SPI_DMA">Enable SPI DMA for SD Card</label>
+	</div>
+
+	<div class="form-check form-switch" ng-if="VERSION>11099">
 		<input class="form-check-input" type="checkbox" id="ENABLE_SETTINGS_ON_SD_SDCARD"
 			ng-model="ENABLE_SETTINGS_ON_SD_SDCARD" config-file="hal">
 		<label class="form-check-label" for="ENABLE_SETTINGS_ON_SD_SDCARD">Store settings on the SD card</label>
