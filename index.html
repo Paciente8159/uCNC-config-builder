@@ -1775,17 +1775,16 @@
 						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a
 								class="btn btn-secondary" id="ucnc-modules-download" href="{{getModules(VERSION)}}"
 								target="_blank">Download µCNC
-								addon modules</a><small id="helpId" class="form-text text-muted">If setting the build environment
-								manually, unzip this file and place each module directory used in the modules directory inside
-								uCNC/src/modules/ directory</small></li>
+								addon modules</a><small id="helpId" class="form-text text-bg-info">If you are using VSCode+PlatformIO you can skip this file.</small><small id="helpId" class="form-text text-bg-warning">You only need to download the modules if setting the build environment
+								manually (like in Arduino IDE). Open the zip and place each module directory used in the modules directory inside
+								uCNC/src/modules/ directory.</small><small id="helpId" class="form-text text-bg-danger">Do not copy the entire contentof uCNC-modules to the modules directory. Copy only the modules you are using. Doing this will result in compilation errors</small></li>
 						<li class="list-group-item d-flex flex-column justify-content-start align-items-start"><a
 								name="config_files" id="config_files" class="btn btn-primary" href="#" role="button">Download your
 								configuration files</a>
-							<small id="helpId" class="form-text text-muted">If setting the build environment manually, and place the
-								file inside uCNC root directory.</small>
+							<small id="helpId" class="form-text text-muted">Copy all the files to the uCNC root directory. This will replace some files</small>
 						</li>
 						<li class="list-group-item d-flex flex-column align-items-start">
-							<small id="helpId" class="form-text text-muted">If want to update your existing files you can copy them to
+							<small id="helpId" class="form-text text-muted">If want to update your existing override files, without having to download the zip again, you can copy them to
 								the clipboard here</small>
 							<div class="d-flex flex-column justify-content-start d-gap-10"><button class="btn btn-light copyclipboard"
 									data-clipboard-call="generateBoardmapReset();">Copy
