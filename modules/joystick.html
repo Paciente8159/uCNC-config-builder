@@ -5,9 +5,27 @@
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">How many axis does your joystick controls?</label>
-		<select class="form-select form-select-md" name="JOYSTICK_AXIS_COUNT" id="JOYSTICK_AXIS_COUNT" ng-model="JOYSTICK_AXIS_COUNT"
-			ng-options="x as x for x in AXIS" var-type="int" config-file="hal" ng-init="JOYSTICK_AXIS_COUNT = $parent.$parent.AXIS_COUNT">
+		<select class="form-select form-select-md" name="JOYSTICK_AXIS_COUNT" id="JOYSTICK_AXIS_COUNT"
+			ng-model="JOYSTICK_AXIS_COUNT" ng-options="x as x for x in AXIS" var-type="int" config-file="hal"
+			ng-init="JOYSTICK_AXIS_COUNT = $parent.$parent.AXIS_COUNT">
 		</select>
+	</div>
+	<div class="form-check form-switch" ng-show="JOYSTICK_AXIS_COUNT>1">
+		<input class="form-check-input" type="checkbox" id="JOYSTICK_ALLOW_MULTI_AXIS_JOG"
+			ng-model="JOYSTICK_ALLOW_MULTI_AXIS_JOG" config-file="hal" var-type="bool"
+			ng-init="JOYSTICK_ALLOW_MULTI_AXIS_JOG=false">
+		<label class="form-check-label" for="JOYSTICK_ALLOW_MULTI_AXIS_JOG">Allow Multi Axis JOG</label>
+	</div>
+	<div class="form-check form-switch" ng-show="JOYSTICK_AXIS_COUNT>1">
+		<input class="form-check-input" type="checkbox" id="JOYSTICK_DISABLE_DEAD_ZONE"
+			ng-model="JOYSTICK_DISABLE_DEAD_ZONE" config-file="hal" var-type="bool" ng-init="JOYSTICK_DISABLE_DEAD_ZONE=false">
+		<label class="form-check-label" for="JOYSTICK_DISABLE_DEAD_ZONE">Disable dead zone</label>
+	</div>
+	<div ng-show="!JOYSTICK_DISABLE_DEAD_ZONE">
+		<label for="JOYSTICK_DEAD_ZONE" class="form-label">Dead zone range: <span ng-bind="JOYSTICK_DEAD_ZONE"></span>
+			units</label>
+		<input type="range" class="form-range" min="0" max="1" step="0.01" id="JOYSTICK_DEAD_ZONE"
+			ng-model="JOYSTICK_DEAD_ZONE" config-file="hal" var-type="float" ng-init="JOYSTICK_DEAD_ZONE=0">
 	</div>
 	<!-- 0 -->
 	<div ng-if="JOYSTICK_AXIS_COUNT>0">
@@ -17,9 +35,8 @@
 			ng-init="JOYSTICK_INPUT_0=null">
 			<option value=""></option>
 		</select>
-		<select class="form-select form-select-md" name="JOYSTICK_INPUT_0_AXIS" id="JOYSTICK_INPUT_0_AXIS" ng-model="JOYSTICK_INPUT_0_AXIS"
-			config-file="hal"
-			ng-init="JOYSTICK_INPUT_0_AXIS=0">
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_0_AXIS" id="JOYSTICK_INPUT_0_AXIS"
+			ng-model="JOYSTICK_INPUT_0_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_0_AXIS=0">
 			<option value="0">X</option>
 			<option value="1">Y</option>
 			<option value="2">Z</option>
@@ -40,7 +57,15 @@
 			ng-init="JOYSTICK_INPUT_1=null">
 			<option value=""></option>
 		</select>
-		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS"
+			ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1">
+			<option value="0">X</option>
+			<option value="1">Y</option>
+			<option value="2">Z</option>
+			<option value="3">A</option>
+			<option value="4">B</option>
+			<option value="5">C</option>
+		</select>
 
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_1)">
 			{{JOYSTICK_INPUT_1}} pin is not defined for
@@ -55,7 +80,15 @@
 			ng-init="JOYSTICK_INPUT_2=null">
 			<option value=""></option>
 		</select>
-		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS"
+			ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1">
+			<option value="0">X</option>
+			<option value="1">Y</option>
+			<option value="2">Z</option>
+			<option value="3">A</option>
+			<option value="4">B</option>
+			<option value="5">C</option>
+		</select>
 
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_2)">
 			{{JOYSTICK_INPUT_2}} pin is not defined for
@@ -70,7 +103,15 @@
 			ng-init="JOYSTICK_INPUT_3=null">
 			<option value=""></option>
 		</select>
-		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS"
+			ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1">
+			<option value="0">X</option>
+			<option value="1">Y</option>
+			<option value="2">Z</option>
+			<option value="3">A</option>
+			<option value="4">B</option>
+			<option value="5">C</option>
+		</select>
 
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_3)">
 			{{JOYSTICK_INPUT_3}} pin is not defined for
@@ -85,7 +126,15 @@
 			ng-init="JOYSTICK_INPUT_4=null">
 			<option value=""></option>
 		</select>
-		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS" ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_1_AXIS" id="JOYSTICK_INPUT_1_AXIS"
+			ng-model="JOYSTICK_INPUT_1_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_1_AXIS=1">
+			<option value="0">X</option>
+			<option value="1">Y</option>
+			<option value="2">Z</option>
+			<option value="3">A</option>
+			<option value="4">B</option>
+			<option value="5">C</option>
+		</select>
 
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_4)">
 			{{JOYSTICK_INPUT_4}} pin is not defined for
@@ -100,7 +149,15 @@
 			ng-init="JOYSTICK_INPUT_5=null">
 			<option value=""></option>
 		</select>
-		<select class="form-select form-select-md" name="JOYSTICK_INPUT_5_AXIS" id="JOYSTICK_INPUT_5_AXIS" ng-model="JOYSTICK_INPUT_5_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_5_AXIS=5"> <option value="0">X</option> <option value="1">Y</option> <option value="2">Z</option> <option value="3">A</option> <option value="4">B</option> <option value="5">C</option> </select>
+		<select class="form-select form-select-md" name="JOYSTICK_INPUT_5_AXIS" id="JOYSTICK_INPUT_5_AXIS"
+			ng-model="JOYSTICK_INPUT_5_AXIS" config-file="hal" ng-init="JOYSTICK_INPUT_5_AXIS=5">
+			<option value="0">X</option>
+			<option value="1">Y</option>
+			<option value="2">Z</option>
+			<option value="3">A</option>
+			<option value="4">B</option>
+			<option value="5">C</option>
+		</select>
 		<div class="alert alert-warning" role="alert" ng-show="!$parent.$parent.DEFINED_PINS.includes(JOYSTICK_INPUT_5)">
 			{{JOYSTICK_INPUT_5}} pin is not defined for
 			your board!
